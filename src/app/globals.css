@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+@tailwind utilities;
+
+:root {
+  /* background */
+  --bg-color: #fff;
+  /* white */
+  --text-color-white: #fff;
+  /* black */
+  --color-black: #000000;
+
+  /* gray-100 */
+  --border-color-light-blue: #e1eaff;
+  /* gray-200 */
+  --input-disabled: #ced2da;
+  /* gray-300 */
+  --user-background-gray: #b8bdc8;
+  /* gray-400 */
+  --color-light-gray: #a2a8b6;
+  /* gray-500 */
+  --color-medium-gray: #8b93a5;
+  /* gray-600 */
+  --text-color-ligth-gray: #757e93;
+  /* gray-700 */
+  --text-color-gray: #5f6981;
+  /* gray-800 */
+  --color-gray-form: #49546f;
+  /* gray-900 */
+  --text-color-dark: #333f5d;
+  --text-dark-gray: #344054;
+
+  /* primary-100 */
+  --bg-color-list: #f5f9fe;
+  /* primary-200 */
+  --button-hover-background: #e2effb;
+  /* primary-300 */
+  --input-def: #c9e2f8;
+  /* primary-400 */
+  --input-hover: #b1d5f6;
+
+  /* primary-500 */
+  --accent-color-light: #80bcf0;
+  /* primary-600 */
+  --logo-hover: #4fa2eb;
+  /* primary-700 */
+  --accent-color-dark: #1e88e5;
+  /* primary-800 */
+  --button-hover: #1376cc;
+  /* primary-900 */
+  --link-active: #0666ba;
+
+  /* error */
+  --error-color: #f11c0e;
+  /* success */
+  --success-color: #2b9429;
+
+  /* primary-200 */
+  --text-default: #c0cade;
+
+  background-color: var(--bg-color);
+  scroll-behavior: smooth;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+/* Зміна стилів календаря у компоненті профіль власника */
+.rdp-caption_label {
+  display: none !important;
+}
+.rdp-nav button {
+  display: none !important;
+}
+.rdp-dropdowns {
+  display: flex !important;
+  gap: 1rem !important;
+  justify-content: flex-start;
+  align-items: center;
+}
+.rdp-dropdowns select {
+  background-color: #f5f9ff !important;
+}
+.rdp-dropdowns select {
+  scrollbar-width: none;
+}
+.rdp-dropdowns select::-webkit-scrollbar {
+  display: none;
+}

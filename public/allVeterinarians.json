@@ -1,0 +1,544 @@
+[
+    {
+      "id": 1,
+      "slug": "koval_olena",
+      "surname": "Коваль",
+      "name": "Олена",
+      "patronymic": "Петрівна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 10,
+      "reviews_count": 45,
+      "rating": 2.7,
+      "work_places": {
+        "organization": "Клініка \"ВетСервіс\"",
+        "organizationCity": "Львів"
+      },
+      "petCategories": ["Собака", "Плазун", "Інше"],
+      "petProblems": ["Харчовий розлад", "Травмування частин тіла", "Інше"],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://images.app.goo.gl/itr88BqLornkjGxN9"
+    },
+    {
+      "id": 2,
+      "slug": "grytsenko_iryna",
+      "surname": "Гриценко",
+      "name": "Ірина",
+      "patronymic": "Петрівна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 13,
+      "reviews_count": 55,
+      "rating": 4.8,
+      "work_places": {
+        "organization": "Клініка \"Зоомед\"",
+        "organizationCity": "Київ"
+      },
+      "petCategories": ["Кіт", "Плазун", "Інше"],
+      "petProblems": ["Харчовий розлад", "Травмування частин тіла", "Інше"],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам.Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/e426/0716/588f8e49768020da958bb009d913c575?Expires=1736121600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=RpGOW1ebz8Htxcej~Vzhkqc1vfnKbT1P0LU6KAcEfcyVjSaVf50J4~PZW287-zg2-TgRXEUfXawqRcG-YIZkzp8WFKSqcXUiWLREbqQL0i0msZATHG9HkFxLwPo8SSqrxoOzLbAwckYY68sz9rKGM8QuoV5yZqqbA6N4w2Z9nFmJ2Ugq4fDNWM~mbXZGyQdbPChAWXozVQuTBteF-Xmv2dpNRXv1DSG0SNjgBZAJkMUPUuHSaMTwp9LirWX79X2~kaew5cDDbCkkGmQBD0rSkhJMbWUsXsSlWQlpftYK3LK9MyFLMSkPRMHZJIhZlnRLJH76oK7p5VVO8nxaMbVyHw__"
+    },
+    {
+      "id": 8,
+      "slug": "melnyk_andriy",
+      "surname": "Мельник",
+      "name": "Андрій",
+      "patronymic": "Васильович",
+      "email": "qwerty12345@gmail.com",
+      "experience": 12,
+      "reviews_count": 50,
+      "rating": 4.9,
+      "work_places": {
+        "organization": "Клініка \"ВетМед\"",
+        "organizationCity": "Київ"
+      },
+      "petCategories": ["Собака", "Плазун", "Кіт", "Гризун", "Птах"],
+      "petProblems": [
+        "Проблеми з очима",
+        "Догляд та утримання",
+        "Інше",
+        "Травмування частин тіла"
+      ],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/e426/0716/588f8e49768020da958bb009d913c575?Expires=1736121600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=RpGOW1ebz8Htxcej~Vzhkqc1vfnKbT1P0LU6KAcEfcyVjSaVf50J4~PZW287-zg2-TgRXEUfXawqRcG-YIZkzp8WFKSqcXUiWLREbqQL0i0msZATHG9HkFxLwPo8SSqrxoOzLbAwckYY68sz9rKGM8QuoV5yZqqbA6N4w2Z9nFmJ2Ugq4fDNWM~mbXZGyQdbPChAWXozVQuTBteF-Xmv2dpNRXv1DSG0SNjgBZAJkMUPUuHSaMTwp9LirWX79X2~kaew5cDDbCkkGmQBD0rSkhJMbWUsXsSlWQlpftYK3LK9MyFLMSkPRMHZJIhZlnRLJH76oK7p5VVO8nxaMbVyHw__"
+    },
+    {
+      "id": 3,
+      "slug": "boyko_ganna",
+      "surname": "Бойко",
+      "name": "Ганна",
+      "patronymic": "Сергіївна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 6,
+      "reviews_count": 25,
+      "rating": 4.3,
+      "work_places": {
+        "organization": "Клініка \"Зоомед\"",
+        "organizationCity": "Тернопіль"
+      },
+      "petCategories": ["Собака", "Птах", "Плазун"],
+      "petProblems": ["Алергічна реакція", "Травмування частин тіла", "Інше"],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам.Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам.Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам.Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам.Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/e426/0716/588f8e49768020da958bb009d913c575?Expires=1734307200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=SZSNiIAZlnEXfa~PcROErtGVBxE2NnkPDaHEhOOvWor447wji-Y6u3kOCa7CDZnje~XF2x6kqlGjgnCWVk2B2G8qOqv4IIhB6AQUWQrVzSNxw12EKGQQSDDqc8U0DZIC-XukxOAG0f6AWwk1xjuTZ4m5IwNe~9MG-Ub4VkYQ2SPekg8w7sNKpy66XNDRahfnPEw9Ay5pxNJV~0ed4snPuaY~kE-En8D0QchnQEWbbOj0trkedjC9uib6prPkFhKMQNw7NV9WAdv3-JB5v0u2qfUFAOJEQYbv2TfW2VeQpH1kMnK4ISkGa48uZPDWsKdVI2RigKUXJEGvc46Y2Oni6Q__"
+    },
+    {
+      "id": 4,
+      "slug": "mironenko_vitaliy",
+      "surname": "Мироненко",
+      "name": "Віталій",
+      "patronymic": "Олексійович",
+      "email": "qwerty12345@gmail.com",
+      "experience": 9,
+      "reviews_count": 40,
+      "rating": 4.6,
+      "work_places": {
+        "organization": "Клініка \"ВетСити\"",
+        "organizationCity": "Полтава"
+      },
+      "petCategories": ["Собака", "Птах", "Інше"],
+      "petProblems": [
+        "Догляд та утримання",
+        "Травмування частин тіла",
+        "Алергічна реакція"
+      ],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/206f/f635/8c79de89e642397eab28503fa858f083?Expires=1734307200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=DMEUXLcFUWtz92kERE54OOSIqCmIiWn3R3Ukt27sL8lFXvyS6kLhe3Ww~dictMXju2ZvkaaWUZUMtOhAWm3eOqjvoStcPG0p7Pc5FTl1pOSvaPSH6kyeAAfomECYsg40twg561RjByyL-LVYc0El3AHBdVeD8s5u8t04WTDZdKNPQcaM8DEpk7NhcIpDO6zNUGn2bv-LqQu7bRDnUMl9U2awQsKiFQZZZ9x4xkEPmQAiiNMIpSLBIp1yeF8sI-TWrXOmy7mlR~mfbFoUW6i4nLStCOuyIWVr41BX-UEmPh2MzlzzKuztYkC1q4~SSP0JtsO07jpAtgoLBO6Cfj10IQ__"
+    },
+    {
+      "id": 5,
+      "slug": "petrenko_oksana",
+      "surname": "Петренко",
+      "name": "Оксана",
+      "patronymic": "Іванівна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 7,
+      "reviews_count": 30,
+      "rating": 4.4,
+      "work_places": {
+        "organization": "Клініка \"Тваринки\"",
+        "organizationCity": "Полтава"
+      },
+      "petCategories": ["Собака", "Плазун", "Інше"],
+      "petProblems": [
+        "Харчовий розлад",
+        "Шкірні/вушні інфекції",
+        "Інше",
+        "Проблеми із травленням"
+      ],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.Лікар з великим досвідом, швидко поставив діагноз і допоміг нашому улюбленцю. Дякуємо за турботу!Лікар з великим досвідом, швидко поставив діагноз і допоміг нашому улюбленцю. Дякуємо за турботу!"
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Пубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Ивбрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/86fc/9ddf/ff1a8fef03ec44fb0fc8619f2de047a9?Expires=1734307200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=QdlKrxBgO2uN2iEbIfHMdr7aVfZZhoccydDx2j~aUFkTfqNlq2e4x7H2lS8WlqnXUj-dtVzKRYuicaYT00uoJpNgDUtP6zxHOLyuaVOW4-bYtWfRuH2zg0QDOrXbpnCvHA4IPqueIIZKEf8TYvk9nHTdD7p3BKmmJRBP~dKd6ookd8FtxZq8UDw-0EQM40xEkUw3mhRdw16jNSHN2ta~NDcVzZ65pTLSupibqK-tHqht9Ml9hhZWf9GagIcdkKMhIsGA8N1Bc5niYgxbDUJHEpPW~bn4x1Tfn73-7Puuj-EJLG~GVlEWI14c3N-RZ1-IUJMfwXqQt4OLzrKIsdN1dA__"
+    },
+    {
+      "id": 6,
+      "slug": "eroshenko_olga",
+      "surname": "Єрошенко",
+      "name": "Ольга",
+      "patronymic": "Іванівна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 12,
+      "reviews_count": 23,
+      "rating": 4.7,
+      "work_places": {
+        "organization": "Клініка \"IMC\"",
+        "organizationCity": "Суми"
+      },
+      "petCategories": ["Птах", "Плазун", "Гризун"],
+      "petProblems": [
+        "Шкірні/вушні інфекції",
+        "Травмування частин тіла",
+        "Проблеми з очима"
+      ],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "3",
+          "comment": "Лікар з великим досвідом, швидко поставив діагноз і допоміг нашому улюбленцю. Дякуємо за турботу!"
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/358c/0558/5dc2278f5241f5d24d88bd46ca671fb0?Expires=1734307200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=K2J5oQfcLfxnzeygk0oxP3~vBnr7tUrWOFvQWJGECPZbCpbrGpSO6YB2cK6B8TWSp7OF6D07m2r8AlXpmAHi3ahM4EarlKr~hMrxFtjhTfvQW~8Qa1Kds7n9RtXJvp7uhFoYwBFUPeB9wXDSEi1aW1jsshGmUsOzPAu0g7Mh6lFxHQL7BBhlJx78gQL58csQ5NAiSV0uTKgYLEpN17kGu-ptrWip35xJAfax3P~LQgjehBBWrKYcbMq-6hL4v-dPExi7cJNqxZSZPu1hOwma-JssO7m6m3mGFwi~tcfXqIQmTYJGLjbxolK4lXPZit-YLx4BhuLS-W-zxXblGZO-QQ__"
+    },
+    {
+      "id": 7,
+      "slug": "malushko_svitlana",
+      "surname": "Малишко",
+      "name": "Світлана",
+      "patronymic": "Петрівна",
+      "email": "qwerty12345@gmail.com",
+      "experience": 10,
+      "reviews_count": 3,
+      "rating": 4.6,
+      "work_places": {
+        "organization": "Клініка \"JMC\"",
+        "organizationCity": "Київ"
+      },
+      "petCategories": ["Гризун", "Плазун", "Собака"],
+      "petProblems": [
+        "Харчовий розлад",
+        "Травмування частин тіла",
+        "Блохи/кліщи",
+        "Догляд та утримання"
+      ],
+      "education": {
+        "eduInstitution": "ДЗ 'Дніпровска медична академія'",
+        "startDateStudy": "Вер 2018",
+        "finishDateStudy": "Чер 2022",
+        "diplomaUrl": [
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg",
+          "https://example.com/diploma2.jpg"
+        ]
+      },
+      "additionalEducation": [
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Сер 2022",
+          "finishDateLearning": "Чер 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        },
+        {
+          "learningCenter": "Курси підвищення кваліфікації",
+          "startDateLearning": "Лют 2023",
+          "finishDateLearning": "Квіт 2023",
+          "certificateUrl": [
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg",
+            "https://example.com/diploma2.jpg"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "fullName": "Зубрицька Анна Володимирівна",
+          "dateReviews": "09.12.2023",
+          "rating": "3",
+          "comment": "Професійний та доброзичливий фахівець. Видно, що любить свою роботу та хвостатих пацієнтів. Професійний та доброзичливий фахівець. Видно, що любить свою роботу та хвостатих пацієнтів."
+        },
+        {
+          "fullName": "Тубрицька Ольга Сергіївна",
+          "dateReviews": "10.02.2024",
+          "rating": "4",
+          "comment": "Лікар з великим досвідом, швидко поставив діагноз і допоміг нашому улюбленцю. Дякуємо за турботу!"
+        }
+      ],
+      "description": "Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікуванн Працюю в клініці для дрібних тварин 12 років і пишаюся стандартом догляду, який я надаю своїм пацієнтам. Я маю ступінь магістра. Моє завдання — не лише лікування.",
+      "photo_url": "https://s3-alpha-sig.figma.com/img/358c/0558/5dc2278f5241f5d24d88bd46ca671fb0?Expires=1734307200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=K2J5oQfcLfxnzeygk0oxP3~vBnr7tUrWOFvQWJGECPZbCpbrGpSO6YB2cK6B8TWSp7OF6D07m2r8AlXpmAHi3ahM4EarlKr~hMrxFtjhTfvQW~8Qa1Kds7n9RtXJvp7uhFoYwBFUPeB9wXDSEi1aW1jsshGmUsOzPAu0g7Mh6lFxHQL7BBhlJx78gQL58csQ5NAiSV0uTKgYLEpN17kGu-ptrWip35xJAfax3P~LQgjehBBWrKYcbMq-6hL4v-dPExi7cJNqxZSZPu1hOwma-JssO7m6m3mGFwi~tcfXqIQmTYJGLjbxolK4lXPZit-YLx4BhuLS-W-zxXblGZO-QQ__"
+    }
+  ]
