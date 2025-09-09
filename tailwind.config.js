@@ -13,7 +13,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        min:"375px",
+        min: "375px",
         xs: "480px",
         sm: "640px",
         md: "768px",
@@ -34,9 +34,6 @@ module.exports = {
         sizeUp: "sizeUp 0.8s ease-out",
       },
       colors: colorPallete,
-      // spacing: {
-      //   pxClamp: "clamp(16px, 5vw, 72px)",
-      // },
     },
   },
   darkMode: "class",
@@ -47,51 +44,7 @@ module.exports = {
           colors: colorPallete,
         },
       },
-      // components: {
-      //   input: {
-      //     variants: {
-      //       bordered: {
-      //         base: "shadow-none",
-      //         inputWrapper: "border-primary-300 hover:border-primary focus-within:border-primary shadow-none",
-      //         input: "shadow-none"
-      //       }
-      //     }
-      //   },
-      //   select: {
-      //     variants: {
-      //       bordered: {
-      //         base: "shadow-none",
-      //         trigger: "border-primary-300 hover:border-primary focus:border-primary shadow-none",
-      //         value: "shadow-none",
-      //       }
-      //     },
-      //     listbox: {
-      //       base: "",
-      //       list: "",
-      //       emptyContent: "",
-      //       item: {
-      //         base: `
-      //       data-[selected=true]:bg-primary-100 
-      //       data-[selected=true]:text-primary-600
-      //       hover:bg-primary-50
-      //       hover:text-primary-700
-      //       transition-colors duration-200
-      //     `,
-      //     selectedIcon: "text-primary-900",
-      //       }
-      //     }
-      //   },
-      //   button: {
-      //     variants: {
-      //       bordered: {
-      //         base: "shadow-none"
-      //       }
-      //     }
-      //   }
-      // }
     }),
-    scrollbar()
+    scrollbar(),
   ],
 };
-
-// text-[14px] font-[400] leading-[1.4] text-gray-700 text-center 2xl:text-left
