@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Icon from '@/components/Icon';
-import { Card, CardBody, Avatar } from '@heroui/react';
-import vetImg from '@/../public/Images/VeterinarianCard-img-eg.jpg';
-import { Veterinarian } from '@/utils/types/veterinarian';
-import { getYearWord } from '@/utils/types/formatExperience';
+import Icon from "@/components/Icon";
+import { Card, CardBody, Avatar } from "@heroui/react";
+import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";
+import { Veterinarian } from "@/utils/types/veterinarian";
+import { getYearWord } from "@/utils/types/formatExperience";
 
 type Props = {
   veterinarian: Veterinarian;
@@ -13,14 +13,14 @@ type Props = {
 
 const DocProfile = ({ veterinarian, hasAvatar = true }: Props) => {
   return (
-    <Card className="shadow-none mt-8 mb-8">
+    <Card className=" shadow-none mt-8 mb-8 lg:col-start-1 lg:row-start-1">
       <CardBody className="flex flex-row gap-8 p-0">
         {hasAvatar && (
           <Avatar className="w-32 h-32" radius="full" src={vetImg.src} />
         )}
         <div className="flex flex-col gap-2">
           <h4 className="text-2xl font-medium leading-[150%] text-gray-900">
-            {veterinarian.surname} <br /> {veterinarian.name}{' '}
+            {veterinarian.surname} <br /> {veterinarian.name}{" "}
             {veterinarian.patronymic}
           </h4>
           <div className="flex gap-1 items-center">

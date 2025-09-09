@@ -13,7 +13,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        min:"375px",
+        min: "375px",
         xs: "480px",
         sm: "640px",
         md: "768px",
@@ -71,7 +71,7 @@ module.exports = {
       //       emptyContent: "",
       //       item: {
       //         base: `
-      //       data-[selected=true]:bg-primary-100 
+      //       data-[selected=true]:bg-primary-100
       //       data-[selected=true]:text-primary-600
       //       hover:bg-primary-50
       //       hover:text-primary-700
@@ -90,7 +90,7 @@ module.exports = {
       //   }
       // }
     }),
-    scrollbar()
+    scrollbar(),
   ],
 };
 
