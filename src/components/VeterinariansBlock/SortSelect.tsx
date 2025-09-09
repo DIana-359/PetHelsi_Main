@@ -4,10 +4,10 @@ import { Select, SelectItem } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const sorts = [
-  { key: "experience,desc", label: "За стажем" },
+  // { key: "experience,desc", label: "За стажем" },
   { key: "rating,desc", label: "За рейтингом" },
-  { key: "priceDesc", label: "За більшою вартістю" },
-  { key: "price", label: "За меншою вартістю" },
+  { key: "rate,desc", label: "За більшою вартістю" },
+  { key: "rate,asc", label: "За меншою вартістю" },
 ];
 
 export default function SortSelect() {
@@ -18,6 +18,7 @@ export default function SortSelect() {
   const handleChange = (key: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("sort", key);
+    params.set("page", "1");
     router.push(`?${params.toString()}`);
   };
 
@@ -40,9 +41,8 @@ export default function SortSelect() {
       }}
       color="primary"
       selectedKeys={[currentSort]}
-      onChange={(e) => handleChange(e.target.value)}
-    >
-      {sorts.map((sort) => (
+      onChange={e => handleChange(e.target.value)}>
+      {sorts.map(sort => (
         <SelectItem key={sort.key}>{sort.label}</SelectItem>
       ))}
     </Select>
