@@ -72,7 +72,14 @@ export function BookingAddPetModal({ onAdd, onClose, isOpen }: BookingAddPetModa
           </button>
         </div>
         <ModalHeader className="text-xl sm:text-2xl font-medium justify-center px-4 sm:px-6 md:px-8 pt-0 pb-6 sm:pb-10 text-gray-900">
-          Додавання нової тварини
+          <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-close"
+              width="24px"
+              height="24px"
+              className="fill-primary-700 stroke-primary-700 hover:stroke-primary-800 hover:fill-primary-800 cursor-pointer"
+            />
+          <div className="aa">Додавання нової тварини</div>
         </ModalHeader>
 
         <ModalBody className="pt-0 pb-6 sm:pb-10 px-6 sm:px-10 md:px-15 gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-[#C9E2F8] scrollbar-track-transparent scrollbar-thumb-rounded [&::-webkit-scrollbar]:w-[6px]">
