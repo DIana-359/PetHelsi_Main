@@ -28,7 +28,7 @@ export default async function VeterinariansPage({
     const res = await fetch(
       `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${
         page - 1
-      }&size=4&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
+      }&size=10&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
       { next: { revalidate: 0 } }
     );
 
@@ -68,7 +68,7 @@ export default async function VeterinariansPage({
           {data.content.length > 0 && (
             <div className="flex items-center justify-between">
               <p className="text-gray-700">{`Сторінка ${page} з ${data.totalPages}`}</p>
-              <VeterinariansPagination page={page} total={data.totalPages} />
+              <VeterinariansPagination page={page} total={data.page.totalPages} />
             </div>
           )}
 

@@ -24,8 +24,7 @@ export default async function ownerVeterinarians({
 
   try {
     const res = await fetch(
-      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${
-        page - 1
+      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${page - 1
       }&size=4&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
       { next: { revalidate: 0 } }
     );
@@ -58,15 +57,15 @@ export default async function ownerVeterinarians({
             </div>
           </div>
           {data.content.length === 0 && <NotFoundVet dateStr={date} />}
-          
-                    <VeterinariansListPage veterinarians={data.content as Vet[]} />
-          
-                    {data.content.length > 0 && (
-                      <div className="flex items-center justify-between">
-                        <p className="text-gray-700">{`Сторінка ${page} з ${data.totalPages}`}</p>
-                        <VeterinariansPagination page={page} total={data.totalPages} />
-                      </div>
-                    )}
+
+          <VeterinariansListPage veterinarians={data.content as Vet[]} />
+
+          {data.content.length > 0 && (
+            <div className="flex items-center justify-between">
+              <p className="text-gray-700">{`Сторінка ${page} з ${data.totalPages}`}</p>
+              <VeterinariansPagination page={page} total={data.totalPages} />
+            </div>
+          )}
         </div>
       </div>
     );

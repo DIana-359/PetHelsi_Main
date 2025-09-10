@@ -5,6 +5,9 @@ import { useRouter, useParams } from 'next/navigation';
 import Stepper from './stepper';
 import { BookingAddPetModal } from './BookingAddPetModal';
 import { Pet } from '@/app/types/pet';
+import { ModalBookingSuccess } from './ModalBookingSuccess';
+import { ModalBookingCancel } from './ModalBookingCancel';
+import { ModalBookingTimeLeft } from './ModalBookingTimeLeft';
 
 interface Vet {
   id: string;
@@ -43,6 +46,9 @@ export default function BookingPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [showModal, setShowModal] = useState(false);
+  const [showModalSuccess, setShowModalSuccess] = useState(false);
+  const [showModalCancel, setShowModalCancel] = useState(false);
+  const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
   // const [newPet, setNewPet] = useState<Partial<Pet>>({});
 
   // Загрузка данных ветеринара и животных
@@ -95,6 +101,7 @@ export default function BookingPage() {
       setTimeLeft(prev => {
         if (prev.seconds === 0) {
           if (prev.minutes === 0) {
+            setShowModalTimeLeft(true);
             clearInterval(timer);
             return { minutes: 0, seconds: 0 };
           }
@@ -104,7 +111,7 @@ export default function BookingPage() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [timeLeft]);
 
   const togglePet = (id: string) => {
     setPets(pets.map(p => p.id === id ? { ...p, checked: !p.checked } : p));
@@ -139,8 +146,8 @@ export default function BookingPage() {
     setAppointmentData(prev => prev ? { ...prev, reason } : prev);
 
     await new Promise(resolve => setTimeout(resolve, 500));
-    alert('Бронювання успішне!');
-    router.push('/success');
+    // router.push('/success');
+    setShowModalSuccess(true);
   };
 
   const formatDateTime = (dateTime: string) => {
@@ -209,8 +216,19 @@ export default function BookingPage() {
         />
 
         <div className="flex space-x-4">
-          <button onClick={() => router.back()} className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Скасувати</button>
-          <button onClick={handleSubmit} disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0} className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400">Продовжити</button>
+          <button
+            onClick={() => router.back()}
+            className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+          >
+            Скасувати
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
+            className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
+          >
+            Продовжити
+          </button>
         </div>
       </div>
 
@@ -251,7 +269,12 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <button onClick={() => router.back()} className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Скасувати бронювання</button>
+        <button
+          onClick={() => setShowModalCancel(true)}
+          className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+        >
+          Скасувати бронювання
+        </button>
       </div>
 
       {/* Модалка добавления животного */}
@@ -260,6 +283,26 @@ export default function BookingPage() {
           isOpen={showModal}
           onAdd={(pet) => setPets([...pets, pet])}
           onClose={() => setShowModal(false)}
+        />
+      )}
+
+      {showModalSuccess && (
+        <ModalBookingSuccess
+          isOpen={showModalSuccess}
+          onClose={() => setShowModalSuccess(false)}
+        />
+      )}
+      {showModalCancel && (
+        <ModalBookingCancel
+          isOpen={showModalCancel}
+          onClose={() => setShowModalCancel(false)}
+        />
+      )}
+      {showModalTimeLeft && (
+        <ModalBookingTimeLeft
+          isOpen={showModalTimeLeft}
+          setTimeLeft={() => setTimeLeft({ minutes: 14, seconds: 58 })}
+          onClose={() => setShowModalTimeLeft(false)}
         />
       )}
     </div>

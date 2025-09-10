@@ -96,11 +96,8 @@ export default function VeterinarianCard({
         >
           <Link href={`/veterinarians`} className="w-full">
             <div className="flex flex-col">
-              <span className="text-gray-800">Швидке бронювання:</span>
-              <div className="flex justify-between text-primary-700">
-                <span>Сьогодні o 18:00</span>
-                <span>300 UAH</span>
-              </div>
+              <span className="text-gray-600">Швидке бронювання</span>
+              <span className="text-gray-900">23 Тра о 18:00</span>
             </div>
           </Link>
         </Button>
@@ -110,7 +107,7 @@ export default function VeterinarianCard({
           variant="bordered"
         >
           <Link href={`/veterinarians/${veterinarian.id}`}>
-            Обрати іншу дату та час
+            Вибрати іншу дату та час
           </Link>
         </Button>
       </CardBody>
