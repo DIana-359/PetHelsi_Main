@@ -84,9 +84,9 @@ export default function BookingPage() {
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map(p => p.type).join(", "),
-          reason: "",
-          price: vetData.rate,
+          animalType: userPets.map(p => p.petTypeName).join(', '),
+          reason: '',
+          price: vetData.rate
         });
       } catch (err) {
         console.error(err);
@@ -120,25 +120,23 @@ export default function BookingPage() {
     setPets(pets.map(p => (p.id === id ? { ...p, checked: !p.checked } : p)));
   };
 
-  // const handleAddPet = () => {
-  //   if (!newPet.name || !newPet.type || !newPet.breed) {
-  //     alert('Заповніть обов\'язкові поля тварини');
-  //     return;
-  //   }
-  //   const pet: Pet = {
-  //     id: (pets.length + 1).toString(),
-  //     name: newPet.name!,
-  //     type: newPet.type!,
-  //     breed: newPet.breed!,
-  //     sex: newPet.sex,
-  //     weight: newPet.weight,
-  //     age: newPet.age,
-  //     checked: true
-  //   };
-  //   setPets([...pets, pet]);
-  //   setShowModal(false);
-  //   setNewPet({});
-  // };
+  const handleAddPet = async (pet: Pet) => {
+    try {
+      const res = await fetch('/api/ownerProfile/add-pet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pet),
+      });
+
+      if (!res.ok) throw new Error("Помилка збереження тварини");
+
+      const savedPet = await res.json();
+      setPets((prev) => [...prev, { ...savedPet, checked: true }]);
+    } catch (err) {
+      console.error(err);
+      alert("Не вдалося зберегти тварину");
+    }
+  };
 
   const handleSubmit = async () => {
     if (pets.every(p => !p.checked)) {
@@ -211,7 +209,7 @@ export default function BookingPage() {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
-                onClick={() => togglePet(pet.id)}>
+                onClick={() => togglePet(pet.id!)}>
                 {pet.name}
               </button>
             ))}
@@ -317,7 +315,7 @@ export default function BookingPage() {
         {showModal && (
           <BookingAddPetModal
             isOpen={showModal}
-            onAdd={pet => setPets([...pets, pet])}
+            handleAddPet={handleAddPet}
             onClose={() => setShowModal(false)}
           />
         )}

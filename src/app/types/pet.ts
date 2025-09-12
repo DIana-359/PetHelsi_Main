@@ -1,10 +1,10 @@
 export interface Pet {
-  id: string;
+  id?: string;
   name: string;
-  type: string;
+  petTypeName: string;
   breed: string;
-  sex?: string;
+  genderTypeName?: string;
   weight?: number;
-  age?: number;
+  ages?: number;
   checked: boolean;
 }
