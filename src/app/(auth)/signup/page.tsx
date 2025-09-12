@@ -270,7 +270,15 @@ export default function SignUpForm() {
       </p>
       <Button
         type="button"
-        onPress={handleGoogleLogin}
+        onPress={ () => {
+          if(!selectedRole) {
+            setTabError(true);
+            return;
+          }
+          document.cookie = `role=${selectedRole}; path=/; max-age=300`;
+          handleGoogleLogin();
+        }
+      }
         color="primary"
         variant="light"
         className="w-full mx-auto text-[16px] font-[400] leading-[1.4] text-primary-700 bg-background border-[1px] rounded-[8px] border-primary-700 ">
