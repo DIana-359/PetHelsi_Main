@@ -9,7 +9,7 @@ import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
 import Icon from "@/components/Icon";
 // import ForgotPassword from "@/components/ForgotPassword";
 import GoBack from "@/components/GoBack";
-import {handleGoogleLogin} from "../AuthFunction";
+import { handleGoogleLogin } from "../AuthFunction";
 
 export default function SignInFormCooky() {
   const router = useRouter();
@@ -187,7 +187,7 @@ export default function SignInFormCooky() {
       </p>
 
       <Button
-       type="button"
+        type="button"
         onPress={handleGoogleLogin}
         color="primary"
         variant="light"

@@ -1,14 +1,12 @@
+"use client";
 import Link from "next/link";
-import { IProfileOwner } from "../../app/types/ownerTypes";
 import Icon from "../Icon";
 import AvatarUser from "./AvatarUser";
+import { useAuth } from "@/contextAuth/authContext";
+import { Pulse } from "../Pulse";
 
-interface Props {
-  userData: IProfileOwner;
-}
-
-export default function ProfileOwner({ userData }: Props) {
-  const { avatar, email } = userData;
+export default function ProfileOwner() {
+  const { userData } = useAuth();
 
   const ownerData = [
     // { label: "avatar", value: data?.avatar ?? "" },
@@ -20,6 +18,7 @@ export default function ProfileOwner({ userData }: Props) {
     { label: "Дата  народження", value: userData?.birthday ?? "Не вказано" },
     { label: "Місце проживання", value: userData?.city ?? "Не вказано" },
   ];
+  if (!userData) return <Pulse />;
 
   return (
     <div>
@@ -46,7 +45,11 @@ export default function ProfileOwner({ userData }: Props) {
 
       <div className="flex flex-col items-center min:items-start">
         <div className="flex flex-col min:flex-row min:justify-start gap-[40px] ">
-          <AvatarUser avatar={avatar} email={email} size={128} />
+          <AvatarUser
+            avatar={userData?.avatar}
+            firstLetter={userData?.firstName}
+            size={128}
+          />
           <ul className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-x-[24px] gap-y-[16px] w-full">
             {ownerData.map((item, i) => (
               <li key={i} className="w-full">

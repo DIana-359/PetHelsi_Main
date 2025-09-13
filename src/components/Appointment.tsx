@@ -9,7 +9,7 @@ export default function AppointmentProcess() {
   return (
     <div
       id="appointment"
-      className="lg:grid grid-cols-12 mb-22 w-full gap-6 items-stretch items-center justify-center pt-4 pb-14 overflow-hidden"
+      className="lg:grid grid-cols-12 mb-22 w-full gap-6 items-center justify-center pt-4 pb-14 overflow-hidden"
     >
       <div className="hidden col-span-5 lg:block rounded-3xl overflow-hidden">
         <div className="relative w-full h-full">
