@@ -2,8 +2,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button, Form, Select, SelectItem, DatePicker } from "@heroui/react";
-import { today, CalendarDate, getLocalTimeZone } from "@internationalized/date";
-
+import { DateValue } from "@internationalized/date";
+// import { today, DateValue, getLocalTimeZone } from "@internationalized/date";
 import { optionsAnimals, optionsProblems } from "./Constants";
 import Icon from "../Icon";
 import { checkAuth } from "@/utils/checkAuth";
@@ -11,7 +11,7 @@ import { checkAuth } from "@/utils/checkAuth";
 interface FormData {
   petTypeName: string;
   issueTypeName: string;
-  date: CalendarDate | null;
+  date: DateValue | null;
 }
 
 export const VeterinarianSearchForm = () => {
@@ -19,32 +19,39 @@ export const VeterinarianSearchForm = () => {
   const [formData, setFormData] = React.useState<FormData>({
     petTypeName: "",
     issueTypeName: "",
-    date: today(getLocalTimeZone()),
+    date: null,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const queryParams = new URLSearchParams();
-    if (formData.petTypeName)
-      queryParams.set("petTypeName", formData.petTypeName);
-    if (formData.issueTypeName)
-      queryParams.set("issueTypeName", formData.issueTypeName);
-    if (formData.date) queryParams.set("date", formData.date.toString());
+
+    const filters = {
+      petTypeName: formData.petTypeName,
+      issueTypeName: formData.issueTypeName,
+      date: formData.date?.toString(),
+    };
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        queryParams.set(key, value);
+      }
+    });
 
     const isAuth = await checkAuth();
 
-    if (isAuth) {
-      router.push(`/owner/veterinarians?${queryParams.toString()}`);
-    } else {
-      router.push(`/veterinarians?${queryParams.toString()}`);
-    }
+    router.push(
+      `${
+        isAuth ? "/owner/veterinarians" : "/veterinarians"
+      }?${queryParams.toString()}`
+    );
   };
 
   return (
     <Form
       className="w-full flex-col space-x-4 lg:flex-row bg-white rounded-xl p-4"
-      onSubmit={handleSubmit}
-    >
+      onSubmit={handleSubmit}>
       <Select
         className="lg:max-w-2xs"
         items={optionsAnimals}
@@ -60,7 +67,7 @@ export const VeterinarianSearchForm = () => {
         }}
         name="petTypeName"
         value={formData.petTypeName}
-        onChange={(event) =>
+        onChange={event =>
           setFormData({ ...formData, petTypeName: event.target.value })
         }
         aria-labelledby="animal"
@@ -78,8 +85,8 @@ export const VeterinarianSearchForm = () => {
             />
           ) : null
         }
-        renderValue={(selectedItems) => {
-          return selectedItems.map((item) => (
+        renderValue={selectedItems => {
+          return selectedItems.map(item => (
             <div key={item.key} className="flex flex-row gap-2 items-center">
               <Icon
                 sprite="/sprites/sprite-animals.svg"
@@ -91,14 +98,12 @@ export const VeterinarianSearchForm = () => {
               <span>{item.data?.value ?? "Тварина"}</span>
             </div>
           ));
-        }}
-      >
-        {(item) => (
+        }}>
+        {item => (
           <SelectItem
             className="text-gray-800"
             key={item.key}
-            textValue={item.value}
-          >
+            textValue={item.value}>
             <div className="flex flex-row gap-2 items-center">
               <Icon
                 sprite="/sprites/sprite-animals.svg"
@@ -128,7 +133,7 @@ export const VeterinarianSearchForm = () => {
         }}
         name="issueTypeName"
         value={formData.issueTypeName}
-        onChange={(event) =>
+        onChange={event =>
           setFormData({ ...formData, issueTypeName: event.target.value })
         }
         aria-labelledby="problem"
@@ -146,8 +151,8 @@ export const VeterinarianSearchForm = () => {
             />
           ) : null
         }
-        renderValue={(selectedItems) => {
-          return selectedItems.map((item) => (
+        renderValue={selectedItems => {
+          return selectedItems.map(item => (
             <div key={item.key} className="flex flex-row gap-2 items-center">
               <Icon
                 sprite="/sprites/sprite-problems.svg"
@@ -159,14 +164,12 @@ export const VeterinarianSearchForm = () => {
               <span>{item.data?.value ?? "Тварина"}</span>
             </div>
           ));
-        }}
-      >
-        {(item) => (
+        }}>
+        {item => (
           <SelectItem
             className="text-gray-800"
             key={item.key}
-            textValue={item.value}
-          >
+            textValue={item.value}>
             <div className="flex flex-row gap-2 items-center">
               <Icon
                 sprite="/sprites/sprite-problems.svg"
@@ -192,7 +195,7 @@ export const VeterinarianSearchForm = () => {
         color="primary"
         variant="bordered"
         value={formData.date}
-        onChange={(newDate) => {
+        onChange={newDate => {
           if (newDate) {
             setFormData({ ...formData, date: newDate });
           }
@@ -203,8 +206,7 @@ export const VeterinarianSearchForm = () => {
         className="w-full md:w-auto min-w-[200px] z-20"
         radius="sm"
         color="primary"
-        type="submit"
-      >
+        type="submit">
         Знайти ветеринара
       </Button>
     </Form>
