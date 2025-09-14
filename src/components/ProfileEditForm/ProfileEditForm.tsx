@@ -6,35 +6,50 @@ import Icon from "@/components/Icon";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { DayPicker } from "react-day-picker";
 import { uk } from "react-day-picker/locale";
-import { useRef, useState } from "react";
-import { IProfileOwner } from "@/app/types/ownerTypes";
+import { useEffect, useRef, useState } from "react";
 import AvatarUser from "../ProfileOwner/AvatarUser";
 import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
+import { useAuth } from "@/contextAuth/authContext";
+import { Pulse } from "../Pulse";
 
-interface Props {
-  data: IProfileOwner;
-}
-
-export default function ProfileEditForm({ data }: Props) {
+export default function ProfileEditForm() {
   const router = useRouter();
+  const { userData, setUserData } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<string | null>(data.avatar || "");
+  const [image, setImage] = useState<string | null>(userData?.avatar || "");
   const [selected, setSelected] = useState<Date>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [phone, setPhone] = useState<string | null>(data.phone || "");
-  const [email] = useState<string | null>(data.email || "");
-  const [lastName, setLastName] = useState<string | null>(data.lastName || "");
+  const [phone, setPhone] = useState<string | null>(userData?.phone || "");
+  // const [email] = useState<string | null>(userData?.email || "");
+  const [lastName, setLastName] = useState<string | null>(
+    userData?.lastName || ""
+  );
   const [firstName, setFirstName] = useState<string | null>(
-    data.firstName || ""
+    userData?.firstName || ""
   );
   const [middleName, setMiddleName] = useState<string | null>(
-    data.middleName || ""
+    userData?.middleName || ""
   );
-  const [birthday, setBirthday] = useState<string | null>(data.birthday || "");
-  const [city, setCity] = useState<string | null>(data.city || "");
+  const [birthday, setBirthday] = useState<string | null>(
+    userData?.birthday || ""
+  );
+  const [city, setCity] = useState<string | null>(userData?.city || "");
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
   const { setIsModalOpen, setModalContent } = useSistem();
+
+  useEffect(() => {
+    if (userData) {
+      setLastName(userData.lastName || "");
+      setFirstName(userData.firstName || "");
+      setMiddleName(userData.middleName || "");
+      setPhone(userData.phone || "");
+      setBirthday(userData.birthday || "");
+      setCity(userData.city || "");
+      setImage(userData.avatar || "");
+      if (userData.birthday) setSelected(new Date(userData.birthday));
+    }
+  }, [userData]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -56,7 +71,7 @@ export default function ProfileEditForm({ data }: Props) {
     router.push("/owner/profile");
   }
 
-  async function handleDateForm(e: React.FormEvent<HTMLFormElement>) {
+  async function handleUpdateForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const cleanPhone = phone ? phone.replace(/\s+/g, "") : "";
 
@@ -73,6 +88,16 @@ export default function ProfileEditForm({ data }: Props) {
 
     try {
       await updateProfile(formData);
+      const res = await fetch("/api/proxy/get-profile", {
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        throw new Error("Не вдалося отримати оновлений профіль");
+      }
+
+      const updatedProfile = await res.json();
+      setUserData(updatedProfile);
       setModalContent(
         <>
           <p className="text-[14px] md:text-[16px] font-[400] leading-[1.4] text-gray-900 mb-1">
@@ -109,7 +134,7 @@ export default function ProfileEditForm({ data }: Props) {
       }
     }
   }
-
+  if (!userData) return <Pulse />;
   function handleCancelUpdateProfile() {
     router.push("/owner/profile");
   }
@@ -139,7 +164,7 @@ export default function ProfileEditForm({ data }: Props) {
               className="w-[128px] h-[128px] mb-[8px] rounded-full object-cover"
             />
           ) : (
-            <AvatarUser avatar={image} email={email} size={128} />
+            <AvatarUser avatar={image} firstLetter={firstName} size={128} />
           )}
           <button
             className="p-[8px] flex items-center gap-[8px] group"
@@ -159,7 +184,7 @@ export default function ProfileEditForm({ data }: Props) {
 
         <Form
           className="w-full max-w-[304px] flex flex-col gap-[16px] bg-background"
-          onSubmit={handleDateForm}>
+          onSubmit={handleUpdateForm}>
           <div className="w-full">
             <label
               htmlFor="lastName"
@@ -334,7 +359,7 @@ export default function ProfileEditForm({ data }: Props) {
               name="email"
               placeholder="Введіть E-mail"
               type="email"
-              value={email ?? ""}
+              value={userData?.email ?? ""}
               classNames={{
                 inputWrapper:
                   "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",

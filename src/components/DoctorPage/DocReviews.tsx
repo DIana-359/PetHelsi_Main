@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
-import { Veterinarian } from '@/utils/types/veterinarian';
-import StarsRating from '../StarsRating';
-import { Avatar } from '@heroui/react';
-import vetImg from '@/../public/Images/VeterinarianCard-img-eg.jpg';
+import React, { useState } from "react";
+import { Veterinarian } from "@/utils/types/veterinarian";
+import StarsRating from "../StarsRating";
+import { Avatar } from "@heroui/react";
+import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";
+import ReviewIcon from "./ReviewIcon";
 
 interface DocReviewsProps {
-  reviews: Veterinarian['reviews'];
+  reviews: Veterinarian["reviews"];
 }
 
 const DocReviews: React.FC<DocReviewsProps> = ({ reviews }) => {
   const [showFullText, setShowFullText] = useState(false);
 
   if (!reviews || reviews.length === 0) {
-    return <p className="text-gray-500">Поки немає відгуків</p>;
+    return (
+      <div>
+        <h3 className="text-[18px] font-semibold mb-8 ">Відгуки</h3>
+        <div className="flex flex-col items-center">
+          <ReviewIcon />
+          <p className="text-gray-500 mt-6">У ветеринара ще немає відгуків</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="border-t border-gray-100 pt-8">
+    <div>
       <h2 className="text-[18px] font-semibold mb-6">Відгуки</h2>
 
       {reviews.map((review, index) => {
         const fullText = review.comment;
-        const shortText = fullText.slice(0, 150) + '...';
+        const shortText = fullText.slice(0, 150) + "...";
         const isLong = fullText.length > 150;
 
         return (
@@ -66,9 +75,9 @@ export default DocReviews;
 // Вспомогательная функция форматирования даты (можно заменить по стилю под проект)
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+  return date.toLocaleDateString("ru-RU", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
   });
 }

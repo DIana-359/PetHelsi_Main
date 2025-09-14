@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSistem } from "@/contextSistem/contextSistem";
 import useMedia from "@/utils/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
+import { useAuth } from "@/contextAuth/authContext";
 interface Props {
   decoded: {
     exp?: number;
@@ -17,6 +18,8 @@ interface Props {
 export default function HeaderOwnerActions({ decoded }: Props) {
   const isMobile = useMedia();
   const router = useRouter();
+  const { userData } = useAuth();
+
   const [showNotification, setShowNotification] = useState(false);
   const { isOpenModalDashboard, setIsOpenModalDashboard } = useSistem();
 
@@ -46,7 +49,11 @@ export default function HeaderOwnerActions({ decoded }: Props) {
         <button
           onClick={handleOpenDashboard}
           className="flex items-center justify-center hover:stroke-primary">
-          <AvatarUser avatar={decoded.avatar} email={decoded.sub} size={32} />
+          <AvatarUser
+            avatar={decoded.avatar}
+            firstLetter={userData?.firstName}
+            size={32}
+          />
         </button>
       ) : (
         <button

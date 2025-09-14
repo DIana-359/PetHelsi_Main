@@ -23,12 +23,11 @@ export default async function VeterinariansPage({
     typeof params?.issueTypeName === "string" ? params.issueTypeName : "";
   const date = typeof params?.date === "string" ? params.date : "";
 
-
   try {
     const res = await fetch(
       `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${
         page - 1
-      }&size=10&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
+      }&size=12&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
       { next: { revalidate: 0 } }
     );
 
@@ -67,11 +66,13 @@ export default async function VeterinariansPage({
 
           {data.content.length > 0 && (
             <div className="flex items-center justify-between">
-              <p className="text-gray-700">{`Сторінка ${page} з ${data.totalPages}`}</p>
-              <VeterinariansPagination page={page} total={data.page.totalPages} />
+              <p className="text-gray-700">{`Сторінка ${page} з ${data.page.totalPages}`}</p>
+              <VeterinariansPagination
+                page={page}
+                total={data.page.totalPages}
+              />
             </div>
           )}
-
         </div>
       </div>
     );

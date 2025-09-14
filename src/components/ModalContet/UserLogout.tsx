@@ -1,15 +1,11 @@
 import { HiOutlineUserCircle } from "react-icons/hi";
-import Cookies from "js-cookie";
-// import { fetchLogout } from "../../contextAuth/operations";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
-import { useAuth } from "../../contextAuth/authContext";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { fetchSignoutCookieProxy } from "@/app/api/auth-proxy";
 
 export default function UserLogout() {
   const router = useRouter();
-  const { setIsLoggedIn } = useAuth();
   const { setIsModalOpen, setModalContent } = useSistem();
 
   const closeModal = () => {
@@ -20,8 +16,6 @@ export default function UserLogout() {
   async function exit() {
     try {
       await fetchSignoutCookieProxy();
-      Cookies.remove("auth-token");
-      setIsLoggedIn(false);
       closeModal();
       router.push("/signin");
     } catch (error) {
