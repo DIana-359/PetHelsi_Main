@@ -28,7 +28,7 @@ export const optionsProblems = [
     key: "Проблеми із травленням",
     icon: "icon-digestive-problems",
   },
-  { value: "Блохи/кліщи", key: "Блохи/кліщи", icon: "icon-insects" },
+  { value: "Блохи/кліщі", key: "Блохи/кліщі", icon: "icon-insects" },
   {
     value: "Травмування частин тіла",
     key: "Травмування частин тіла",

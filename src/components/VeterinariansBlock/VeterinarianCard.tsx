@@ -74,7 +74,9 @@ export default function VeterinarianCard({
         </Link>
         <p className={`${experienceStyles[size]}`}>
           <span className="text-gray-600">Стаж: </span>
-          <span className="text-gray-800">{veterinarian.experience} {getYearWord(veterinarian.experience)}</span>
+          <span className="text-gray-800">
+            {veterinarian.experience} {getYearWord(veterinarian.experience)}
+          </span>
         </p>
         <div className={`flex gap-1 items-center ${reviewsStyles[size]} mb-6`}>
           <Icon
@@ -88,24 +90,32 @@ export default function VeterinarianCard({
 
           <span className="text-gray-600">(0 відгуки)</span>
         </div>
+        <span className="font-medium text-[18px] leading-[100%] tracking-[0] text-left align-middle text-gray-900 mb-3">
+          {veterinarian.rate} UAH
+        </span>
 
         <Button
-          className={`flex border rounded-lg border-primary-700 bg-primary-100 w-full mb-2 h-[55px] ${buttonMoreStyles[size]}`}
+          className={`flex border rounded-lg  py-2 border-primary-700 bg-primary-100 w-full mb-2 h-[55px] ${buttonMoreStyles[size]}`}
           variant="bordered"
-          style={{ height: "55px" }}
-        >
-          <Link href={`/veterinarians`} className="w-full">
+          style={{ height: "55px" }}>
+          <Link
+            href={`/veterinarians/${veterinarian.id}/booking`}
+            className="w-full">
             <div className="flex flex-col">
-              <span className="text-gray-600">Швидке бронювання</span>
-              <span className="text-gray-900">23 Тра о 18:00</span>
+              <span className="font-[400] text-[14px] leading-[100%] tracking-[0] text-center text-gray-600 mb-1">
+                Швидке бронювання
+              </span><span className="text-gray-900">23 Тра о 18:00</span>
+              <div className="font-normal text-[16px] leading-[100%] tracking-[0] align-middle text-gray-900">
+                <span className="text-center">Сьогодні o 18:00</span>
+              </div>
+
             </div>
           </Link>
         </Button>
 
         <Button
           className={`border rounded-lg border-gray-100 bg-background text-gray-800 w-full ${buttonTodayStyles[size]}`}
-          variant="bordered"
-        >
+          variant="bordered">
           <Link href={`/veterinarians/${veterinarian.id}`}>
             Вибрати іншу дату та час
           </Link>
