@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import Stepper from './stepper';
-import { BookingAddPetModal } from './BookingAddPetModal';
-import { Pet } from '@/app/types/pet';
-import { ModalBookingSuccess } from './ModalBookingSuccess';
-import { ModalBookingCancel } from './ModalBookingCancel';
-import { ModalBookingTimeLeft } from './ModalBookingTimeLeft';
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Stepper from "./stepper";
+import { BookingAddPetModal } from "./BookingAddPetModal";
+import { Pet } from "@/app/types/pet";
+import { ModalBookingSuccess } from "./ModalBookingSuccess";
+import { ModalBookingCancel } from "./ModalBookingCancel";
+import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 
 interface Vet {
@@ -90,9 +90,9 @@ export default function BookingPage() {
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map(p => p.petTypeName).join(', '),
-          reason: '',
-          price: vetData.rate
+          animalType: userPets.map(p => p.petTypeName).join(", "),
+          reason: "",
+          price: vetData.rate,
         });
       } catch (err) {
         console.error(err);
@@ -129,16 +129,16 @@ export default function BookingPage() {
 
   const handleAddPet = async (pet: Pet) => {
     try {
-      const res = await fetch('/api/ownerProfile/add-pet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/ownerProfile/add-pet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(pet),
       });
 
       if (!res.ok) throw new Error("Помилка збереження тварини");
 
       const savedPet = await res.json();
-      setPets((prev) => [...prev, { ...savedPet, checked: true }]);
+      setPets(prev => [...prev, { ...savedPet, checked: true }]);
     } catch (err) {
       console.error(err);
       alert("Не вдалося зберегти тварину");
@@ -224,53 +224,7 @@ export default function BookingPage() {
               className="px-3 py-1 border border-dashed rounded text-blue-500">
               + Додати тварину
             </button>
-          ))}
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-3 py-1 border border-dashed rounded text-blue-500"
-          >
-            + Додати тварину
-          </button>
-        </div>
-
-        {/* Выпадающее меню */}
-        <select
-          className="w-full border border-gray-300 rounded p-2 mb-4"
-          value={selectedIssue}
-          onChange={(e) => setSelectedIssue(e.target.value)}
-        >
-          <option>Що турбує тварину?</option>
-          {appointmentData?.vet.issueTypes.map((issue, idx) => (
-            <option key={idx} value={issue}>{issue}</option>
-          ))}
-        </select>
-
-        {/* Текстовое поле */}
-        <textarea
-          placeholder="Опишіть більш детально, що саме турбує тварину"
-          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 mb-6"
-          rows={4}
-          value={additionalInfo}
-          onChange={(e) => setAdditionalInfo(e.target.value)}
-        />
-
-        <div className="flex space-x-4">
-          <button
-            onClick={() => router.back()}
-            className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-          >
-            Скасувати
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-            className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-          >
-            Продовжити
-          </button>
-        </div>
-      </div>
-
+          </div>
 
           {/* Выпадающее меню */}
           <select
@@ -309,6 +263,7 @@ export default function BookingPage() {
           </div>
         </div>
 
+        {/* Выпадающее меню  */}
         <div className="md:w-1/2 bg-white p-6 rounded-lg shadow">
           <div className="text-center mb-6">
             <p className="text-xl font-bold">
@@ -357,26 +312,18 @@ export default function BookingPage() {
           </div>
 
           <button
-            onClick={() => router.back()}
+            onClick={() => setShowModalCancel(true)}
             className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
             Скасувати бронювання
           </button>
         </div>
-
-
-        <button
-          onClick={() => setShowModalCancel(true)}
-          className="w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-        >
-          Скасувати бронювання
-        </button>
       </div>
 
       {/* Модалка добавления животного */}
       {showModal && (
         <BookingAddPetModal
           isOpen={showModal}
-          onAdd={(pet) => setPets([...pets, pet])}
+          handleAddPet={handleAddPet}
           onClose={() => setShowModal(false)}
         />
       )}
@@ -400,7 +347,6 @@ export default function BookingPage() {
           onClose={() => setShowModalTimeLeft(false)}
         />
       )}
-
     </div>
   );
 }
