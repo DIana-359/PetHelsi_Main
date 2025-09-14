@@ -104,11 +104,10 @@ export default function VeterinarianCard({
             <div className="flex flex-col">
               <span className="font-[400] text-[14px] leading-[100%] tracking-[0] text-center text-gray-600 mb-1">
                 Швидке бронювання
-              </span><span className="text-gray-900">23 Тра о 18:00</span>
-              <div className="font-normal text-[16px] leading-[100%] tracking-[0] align-middle text-gray-900">
-                <span className="text-center">Сьогодні o 18:00</span>
-              </div>
-
+              </span>
+              <span className="font-normal text-[16px] leading-[100%] tracking-[0] align-middle text-gray-900">
+                23 Тра о 18:00
+              </span>
             </div>
           </Link>
         </Button>

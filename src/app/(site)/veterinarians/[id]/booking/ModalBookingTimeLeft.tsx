@@ -2,7 +2,6 @@ import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody,
   ModalFooter,
   Button,
 } from "@heroui/react";
@@ -19,13 +18,13 @@ export function ModalBookingTimeLeft({ isOpen, onClose, setTimeLeft }: Props) {
   const router = useRouter();
 
   const handleSubmit = () => {
-    setTimeLeft({ minutes: 14, seconds: 58});
+    setTimeLeft({ minutes: 14, seconds: 58 });
     onClose();
-  }
+  };
   const handleClose = () => {
     router.back();
     onClose();
-  }
+  };
 
   return (
     <Modal
@@ -34,15 +33,13 @@ export function ModalBookingTimeLeft({ isOpen, onClose, setTimeLeft }: Props) {
       size="md"
       placement="center"
       hideCloseButton={true}
-      className="rounded-[18px] max-h-[95vh] lg:max-h-[80vh] overflow-y-auto"
-    >
+      className="rounded-[18px] max-h-[95vh] lg:max-h-[80vh] overflow-y-auto">
       <ModalContent className="flex flex-col max-h-[95vh] lg:max-h-[80vh] overflow-y-auto outline-none">
         <div className="flex justify-end px-4 sm:px-6 md:px-8 lg:px-10 pt-4 sm:pt-6 pb-2">
           <button
             type="button"
             onClick={onClose}
-            className="w-[24px] h-[24px] flex items-center text-primary-700 hover:text-primary-800 cursor-pointer"
-          >
+            className="w-[24px] h-[24px] flex items-center text-primary-700 hover:text-primary-800 cursor-pointer">
             <Icon
               sprite="/sprites/sprite-sistem.svg"
               id="icon-close"
@@ -56,21 +53,23 @@ export function ModalBookingTimeLeft({ isOpen, onClose, setTimeLeft }: Props) {
           <div className="flex flex-col items-center gap-4">
             <div className="text-2xl font-medium">Час бронювання минув</div>
             <div className="text-base font-medium text-center">
-              15 хвилин на бронювання прийому закінчився.
-              Ви можете повторно записатись до обраного ветеринара
+              15 хвилин на бронювання прийому закінчився. Ви можете повторно
+              записатись до обраного ветеринара
             </div>
           </div>
         </ModalHeader>
 
         <ModalFooter className="flex flex-col gap-2 pt-0 px-6 sm:px-10 md:px-15 pb-6 sm:pb-8">
-          <Button color="primary" onPress={handleSubmit} className="w-full rounded-md">
+          <Button
+            color="primary"
+            onPress={handleSubmit}
+            className="w-full rounded-md">
             Повторно записатись
           </Button>
           <Button
             variant="light"
             onPress={handleClose}
-            className="w-full rounded-md text-[16px] font-[400] leading-[1.4] text-primary-700 bg-background border-[1px] border-primary-700"
-          >
+            className="w-full rounded-md text-[16px] font-[400] leading-[1.4] text-primary-700 bg-background border-[1px] border-primary-700">
             Скасувати
           </Button>
         </ModalFooter>
