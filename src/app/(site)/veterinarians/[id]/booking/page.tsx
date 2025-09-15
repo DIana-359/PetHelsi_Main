@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Stepper from "./stepper";
+// import Stepper from "./stepper";
 import { BookingAddPetModal } from "./BookingAddPetModal";
 import { Pet } from "@/app/types/pet";
 import { ModalBookingSuccess } from "./ModalBookingSuccess";
@@ -225,13 +225,15 @@ export default function BookingPage() {
           {/* Правая колонка - информация */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             {/* Таймер */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-center">
-              <p className="text-xl font-bold text-blue-800 mb-1">
-                {timeLeft.minutes} хв : {timeLeft.seconds.toString().padStart(2, "0")} сек
-              </p>
-              <p className="text-sm text-blue-600">до завершення бронювання</p>
-            </div>
-
+<div 
+  className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2" 
+  style={{ backgroundColor: '#F5F9FE' }}
+>
+  <p className="text-xl font-bold text-gray-800">
+    {timeLeft.minutes} хв : {timeLeft.seconds.toString().padStart(2, "0")} сек
+  </p>
+  <p className="text-sm text-gray-600">до завершення бронювання</p>
+</div>
             {appointmentData && (
               <div className="space-y-4 mb-6">
                 <div className="grid grid-cols-2 gap-4 text-sm">
