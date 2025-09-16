@@ -7,8 +7,14 @@ import Discount from "@/components/Discount";
 import Faq from "@/components/Faq";
 import Veterinarians from "@/components/VeterinariansBlock/Veterinarians";
 import Footer from "@/components/Footer/Footer";
+import { cookies } from "next/headers";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies();
+  const token: true | undefined = cookieStore.get("auth-token")
+    ? true
+    : undefined;
+
   return (
     <div>
       <div className="w-full flex flex-col">
@@ -32,7 +38,7 @@ export default function Home() {
         <HeroImage />
         <Features />
         <Appointment />
-        <Veterinarians />
+        <Veterinarians token={token} />
         <Discount />
         <Faq />
       </div>
