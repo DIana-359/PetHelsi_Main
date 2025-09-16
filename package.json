@@ -32,6 +32,7 @@
     "libphonenumber-js": "^1.12.9",
     "lightningcss": "^1.29.3",
     "next": "15.3.0",
+    "next-auth": "^4.24.11",
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-day-picker": "^9.7.0",

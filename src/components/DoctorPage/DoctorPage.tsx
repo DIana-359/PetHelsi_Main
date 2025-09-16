@@ -75,9 +75,9 @@ export default function DoctorPage({ veterinarian }: Props) {
                 title={
                   <div
                     className={clsx(
-                      "w-[228px] text-center px-3 py-2 text-[18px] font-medium",
+                      "w-[127px] lg:w-[228px] text-center  py-2 text-[18px] font-medium",
                       selected === item.id
-                        ? "text-primary-700 bg-primary-100 rounded-t-md border-b-1 border-primary-700 -mb-[4px]"
+                        ? "text-primary-700 bg-primary-100 rounded-t-md border-b-2 border-primary-700 -mb-[4px]"
                         : "text-gray-500"
                     )}
                   >

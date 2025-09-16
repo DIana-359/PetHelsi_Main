@@ -44,8 +44,51 @@ module.exports = {
           colors: colorPallete,
         },
       },
+      // components: {
+      //   input: {
+      //     variants: {
+      //       bordered: {
+      //         base: "shadow-none",
+      //         inputWrapper: "border-primary-300 hover:border-primary focus-within:border-primary shadow-none",
+      //         input: "shadow-none"
+      //       }
+      //     }
+      //   },
+      //   select: {
+      //     variants: {
+      //       bordered: {
+      //         base: "shadow-none",
+      //         trigger: "border-primary-300 hover:border-primary focus:border-primary shadow-none",
+      //         value: "shadow-none",
+      //       }
+      //     },
+      //     listbox: {
+      //       base: "",
+      //       list: "",
+      //       emptyContent: "",
+      //       item: {
+      //         base: `
+      //       data-[selected=true]:bg-primary-100
+      //       data-[selected=true]:text-primary-600
+      //       hover:bg-primary-50
+      //       hover:text-primary-700
+      //       transition-colors duration-200
+      //     `,
+      //     selectedIcon: "text-primary-900",
+      //       }
+      //     }
+      //   },
+      //   button: {
+      //     variants: {
+      //       bordered: {
+      //         base: "shadow-none"
+      //       }
+      //     }
+      //   }
+      // }
     }),
     scrollbar(),
   ],
 };
 
+// text-[14px] font-[400] leading-[1.4] text-gray-700 text-center 2xl:text-left
