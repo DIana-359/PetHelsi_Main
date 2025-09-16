@@ -62,6 +62,7 @@ export default async function ownerVeterinarians({
           <VeterinariansListPage
             veterinarians={data.content as Vet[]}
             owner={true}
+            token={true}
           />
 
           {data.content.length > 0 && (
