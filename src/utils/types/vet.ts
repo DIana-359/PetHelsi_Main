@@ -6,4 +6,5 @@ export type Vet = {
   experience: number;
   rating: number;
   rate: number;
+  price: number;
 };

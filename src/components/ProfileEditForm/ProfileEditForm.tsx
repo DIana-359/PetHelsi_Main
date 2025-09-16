@@ -10,8 +10,12 @@ import { useEffect, useRef, useState } from "react";
 import AvatarUser from "../ProfileOwner/AvatarUser";
 import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
+<<<<<<< HEAD
+import { Image } from "@heroui/react";
+=======
 import { useAuth } from "@/contextAuth/authContext";
 import { Pulse } from "../Pulse";
+>>>>>>> origin/main
 
 export default function ProfileEditForm() {
   const router = useRouter();
@@ -107,7 +111,8 @@ export default function ProfileEditForm() {
             color="primary"
             type="button"
             className="w-full md:w-[280px] text-[14px] md:text-[16px] font-[400] leading-[1.4] text-white"
-            onPress={handlecloseModal}>
+            onPress={handlecloseModal}
+          >
             Готово
           </Button>
         </>
@@ -126,7 +131,8 @@ export default function ProfileEditForm() {
               color="primary"
               type="button"
               className="w-full md:w-[280px] text-[14px] md:text-[16px] font-[400] leading-[1.4] text-white"
-              onPress={handlecloseModal}>
+              onPress={handlecloseModal}
+            >
               Закрити
             </Button>
           </>
@@ -158,17 +164,20 @@ export default function ProfileEditForm() {
             className="hidden"
           />
           {image ? (
-            <img
+            <Image
               src={image}
               alt="photo user"
-              className="w-[128px] h-[128px] mb-[8px] rounded-full object-cover"
+              width={128}
+              height={128}
+              className="mb-[8px] rounded-full object-cover"
             />
           ) : (
             <AvatarUser avatar={image} firstLetter={firstName} size={128} />
           )}
           <button
             className="p-[8px] flex items-center gap-[8px] group"
-            onClick={() => fileInputRef.current?.click()}>
+            onClick={() => fileInputRef.current?.click()}
+          >
             <Icon
               sprite="/sprites/sprite-sistem.svg"
               id="icon-refresh_2_light"
@@ -184,17 +193,23 @@ export default function ProfileEditForm() {
 
         <Form
           className="w-full max-w-[304px] flex flex-col gap-[16px] bg-background"
+<<<<<<< HEAD
+          onSubmit={handleDateForm}
+        >
+=======
           onSubmit={handleUpdateForm}>
+>>>>>>> origin/main
           <div className="w-full">
             <label
               htmlFor="lastName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               Прізвище*
             </label>
 
             <Input
               value={lastName ?? ""}
-              onChange={e => setLastName(e.target.value)}
+              onChange={(e) => setLastName(e.target.value)}
               isRequired
               name="lastName"
               placeholder="Введіть прізвище"
@@ -212,13 +227,14 @@ export default function ProfileEditForm() {
           <div className="w-full">
             <label
               htmlFor="firstName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               Ім’я*
             </label>
 
             <Input
               value={firstName ?? ""}
-              onChange={e => setFirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.target.value)}
               isRequired
               name="firstName"
               placeholder="Введіть ім’я"
@@ -236,12 +252,13 @@ export default function ProfileEditForm() {
           <div className="w-full">
             <label
               htmlFor="middleName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               По-батькові
             </label>
             <Input
               value={middleName ?? ""}
-              onChange={e => setMiddleName(e.target.value)}
+              onChange={(e) => setMiddleName(e.target.value)}
               name="middleName"
               placeholder="Введіть по батькові"
               type="text"
@@ -258,7 +275,8 @@ export default function ProfileEditForm() {
           <div className="w-full relative">
             <label
               htmlFor="birthday"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               Дата народження
             </label>
             <input
@@ -266,18 +284,20 @@ export default function ProfileEditForm() {
               placeholder="ДД/ММ/РРРР"
               value={selected ? selected.toLocaleDateString() : birthday ?? ""}
               readOnly
-              onChange={e => setBirthday(e.target.value)}
+              onChange={(e) => setBirthday(e.target.value)}
               onClick={() => setIsOpen(!isOpen)}
               className="w-full border-[1px] border-primary-300 rounded-[12px] px-2 py-[13px] focus:outline-none focus:border-primary-500 text-[16px] font-[500] leading-[1.4] text-gray-950"
             />
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="absolute right-2 bottom-[13px] cursor-pointer">
+              className="absolute right-2 bottom-[13px] cursor-pointer"
+            >
               <svg
                 width="24"
                 height="24"
-                className="stroke-primary-700 fill-background hover:stroke-primary-900 transition-colors duration-300 pointer-events-none">
+                className="stroke-primary-700 fill-background hover:stroke-primary-900 transition-colors duration-300 pointer-events-none"
+              >
                 <use href="/sprites/sprite-sistem.svg#icon-calendar" />
               </svg>
             </button>
@@ -289,7 +309,7 @@ export default function ProfileEditForm() {
                   ISOWeek
                   locale={uk}
                   selected={selected}
-                  onSelect={date => {
+                  onSelect={(date) => {
                     setSelected(date);
                     setIsOpen(false);
                   }}
@@ -318,7 +338,8 @@ export default function ProfileEditForm() {
           <div className="w-full">
             <label
               htmlFor="phone"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               Телефон*
             </label>
             <Input
@@ -339,7 +360,7 @@ export default function ProfileEditForm() {
                   "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
                 errorMessage: "text-[12px] font-[400] text-red-500",
               }}
-              validate={isValid => {
+              validate={(isValid) => {
                 if (!isValid) {
                   return "Введіть номер телефону у форматі +380 (XX) XXX-XX-XX";
                 }
@@ -350,7 +371,8 @@ export default function ProfileEditForm() {
           <div className="w-full">
             <label
               htmlFor="email"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               E-mail*
             </label>
             <Input
@@ -373,12 +395,13 @@ export default function ProfileEditForm() {
           <div className="w-full">
             <label
               htmlFor="city"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]"
+            >
               Місце проживання
             </label>
             <Input
               value={city ?? ""}
-              onChange={e => setCity(e.target.value)}
+              onChange={(e) => setCity(e.target.value)}
               isRequired
               name="city"
               placeholder="Введіть назву населенного пункту"
@@ -396,14 +419,16 @@ export default function ProfileEditForm() {
           <div className="flex items-center gap-[16px] mt-[16px]">
             <Button
               type="submit"
-              className="w-full text-background bg-primary-700">
+              className="w-full text-background bg-primary-700"
+            >
               Зберегти зміни
             </Button>
 
             <Button
               type="button"
               onPress={handleCancelUpdateProfile}
-              className="w-full text-primary-700 bg-background border-[1px] border-primary-700">
+              className="w-full text-primary-700 bg-background border-[1px] border-primary-700"
+            >
               Скасувати
             </Button>
           </div>

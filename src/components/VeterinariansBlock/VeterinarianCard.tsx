@@ -81,8 +81,10 @@ export default function VeterinarianCard({
           <span className="text-gray-900">{veterinarian.rating}</span>
           <span className="text-gray-600">(0 відгуки)</span>
         </div>
-        <VeterinarianPrice price={veterinarian.rate} />
-        <VeterinariansButtons token={token} id={veterinarian.id} size={size} />
+        <div>
+          <VeterinarianPrice price={veterinarian.price} />
+        </div>
+        <VeterinariansButtons id={veterinarian.id} size={size} token={token} />
       </CardBody>
     </Card>
   );
