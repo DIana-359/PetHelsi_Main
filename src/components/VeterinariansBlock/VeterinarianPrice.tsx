@@ -12,8 +12,8 @@ export default function VeterinarianPrice({ price }: VeterinarianPriceProps) {
   if (!showRate) return null;
 
   return (
-    <span className="font-medium text-[18px] leading-[100%] tracking-[0] text-left align-middle text-gray-900 mb-3">
+    <div className="font-[500] text-[18px] leading-[100%] tracking-[0] text-left align-middle text-gray-900 mb-[12px]">
       {price} UAH
-    </span>
+    </div>
   );
 }
