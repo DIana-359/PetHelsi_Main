@@ -4,7 +4,11 @@ import { Vet } from "@/utils/types/vet";
 import VetCardHomePage from "./VetCardHomePage";
 import { useEffect, useState } from "react";
 
-export default function VeterinariansList() {
+interface IVeterinariansListProps {
+  token?: true;
+}
+
+export default function VeterinariansList({ token }: IVeterinariansListProps) {
   const [data, setData] = useState<Vet[]>([]);
 
   useEffect(() => {
@@ -20,12 +24,10 @@ export default function VeterinariansList() {
   }, []);
 
   return (
-    <div
-      id="veterinariansList"
-      className="flex gap-[13px] lg:gap-6">
+    <div id="veterinariansList" className="flex gap-[13px] lg:gap-6">
       {data.map((veterinarian: Vet) => (
         <div key={veterinarian.id} className="w-[272px] lg:w-[344px]">
-          <VetCardHomePage veterinarian={veterinarian} />
+          <VetCardHomePage veterinarian={veterinarian} token={token} />
         </div>
       ))}
     </div>
