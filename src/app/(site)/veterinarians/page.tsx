@@ -5,7 +5,7 @@ import { Vet } from "@/utils/types/vet";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
-
+import { cookies } from "next/headers";
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
 }
@@ -16,6 +16,10 @@ export default async function VeterinariansPage({
   const params = (await searchParams) as Record<string, string>;
   const page = parseInt(params?.page || "1");
   const sort = (await params?.sort) || "rating,desc";
+  const cookieStore = await cookies();
+  const token: true | undefined = cookieStore.get("auth-token")
+    ? true
+    : undefined;
 
   const petType =
     typeof params?.petTypeName === "string" ? params.petTypeName : "";
@@ -23,12 +27,11 @@ export default async function VeterinariansPage({
     typeof params?.issueTypeName === "string" ? params.issueTypeName : "";
   const date = typeof params?.date === "string" ? params.date : "";
 
-
   try {
     const res = await fetch(
       `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${
         page - 1
-      }&size=4&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
+      }&size=12&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
       { next: { revalidate: 0 } }
     );
 
@@ -63,15 +66,20 @@ export default async function VeterinariansPage({
 
           {data.content.length === 0 && <NotFoundVet dateStr={date} />}
 
-          <VeterinariansListPage veterinarians={data.content as Vet[]} />
+          <VeterinariansListPage
+            veterinarians={data.content as Vet[]}
+            token={token}
+          />
 
           {data.content.length > 0 && (
             <div className="flex items-center justify-between">
-              <p className="text-gray-700">{`Сторінка ${page} з ${data.totalPages}`}</p>
-              <VeterinariansPagination page={page} total={data.totalPages} />
+              <p className="text-gray-700">{`Сторінка ${page} з ${data.page.totalPages}`}</p>
+              <VeterinariansPagination
+                page={page}
+                total={data.page.totalPages}
+              />
             </div>
           )}
-
         </div>
       </div>
     );
