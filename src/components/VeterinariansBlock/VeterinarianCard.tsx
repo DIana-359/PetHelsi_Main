@@ -34,7 +34,7 @@ export default function VeterinarianCard({
 
   const experienceStyles = {
     small: "text-sm font-normal leading-[140%] mb-[12px]",
-    large: "text-base font-normal leading-[140%] mb-4",
+    large: "text-base font-normal leading-[140%] mb-2",
     base: "text-base font-normal leading-[100%] mb-2",
   };
 
@@ -55,7 +55,7 @@ export default function VeterinarianCard({
       <CardBody className={`${paddingsBody[size]}`}>
         {hasAvatar && (
           <Link href={`/veterinarians/${veterinarian.id}`}>
-            <Avatar className="w-26 h-26 mb-4" radius="full" src={vet.src} />
+            <Avatar className="w-26 h-26 mb-2" radius="full" src={vet.src} />
           </Link>
         )}
         <Link href={`/veterinarians/${veterinarian.id}`}>
@@ -70,7 +70,8 @@ export default function VeterinarianCard({
             {veterinarian.experience} {getYearWord(veterinarian.experience)}
           </span>
         </p>
-        <div className={`flex gap-1 items-center ${reviewsStyles[size]} mb-6`}>
+        <div
+          className={`flex gap-1 items-center ${reviewsStyles[size]} mb-[12px]`}>
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-star_fill"
@@ -82,7 +83,7 @@ export default function VeterinarianCard({
           <span className="text-gray-600">(0 відгуки)</span>
         </div>
         <div>
-          <VeterinarianPrice price={veterinarian.price} />
+          <VeterinarianPrice price={veterinarian.rate} />
         </div>
         <VeterinariansButtons id={veterinarian.id} size={size} token={token} />
       </CardBody>
