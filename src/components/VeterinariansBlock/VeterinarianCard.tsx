@@ -74,7 +74,9 @@ export default function VeterinarianCard({
         </Link>
         <p className={`${experienceStyles[size]}`}>
           <span className="text-gray-600">Стаж: </span>
-          <span className="text-gray-800">{veterinarian.experience} {getYearWord(veterinarian.experience)}</span>
+          <span className="text-gray-800">
+            {veterinarian.experience} {getYearWord(veterinarian.experience)}
+          </span>
         </p>
         <div className={`flex gap-1 items-center ${reviewsStyles[size]} mb-6`}>
           <Icon
@@ -90,17 +92,21 @@ export default function VeterinarianCard({
         </div>
 
         <Button
-          className={`flex border rounded-lg border-primary-700 bg-primary-100 w-full mb-2 h-[55px] ${buttonMoreStyles[size]}`}
+          className={`flex border rounded-lg  py-2 border-primary-700 bg-primary-100 w-full mb-2 h-[55px] ${buttonMoreStyles[size]}`}
           variant="bordered"
           style={{ height: "55px" }}
         >
-          <Link href={`/veterinarians`} className="w-full">
+          <Link
+            href={`/veterinarians/${veterinarian.id}/booking`}
+            className="w-full"
+          >
             <div className="flex flex-col">
-              <span className="text-gray-800">Швидке бронювання:</span>
-              <div className="flex justify-between text-primary-700">
-                <span>Сьогодні o 18:00</span>
-                <span>300 UAH</span>
-              </div>
+              <span className="font-[400] text-[14px] leading-[100%] tracking-[0] text-center text-gray-600 mb-1">
+                Швидке бронювання
+              </span>
+              <span className="font-normal text-[16px] leading-[100%] tracking-[0] align-middle text-gray-900">
+                23 Тра о 18:00
+              </span>
             </div>
           </Link>
         </Button>
