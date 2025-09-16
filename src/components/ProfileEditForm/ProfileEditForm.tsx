@@ -10,12 +10,9 @@ import { useEffect, useRef, useState } from "react";
 import AvatarUser from "../ProfileOwner/AvatarUser";
 import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
-<<<<<<< HEAD
 import { Image } from "@heroui/react";
-=======
 import { useAuth } from "@/contextAuth/authContext";
 import { Pulse } from "../Pulse";
->>>>>>> origin/main
 
 export default function ProfileEditForm() {
   const router = useRouter();
@@ -193,12 +190,8 @@ export default function ProfileEditForm() {
 
         <Form
           className="w-full max-w-[304px] flex flex-col gap-[16px] bg-background"
-<<<<<<< HEAD
-          onSubmit={handleDateForm}
+          onSubmit={handleUpdateForm}
         >
-=======
-          onSubmit={handleUpdateForm}>
->>>>>>> origin/main
           <div className="w-full">
             <label
               htmlFor="lastName"
