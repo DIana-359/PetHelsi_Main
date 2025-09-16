@@ -1,10 +1,12 @@
-import OwnerNav from '@/components/Dashboard/OwnerNav'
-import { cookies } from 'next/headers';
-import AuthGuard from './AuthGuard'
+import OwnerNav from "@/components/Dashboard/OwnerNav";
+import AuthGuard from "./AuthGuard";
 // import MobDashboardModal from '@/components/MobDashboardModal/MobDashboardModal';
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  console.log('cookies type:', typeof cookies());
+export default function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <AuthGuard>
       <div className="min-h-[calc(100vh-276px)]">

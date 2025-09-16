@@ -1,4 +1,3 @@
-import { AuthProvider } from "../contextAuth/authContext";
 import { SistemProvider } from "../contextSistem/contextSistem";
 import ModalWindow from "@/components/ModalWindow";
 import "./globals.css";
@@ -10,7 +9,7 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -19,10 +18,8 @@ export default function RootLayout({
     <html lang="uk" suppressHydrationWarning>
       <body id="root" className="font-lato">
         <SistemProvider>
-          <AuthProvider>
-            <ModalWindow />
-            {children}
-          </AuthProvider>
+          <ModalWindow />
+          {children}
         </SistemProvider>
       </body>
     </html>

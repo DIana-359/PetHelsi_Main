@@ -63,6 +63,7 @@ const AboutTab = ({ veterinarian }: Props) => {
         <h3 className="text-[18px] font-semibold mb-4">
           Тварини, з якими працюю:
         </h3>
+<<<<<<< HEAD
         <div className="flex  flex-row lg:justify-between lg:gap-12">
           <ul className="flex flex-wrap gap-2 lg:columns-2 lg:gap-2 mb-8 space-y-2">
             {veterinarian.petTypes?.map((type) => (
@@ -76,6 +77,18 @@ const AboutTab = ({ veterinarian }: Props) => {
                   width="20px"
                   height="20px"
                   className="stroke-primary stroke-1 scale-x-[-1] lg:w-[24px] lg:h-[24px]"
+=======
+        <div className="flex flex-row justify-between gap-12">
+          <ul className="columns-2 gap-6 mb-8 space-y-2">
+            {veterinarian.petTypes?.map((type) => (
+              <li key={type} className="flex items-center gap-2 w-[248px]">
+                <Icon
+                  sprite="/sprites/sprite-animals.svg"
+                  id={petTypeIcons[type] || "icon-dog"}
+                  width="24px"
+                  height="24px"
+                  className="stroke-primary stroke-1 scale-x-[-1]"
+>>>>>>> origin/main
                 />
                 <p>{petTypePlural[type] || type}</p>
               </li>
@@ -87,6 +100,7 @@ const AboutTab = ({ veterinarian }: Props) => {
           <h4 className="text-[18px] font-semibold mb-4">
             Які проблеми лікую:
           </h4>
+<<<<<<< HEAD
           <ul className="flex flex-wrap gap-2 lg:gap-4 mb-8">
             {veterinarian.issueTypes?.map((issue) => (
               <li
@@ -99,6 +113,17 @@ const AboutTab = ({ veterinarian }: Props) => {
                   width="20px"
                   height="20px"
                   className="stroke-primary stroke-1 scale-x-[-1] lg:w-[24px] lg:h-[24px]"
+=======
+          <ul className="flex flex-wrap gap-4 mb-8">
+            {veterinarian.issueTypes?.map((issue) => (
+              <li key={issue} className="flex items-center gap-2 w-[248px]">
+                <Icon
+                  sprite="/sprites/sprite-problems.svg"
+                  id={issueTypeIcons[issue] || "icon-bones"}
+                  width="24px"
+                  height="24px"
+                  className="stroke-primary stroke-1 scale-x-[-1]"
+>>>>>>> origin/main
                 />
                 <p>{issue}</p>
               </li>

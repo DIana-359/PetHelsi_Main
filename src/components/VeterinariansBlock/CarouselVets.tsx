@@ -5,7 +5,11 @@ import VeterinariansList from "./VeterinariansList";
 import { Button } from "@heroui/react";
 import Icon from "../Icon";
 
-export default function CarouselVets() {
+interface ICarouselVetsProps {
+  token?: true;
+}
+
+export default function CarouselVets({ token }: ICarouselVetsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -57,9 +61,8 @@ export default function CarouselVets() {
     <div id="carouselVets" className="">
       <div
         ref={containerRef}
-        className="overflow-x-auto scroll-smooth scrollbar-hide mb-6 -mr-4 md:-mr-8 xl:-mr-16"
-      >
-        <VeterinariansList />
+        className="overflow-x-auto scroll-smooth scrollbar-hide mb-6 -mr-4 md:-mr-8 xl:-mr-16">
+        <VeterinariansList token={token} />
       </div>
 
       <div className="hidden md:flex justify-end gap-[15px]">
@@ -69,8 +72,7 @@ export default function CarouselVets() {
           onPress={() => scroll("left")}
           className={`rounded-[100px] border-1 ${
             canScrollLeft ? "border-primary-700" : "border-gray-200"
-          }`}
-        >
+          }`}>
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-arrow_left-fill"
@@ -88,8 +90,7 @@ export default function CarouselVets() {
           onPress={() => scroll("right")}
           className={`rounded-[100px] border-1 ${
             canScrollRight ? "border-primary-700" : "border-gray-200"
-          }`}
-        >
+          }`}>
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-arrow_right_light"

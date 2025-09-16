@@ -34,9 +34,6 @@ module.exports = {
         sizeUp: "sizeUp 0.8s ease-out",
       },
       colors: colorPallete,
-      // spacing: {
-      //   pxClamp: "clamp(16px, 5vw, 72px)",
-      // },
     },
   },
   darkMode: "class",
