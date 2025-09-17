@@ -9,7 +9,7 @@ import { ModalBookingSuccess } from "./ModalBookingSuccess";
 import { ModalBookingCancel } from "./ModalBookingCancel";
 import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
-import { Vet, AppointmentSlot, AppointmentData } from '@/utils/types/booking';
+import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -21,10 +21,11 @@ export default function BookingPage() {
   const [selectedIssue, setSelectedIssue] = useState("Що турбує тварину?");
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [timeLeft, setTimeLeft] = useState({ minutes: 14, seconds: 58 });
-  const [appointmentData, setAppointmentData] = useState<AppointmentData | null>(null);
+  const [appointmentData, setAppointmentData] =
+    useState<AppointmentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  console.log(error, setSelectedIssue);
   const [showModal, setShowModal] = useState(false);
   const [showModalSuccess, setShowModalSuccess] = useState(false);
   const [showModalCancel, setShowModalCancel] = useState(false);
@@ -123,7 +124,8 @@ export default function BookingPage() {
       alert("Оберіть хоча б одну тварину");
       return;
     }
-    const reason = selectedIssue !== "Що турбує тварину?" ? selectedIssue : additionalInfo;
+    const reason =
+      selectedIssue !== "Що турбує тварину?" ? selectedIssue : additionalInfo;
     setAppointmentData(prev => (prev ? { ...prev, reason } : prev));
 
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -139,30 +141,38 @@ export default function BookingPage() {
         month: "long",
         year: "numeric",
       }),
-      time: date.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      }).replace(':', '.') + " (GMT+02:00)",
+      time:
+        date
+          .toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })
+          .replace(":", ".") + " (GMT+02:00)",
     };
   };
 
-  const formatDoctorName = (surname: string, name: string, patronymic: string) => {
+  const formatDoctorName = (
+    surname: string,
+    name: string,
+    patronymic: string
+  ) => {
     return `${surname} ${name.charAt(0)}. ${patronymic.charAt(0)}.`;
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Pulse />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Pulse />
+      </div>
+    );
 
   return (
     <div className="flex gap-0">
       <div className="hidden md:block">
         <OwnerNav />
       </div>
-      
+
       <div className="flex flex-col w-full p-6">
         <div className="text-gray-500 pt-5">
           <Breadcrumbs
@@ -176,13 +186,19 @@ export default function BookingPage() {
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
           {/* Левая колонка - форма */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Бронювання запису</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">
+              Бронювання запису
+            </h1>
 
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Оберіть або додайте тварину</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Оберіть або додайте тварину
+              </h2>
               <div className="flex flex-wrap gap-2 mb-4">
                 {pets.map(pet => (
-                  <label key={pet.id} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
+                  <label
+                    key={pet.id}
+                    className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
                     <input
                       type="checkbox"
                       checked={pet.checked}
@@ -194,8 +210,7 @@ export default function BookingPage() {
                 ))}
                 <button
                   onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-700"
-                >
+                  className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-700">
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
@@ -203,7 +218,9 @@ export default function BookingPage() {
             </div>
 
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Надайте додаткову інформацію (за необхідності)</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Надайте додаткову інформацію (за необхідності)
+              </h2>
               <textarea
                 placeholder="Опишіть більш детальніше, що саме турбує тварину"
                 className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -216,8 +233,7 @@ export default function BookingPage() {
             <button
               onClick={handleSubmit}
               disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
               Перейти до оплати
             </button>
           </div>
@@ -225,26 +241,32 @@ export default function BookingPage() {
           {/* Правая колонка - информация */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             {/* Таймер */}
-<div 
-  className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2" 
-  style={{ backgroundColor: '#F5F9FE' }}
->
-  <p className="text-xl font-bold text-gray-800">
-    {timeLeft.minutes} хв : {timeLeft.seconds.toString().padStart(2, "0")} сек
-  </p>
-  <p className="text-sm text-gray-600">до завершення бронювання</p>
-</div>
+            <div
+              className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2"
+              style={{ backgroundColor: "#F5F9FE" }}>
+              <p className="text-xl font-bold text-gray-800">
+                {timeLeft.minutes} хв :{" "}
+                {timeLeft.seconds.toString().padStart(2, "0")} сек
+              </p>
+              <p className="text-sm text-gray-600">до завершення бронювання</p>
+            </div>
             {appointmentData && (
               <div className="space-y-4 mb-6">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="font-medium text-gray-700">Тварина:</div>
-                  <div className="text-gray-600">{appointmentData.animalType}</div>
+                  <div className="text-gray-600">
+                    {appointmentData.animalType}
+                  </div>
 
                   <div className="font-medium text-gray-700">Дата:</div>
-                  <div className="text-gray-600">{formatDateTime(appointmentData.slot.dateTime).date}</div>
+                  <div className="text-gray-600">
+                    {formatDateTime(appointmentData.slot.dateTime).date}
+                  </div>
 
                   <div className="font-medium text-gray-700">Час:</div>
-                  <div className="text-gray-600">{formatDateTime(appointmentData.slot.dateTime).time}</div>
+                  <div className="text-gray-600">
+                    {formatDateTime(appointmentData.slot.dateTime).time}
+                  </div>
 
                   <div className="font-medium text-gray-700">Лікар:</div>
                   <div className="text-gray-600">
@@ -255,9 +277,13 @@ export default function BookingPage() {
                     )}
                   </div>
 
-                  <div className="font-medium text-gray-700">Причина звернення:</div>
+                  <div className="font-medium text-gray-700">
+                    Причина звернення:
+                  </div>
                   <div className="text-gray-600">
-                    {selectedIssue !== "Що турбує тварину?" ? selectedIssue : additionalInfo || "—"}
+                    {selectedIssue !== "Що турбує тварину?"
+                      ? selectedIssue
+                      : additionalInfo || "—"}
                   </div>
                 </div>
               </div>
@@ -266,14 +292,15 @@ export default function BookingPage() {
             <div className="border-t border-b border-gray-200 py-4 my-4">
               <div className="flex justify-between items-center">
                 <div className="font-bold text-gray-800">Вартість:</div>
-                <div className="font-bold text-gray-800">{appointmentData?.vet.rate || 0} UAH</div>
+                <div className="font-bold text-gray-800">
+                  {appointmentData?.vet.rate || 0} UAH
+                </div>
               </div>
             </div>
 
             <button
               onClick={() => setShowModalCancel(true)}
-              className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50"
-            >
+              className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50">
               Скасувати бронювання
             </button>
           </div>
