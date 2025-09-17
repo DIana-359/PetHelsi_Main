@@ -1,10 +1,9 @@
-// файл: app/api/proxy/get-profile/route.ts
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-     const cookieStore = await cookies();
-     const token = cookieStore.get("auth-token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token")?.value;
   if (!token) {
     return NextResponse.json({ error: "No auth token" }, { status: 401 });
   }
