@@ -47,7 +47,8 @@ export default function ProfileOwner() {
         <div className="flex flex-col min:flex-row min:justify-start gap-[40px] ">
           <AvatarUser
             avatar={userData?.avatar}
-            firstLetter={userData?.firstName}
+            firstName={userData?.firstName}
+            email={userData?.email}
             size={128}
           />
           <ul className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-x-[24px] gap-y-[16px] w-full">
