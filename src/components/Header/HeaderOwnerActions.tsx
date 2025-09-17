@@ -6,16 +6,8 @@ import { useSistem } from "@/contextSistem/contextSistem";
 import useMedia from "@/utils/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
 import { useAuth } from "@/contextAuth/authContext";
-interface Props {
-  decoded: {
-    exp?: number;
-    iat?: number;
-    sub?: string;
-    avatar?: string;
-  };
-}
 
-export default function HeaderOwnerActions({ decoded }: Props) {
+export default function HeaderOwnerActions() {
   const isMobile = useMedia();
   const router = useRouter();
   const { userData } = useAuth();
@@ -50,8 +42,9 @@ export default function HeaderOwnerActions({ decoded }: Props) {
           onClick={handleOpenDashboard}
           className="flex items-center justify-center hover:stroke-primary">
           <AvatarUser
-            avatar={decoded.avatar}
-            firstLetter={userData?.firstName}
+            avatar={userData?.avatar}
+            firstName={userData?.firstName}
+            email={userData?.email}
             size={32}
           />
         </button>
