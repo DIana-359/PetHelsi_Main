@@ -1,18 +1,15 @@
 import Icon from "../Icon";
 import { NavLink } from "./NavLink";
-import { cookies } from "next/headers";
-import { jwtDecode } from "jwt-decode";
 import HeaderOwnerActions from "./HeaderOwnerActions";
 import Navigation from "./Navigation";
 import BurgerMenue from "./BurgerMenue";
+import { checkToken } from "@/app/api/checkToken";
 
 export default async function ClientHeaderActionsServer() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token")?.value;
+  const token = await checkToken();
 
   if (token) {
-    const decoded = jwtDecode(token);
-    return <HeaderOwnerActions decoded={decoded} />;
+    return <HeaderOwnerActions />;
   }
 
   return (

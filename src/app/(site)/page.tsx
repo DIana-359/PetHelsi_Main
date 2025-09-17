@@ -7,13 +7,10 @@ import Discount from "@/components/Discount";
 import Faq from "@/components/Faq";
 import Veterinarians from "@/components/VeterinariansBlock/Veterinarians";
 import Footer from "@/components/Footer/Footer";
-import { cookies } from "next/headers";
+import { checkToken } from "../api/checkToken";
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const token: true | undefined = cookieStore.get("auth-token")
-    ? true
-    : undefined;
+  const token = await checkToken();
 
   return (
     <div>
@@ -38,7 +35,7 @@ export default async function Home() {
         <HeroImage />
         <Features />
         <Appointment />
-        <Veterinarians token={token} />
+        <Veterinarians token={token ? true : undefined} />
         <Discount />
         <Faq />
       </div>
