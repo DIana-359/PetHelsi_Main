@@ -45,9 +45,9 @@ export default function VeterinarianCard({
   };
 
   const reviewsStyles = {
-    small: "text-sm font-normal leading-[140%]",
-    large: "text-base font-normal leading-[140%]",
-    base: "text-base font-normal leading-[100%]",
+    small: "text-sm font-normal leading-[140%] mb-2",
+    large: "text-base font-normal leading-[140%] mb-3",
+    base: "text-base font-normal leading-[100%] mb-3",
   };
 
   return (
@@ -70,8 +70,7 @@ export default function VeterinarianCard({
             {veterinarian.experience} {getYearWord(veterinarian.experience)}
           </span>
         </p>
-        <div
-          className={`flex gap-1 items-center ${reviewsStyles[size]} mb-[12px]`}>
+        <div className={`flex gap-1 items-center ${reviewsStyles[size]}`}>
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-star_fill"
