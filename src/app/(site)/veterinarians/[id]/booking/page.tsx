@@ -11,7 +11,24 @@ import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Icon from "@/components/Icon"
+
+const petTypeIcons: Record<string, string> = {
+  Собака: "icon-dog",
+  Кіт: "icon-cat", 
+  Птах: "icon-bird",
+  Гризун: "icon-rabbit",
+  Плазун: "icon-turtle",
+  Інше: "icon-other",
+};
+
+const petTypePlural: Record<string, string> = {
+  Собака: "Собаки",
+  Кіт: "Коти",
+  Птах: "Птахи",
+  Гризун: "Гризуни",
+  Плазун: "Плазуни",
+};
 
 export default function BookingPage() {
   const params = useParams();
@@ -30,6 +47,15 @@ export default function BookingPage() {
   const [showModalSuccess, setShowModalSuccess] = useState(false);
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
+  const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
+
+  const togglePetType = (petType: string) => {
+  setSelectedPetTypes(prev => 
+    prev.includes(petType) 
+      ? prev.filter(type => type !== petType)
+      : [...prev, petType]
+  );
+};
 
   useEffect(() => {
     if (!vetId) return;
@@ -97,9 +123,6 @@ export default function BookingPage() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const togglePet = (id: string) => {
-    setPets(pets.map(p => (p.id === id ? { ...p, checked: !p.checked } : p)));
-  };
 
   const handleAddPet = async (pet: Pet) => {
     try {
@@ -159,63 +182,78 @@ export default function BookingPage() {
   ) => {
     return `${surname} ${name.charAt(0)}. ${patronymic.charAt(0)}.`;
   };
-
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Pulse />
       </div>
     );
-
   return (
     <div className="flex gap-0">
       <div className="hidden md:block">
         <OwnerNav />
       </div>
-
-      <div className="flex flex-col w-full p-6">
-        <div className="text-gray-500 pt-5">
-          <Breadcrumbs
-            segments={[
-              { label: "Ветеринари", href: "/veterinarians" },
-              { label: "Бронювання запису" },
-            ]}
-          />
-        </div>
-
+      <div className="text-gray-500 pt-5 md:pt-8">
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
           {/* Левая колонка - форма */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">
               Бронювання запису
             </h1>
-
             <div className="mb-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
                 Оберіть або додайте тварину
               </h2>
               <div className="flex flex-wrap gap-2 mb-4">
-                {pets.map(pet => (
-                  <label
-                    key={pet.id}
-                    className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
-                    <input
-                      type="checkbox"
-                      checked={pet.checked}
-                      onChange={() => togglePet(pet.id!)}
-                      className="w-4 h-4 text-blue-600"
-                    />
-                    <span className="text-gray-700">{pet.name}</span>
-                  </label>
-                ))}
                 <button
                   onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:text-blue-700">
+                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato">
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
+                {appointmentData?.vet.petTypes && appointmentData.vet.petTypes.map((petType, index) => (
+                  <button 
+                    key={`vet-pet-${index}`}
+                    className={`flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato ${
+                      selectedPetTypes.includes(petType) 
+                        ? 'bg-primary text-white border-primary' 
+                        : 'bg-white text-primary border-primary hover:bg-primary-50'
+                    }`}
+                    onClick={() => togglePetType(petType)}
+                  >
+                    <Icon
+                      sprite="/sprites/sprite-animals.svg"
+                      id={petTypeIcons[petType] || "icon-dog"}
+                      width="24" 
+                      height="24"
+                      className={`stroke-1 scale-x-[-1] ${
+                        selectedPetTypes.includes(petType) ? 'stroke-white' : 'stroke-primary'
+                      }`}
+                    />
+                    <span >{petTypePlural[petType] || petType}</span>
+                  </button>
+                ))}
               </div>
             </div>
+
+                {selectedPetTypes.length > 0 && (
+                  <div className="mb-6">
+                    <h2 className="text-lg font-medium text-gray-900 mb-4">
+                      Причина звернення*
+                    </h2>
+                    
+                    <select 
+                      value={selectedIssue}
+                      onChange={(e) => setSelectedIssue(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato"
+                    >
+                      <option value="Що турбує тварину?">Що турбує тварину?</option>
+                      {appointmentData?.vet.issueTypes && appointmentData.vet.issueTypes.map((issue, index) => (
+                        <option key={index} value={issue}>{issue}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
             <div className="mb-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
@@ -223,24 +261,20 @@ export default function BookingPage() {
               </h2>
               <textarea
                 placeholder="Опишіть більш детальніше, що саме турбує тварину"
-                className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg p-3 text-primary-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows={4}
                 value={additionalInfo}
                 onChange={e => setAdditionalInfo(e.target.value)}
               />
             </div>
-
-            <button
-              onClick={handleSubmit}
-              disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
-              Перейти до оплати
-            </button>
+              <button
+                onClick={handleSubmit}
+                disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
+                className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium">
+                Перейти до оплати
+              </button>
           </div>
-
-          {/* Правая колонка - информация */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
-            {/* Таймер */}
             <div
               className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2"
               style={{ backgroundColor: "#F5F9FE" }}>
@@ -277,13 +311,12 @@ export default function BookingPage() {
                     )}
                   </div>
 
-                  <div className="font-medium text-gray-700">
-                    Причина звернення:
-                  </div>
+                  <div className="font-medium text-gray-700">Причина звернення:</div>
                   <div className="text-gray-600">
-                    {selectedIssue !== "Що турбує тварину?"
-                      ? selectedIssue
-                      : additionalInfo || "—"}
+                    {appointmentData?.vet.issueTypes && appointmentData.vet.issueTypes.length > 0 
+                      ? appointmentData.vet.issueTypes.join(" , ")
+                      : "—"
+                  }
                   </div>
                 </div>
               </div>
@@ -300,7 +333,7 @@ export default function BookingPage() {
 
             <button
               onClick={() => setShowModalCancel(true)}
-              className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50">
+              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50">
               Скасувати бронювання
             </button>
           </div>
