@@ -4,6 +4,10 @@ import { NavLink } from "../Header/NavLink";
 import { FormFooter } from "./FormFooter";
 import Icon from "../Icon";
 
+interface IProps {
+  token: true | undefined;
+}
+
 const FOOTER_SERVICE = [
   { name: "Переваги", href: "#" },
   { name: "Як записатися на консультацію?", href: "#" },
@@ -17,7 +21,7 @@ const FOOTER_FORUSER = [
   { name: "Оплата та повернення", href: "#" },
 ];
 
-export default function Footer() {
+export default function Footer({ token }: IProps) {
   return (
     <div className="w-full max-w-[1440px] mx-auto">
       <div className="flex flex-col items-center relative w-full bg-primary-800 px-4 pt-10 md:px-10  rounded-tl-3xl rounded-tr-3xl ">
@@ -25,8 +29,7 @@ export default function Footer() {
           <div className="flex flex-col">
             <Link
               className="flex felx-row items-center gap-[4px] md:gap-[6px] transition-transform duration-300 hover:scale-102"
-              href={"/"}
-            >
+              href={"/"}>
               <Icon
                 sprite="/sprites/sprite-animals.svg"
                 id="icon-head-logo"
@@ -48,8 +51,7 @@ export default function Footer() {
                   <li key={i}>
                     <NavLink
                       href={item.href}
-                      className=" text-[12px] text-white hover:text-primary-400"
-                    >
+                      className=" text-[12px] text-white hover:text-primary-400">
                       {item.name}
                     </NavLink>
                   </li>
@@ -64,8 +66,7 @@ export default function Footer() {
                   <li key={i}>
                     <NavLink
                       href={item.href}
-                      className=" text-[12px] text-white hover:text-primary-400"
-                    >
+                      className=" text-[12px] text-white hover:text-primary-400">
                       {item.name}
                     </NavLink>
                   </li>
@@ -74,7 +75,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <FormFooter />
+          <div className="w-[271px]">{!token && <FormFooter />}</div>
 
           <div className="absolute bottom-14 lg:bottom-6 right-6">
             <div className="relative">
