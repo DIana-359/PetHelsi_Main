@@ -36,11 +36,11 @@ export default async function Home() {
         <Features />
         <Appointment />
         <Veterinarians token={token ? true : undefined} />
-        <Discount />
+        {!token && <Discount />}
         <Faq />
       </div>
       <div className="-mx-4 md:mx-0">
-        <Footer />
+        <Footer token={token ? true : undefined} />
       </div>
     </div>
   );
