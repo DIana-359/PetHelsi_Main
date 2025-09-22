@@ -2,7 +2,7 @@ import { NavItemType } from "./types/ownerTypes";
 
 export const NAV_ITEMS = [
   { name: "Про нас", href: "#features" },
-  { name: "База лікарів", href: "#veterinarians" },
+  { name: "Ветеринари", href: "#veterinarians" },
   { name: "FAQ", href: "#faq" },
 ];
 
