@@ -27,15 +27,15 @@ export default function VeterinarianCard({
   };
 
   const titleStyles = {
-    small: "text-lg font-semibold leading-[140%] text-gray-900 mb-[6px]",
-    large: "text-2xl font-medium leading-[150%] text-gray-900 mb-2",
-    base: "text-xl font-medium leading-[140%] text-gray-900 mb-2",
+    small: "text-[18px] font-semibold leading-[140%] text-gray-900 mb-[6px]",
+    large: "text-[24px] font-medium leading-[150%] text-gray-900 mb-2",
+    base: "text-[24px] font-medium leading-[140%] text-gray-900 mb-2",
   };
 
   const experienceStyles = {
-    small: "text-sm font-normal leading-[140%] mb-[12px]",
-    large: "text-base font-normal leading-[140%] mb-2",
-    base: "text-base font-normal leading-[100%] mb-2",
+    small: "text-[14px] font-normal leading-[140%] mb-[12px]",
+    large: "text-[16px] font-normal leading-[140%] mb-2",
+    base: "text-[16px] font-normal leading-[100%] mb-2",
   };
 
   const iconStyles = {
@@ -45,9 +45,9 @@ export default function VeterinarianCard({
   };
 
   const reviewsStyles = {
-    small: "text-sm font-normal leading-[140%]",
-    large: "text-base font-normal leading-[140%]",
-    base: "text-base font-normal leading-[100%]",
+    small: "text-[14px] font-normal leading-[140%]",
+    large: "text-[16px] font-normal leading-[140%]",
+    base: "text-[16px] font-normal leading-[100%]",
   };
 
   return (
@@ -55,7 +55,11 @@ export default function VeterinarianCard({
       <CardBody className={`${paddingsBody[size]}`}>
         {hasAvatar && (
           <Link href={`/veterinarians/${veterinarian.id}`}>
-            <Avatar className="w-26 h-26 mb-2" radius="full" src={vet.src} />
+            <Avatar
+              className="w-26 h-26 lg:w-32 lg:h-32 mb-2"
+              radius="full"
+              src={vet.src}
+            />
           </Link>
         )}
         <Link href={`/veterinarians/${veterinarian.id}`}>
@@ -71,7 +75,8 @@ export default function VeterinarianCard({
           </span>
         </p>
         <div
-          className={`flex gap-1 items-center ${reviewsStyles[size]} mb-[12px]`}>
+          className={`flex gap-1 items-center ${reviewsStyles[size]} mb-[12px]`}
+        >
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-star_fill"
