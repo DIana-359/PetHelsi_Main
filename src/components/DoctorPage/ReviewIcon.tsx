@@ -3,16 +3,16 @@ import Image from "next/image";
 
 export default function ReviewIcon() {
   return (
-    <div className="relative inline-block w-[86px] h-[63px]">
+    <div className="relative inline-block">
       <Image
         src="/Review.svg"
         alt="review bubble"
         aria-hidden="true"
-        width={86}
+        width={84}
         height={63}
       />
 
-      <div className="absolute inset-0 flex flex-col items-center p-2 gap-2">
+      <div className="absolute inset-0 flex flex-col items-center p-2 gap-2 ">
         <div className="flex gap-1 ">
           {Array.from({ length: 4 }).map((_, i) => (
             <Image
@@ -20,8 +20,9 @@ export default function ReviewIcon() {
               src="/Stars.svg"
               alt="star"
               aria-hidden="true"
-              width={13}
+              width={12}
               height={12}
+              className="lg:w-[13px]"
             />
           ))}
         </div>
