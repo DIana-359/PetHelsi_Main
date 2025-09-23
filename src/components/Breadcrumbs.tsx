@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Icon from './Icon';
+import Link from "next/link";
+import Icon from "./Icon";
 
 type Segment = {
   label: string;
@@ -12,8 +12,8 @@ export default function Breadcrumbs({
   segments?: Segment[];
 }) {
   return (
-    <div className="flex items-center gap-1 mt-8 text-xs font-medium">
-      <Link href={'/'} className="text-gray-500">
+    <div className="flex items-center gap-1  text-xs font-medium">
+      <Link href={"/"} className="text-gray-500">
         Головна
       </Link>
       {segments.map((seg, index) => (
