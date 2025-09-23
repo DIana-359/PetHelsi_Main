@@ -75,12 +75,7 @@ export default function VeterinarianCard({
           </span>
         </p>
 
-        <div
-          className={`flex gap-1 items-center ${reviewsStyles[size]} mb-[12px]`}
-        >
-
         <div className={`flex gap-1 items-center ${reviewsStyles[size]}`}>
-
           <Icon
             sprite="/sprites/sprite-sistem.svg"
             id="icon-star_fill"
