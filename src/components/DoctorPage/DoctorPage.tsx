@@ -42,7 +42,7 @@ export default function DoctorPage({ veterinarian }: Props) {
   const fullName = `${veterinarian.surname} ${veterinarian.name} ${veterinarian.patronymic}`;
 
   return (
-    <div className="grid grid-cols-1 md:pt-8 md:grid-cols-[minmax(0,1fr)_286px] lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-x-8 lg:gap-y-0">
+    <div className="grid grid-cols-1  md:grid-cols-[minmax(0,1fr)_286px] lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-x-8 lg:gap-y-0">
       <div className="min-w-0 lg:col-start-1 lg:row-start-1">
         <Breadcrumbs
           segments={[
