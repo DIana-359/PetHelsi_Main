@@ -27,15 +27,15 @@ export default function VeterinarianCard({
   };
 
   const titleStyles = {
-    small: "text-[18px] font-semibold leading-[140%] text-gray-900 mb-[6px]",
-    large: "text-[24px] font-medium leading-[150%] text-gray-900 mb-2",
-    base: "text-[24px] font-medium leading-[140%] text-gray-900 mb-2",
+    small: "text-lg font-semibold leading-[140%] text-gray-900 mb-[6px]",
+    large: "text-2xl font-medium leading-[150%] text-gray-900 mb-2",
+    base: "text-xl font-medium leading-[140%] text-gray-900 mb-2",
   };
 
   const experienceStyles = {
-    small: "text-[14px] font-normal leading-[140%] mb-[12px]",
-    large: "text-[16px] font-normal leading-[140%] mb-2",
-    base: "text-[16px] font-normal leading-[100%] mb-2",
+    small: "text-sm font-normal leading-[140%] mb-[12px]",
+    large: "text-base font-normal leading-[140%] mb-2",
+    base: "text-base font-normal leading-[100%] mb-2",
   };
 
   const iconStyles = {
@@ -45,9 +45,9 @@ export default function VeterinarianCard({
   };
 
   const reviewsStyles = {
-    small: "text-[14px] font-normal leading-[140%]",
-    large: "text-[16px] font-normal leading-[140%]",
-    base: "text-[16px] font-normal leading-[100%]",
+    small: "text-sm font-normal leading-[140%]",
+    large: "text-base font-normal leading-[140%]",
+    base: "text-base font-normal leading-[100%]",
   };
 
   return (
