@@ -28,9 +28,9 @@ export default function EmptyCalendar({
   return (
     <section
       className={[
-        "grid h-[185px] mb-8",
+        "grid min-h-[185px] p-4  mb-2",
         "rounded-2xl border border-gray-100 bg-white",
-        "text-center lg:h-[371px] lg:w-[465px] lg:mt-[57px] lg:p-[10px] lg:mb-0",
+        "text-center  md:h-auto md:p-4 md:mb-0 lg:h-[371px] md:p-2   lg:p-[10px] lg:mb-0",
         className,
       ].join(" ")}
       aria-label="Empty calendar"
@@ -40,23 +40,35 @@ export default function EmptyCalendar({
           src="/Calendar-empty.svg"
           alt=""
           aria-hidden="true"
-          className="hidden lg:block  lg:mb-8 "
-          width={128}
-          height={128}
+          className="hidden md:block md:mb-2 lg:w-[128px] lg:h-[128px] lg:block  lg:mb-8 "
+          width={80}
+          height={80}
         />
         <div>
-          <h2 className="text-[18px] text-[#333f5d]  font-medium mb-2 lg:text-[24px]">
+          <h2 className="text-[18px]  text-[#333f5d]  font-medium mb-2 lg:text-[24px]">
             {title}
           </h2>
-          <p className="text-[14px] text-[#333f5d] font-normal mb-8 whitespace-pre-line lg:text-[16px]">
-            {description}
+          <p
+            lang="uk"
+            className="text-[14px] text-[#333f5d] font-normal mb-6 whitespace-pre-line  md:mb-4 lg:mb-8 lg:text-[16px]"
+          >
+            <span className="md:hidden">
+              У цього ветеринара немає вільних слотів.
+              <br />
+              Перевірте розклад пізніше або оберіть
+              <br />
+              іншого.
+            </span>
+            <span className="hidden  md:inline whitespace-normal">
+              {description}
+            </span>
           </p>
         </div>
         <button
           type="button"
           onClick={handleClick}
           className={[
-            "inline-flex h-12 w-full items-center justify-center px-6 py-2 lg:w-[216px]",
+            "inline-flex h-12 w-full items-center justify-center px-6 py-2 md:w-[216px] lg:w-[216px]",
             "rounded-lg border border-primary",
             "font-medium text-[16px] text-primary",
             "transition-colors duration-200",
