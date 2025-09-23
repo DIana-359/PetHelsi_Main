@@ -36,7 +36,7 @@ const DocProfile = ({ veterinarian, hasAvatar = true }: Props) => {
               ({veterinarian.reviews_count} відгуки)
             </span>
           </div>
-          <p className="text-base font-normal leading-[140%]">
+          <p className="text-[14px] font-normal leading-[140%]">
             <span className="text-gray-600">Стаж: </span>
             <span className="text-gray-800">
               {veterinarian.experience} {getYearWord(veterinarian.experience)}
