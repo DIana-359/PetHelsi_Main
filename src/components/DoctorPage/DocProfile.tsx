@@ -23,7 +23,7 @@ const DocProfile = ({ veterinarian, hasAvatar = true }: Props) => {
           />
         )}
         <div className="flex flex-col gap-2">
-          <h4 className="text-[14px] lg:text-2xl font-medium leading-[150%] text-gray-900">
+          <h4 className="text-[14px] lg:text-[24px] font-medium leading-[150%] text-gray-900">
             {veterinarian.surname} <br /> {veterinarian.name}{" "}
             {veterinarian.patronymic}
           </h4>
