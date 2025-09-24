@@ -55,7 +55,11 @@ export default function VeterinarianCard({
       <CardBody className={`${paddingsBody[size]}`}>
         {hasAvatar && (
           <Link href={`/veterinarians/${veterinarian.id}`}>
-            <Avatar className="w-26 h-26 mb-2" radius="full" src={vet.src} />
+            <Avatar
+              className="w-26 h-26 lg:w-32 lg:h-32 mb-2"
+              radius="full"
+              src={vet.src}
+            />
           </Link>
         )}
         <Link href={`/veterinarians/${veterinarian.id}`}>
@@ -70,6 +74,7 @@ export default function VeterinarianCard({
             {veterinarian.experience} {getYearWord(veterinarian.experience)}
           </span>
         </p>
+
         <div className={`flex gap-1 items-center ${reviewsStyles[size]}`}>
           <Icon
             sprite="/sprites/sprite-sistem.svg"
