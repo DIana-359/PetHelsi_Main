@@ -2,8 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button, Form, Select, SelectItem, DatePicker } from "@heroui/react";
-import { DateValue } from "@internationalized/date";
-// import { today, DateValue, getLocalTimeZone } from "@internationalized/date";
+import { today, DateValue, getLocalTimeZone } from "@internationalized/date";
 import { optionsAnimals, optionsProblems } from "./Constants";
 import Icon from "../Icon";
 import { checkAuth } from "@/utils/checkAuth";
@@ -19,7 +18,7 @@ export const VeterinarianSearchForm = () => {
   const [formData, setFormData] = React.useState<FormData>({
     petTypeName: "",
     issueTypeName: "",
-    date: null,
+    date: today(getLocalTimeZone()),
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
