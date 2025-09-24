@@ -1,7 +1,6 @@
 import { Veterinarian } from "@/utils/types/veterinarian";
 import Icon from "../Icon";
 import { useState } from "react";
-import DocReviews from "./DocReviews";
 
 type Props = {
   veterinarian: Veterinarian;
@@ -43,15 +42,17 @@ const AboutTab = ({ veterinarian }: Props) => {
   const shortText = fullText.slice(0, 150) + "...";
 
   return (
-    <div className="flex flex-col gap-8 text-gray-900">
+    <div className="flex flex-col gap-8 mb-8 text-gray-900">
       <div>
-        <h3 className="text-[18px] font-semibold mb-4">Про мене</h3>
+        <h3 className="text-[16px]  md:text-[18px] lg:text-[18px] font-semibold mb-4">
+          Про мене
+        </h3>
         <p className="text-gray-900 whitespace-pre-line">
           {showFullText || fullText.length <= 150 ? fullText : shortText}
           {!showFullText && fullText.length > 150 && (
             <button
               onClick={() => setShowFullText(true)}
-              className="text-primary-700 font-medium ml-1"
+              className="text-primary-700  font-medium ml-1"
             >
               читати більше
             </button>
@@ -60,147 +61,53 @@ const AboutTab = ({ veterinarian }: Props) => {
       </div>
 
       <div>
-        <h3 className="text-[18px] font-semibold mb-4">
+        <h3 className="text-[16px] lg:text-[18px] font-semibold mb-4">
           Тварини, з якими працюю:
         </h3>
+        <div className="flex  flex-row md:justify-between lg:justify-between lg:gap-12">
+          <ul className="flex flex-col gap-2 md:justify-between md:columns-2 lg:justify-between lg:columns-2 space-y-2">
+            <ul className="flex flex-wrap gap-2 lg:justify-between md:block md:columns-2 md:[text-decoration-line:none] md:overflow-visible  lg:columns-2  mb-8 space-y-2">
+              {veterinarian.petTypes?.map((type) => (
+                <li
+                  key={type}
+                  className="flex px-2 items-center w-auto h-[32px] text-[14px] border border-[#e2effb] rounded-full gap-2 md:h-auto  md:text-[16px]
+        md:mb-2  md:border-none md:justify-start lg:border-none lg:justify-start lg:text-[16px] w-[248px]"
+                >
+                  <Icon
+                    sprite="/sprites/sprite-animals.svg"
+                    id={petTypeIcons[type] || "icon-dog"}
+                    width="20px"
+                    height="20px"
+                    className="stroke-primary stroke-1 scale-x-[-1] lg:w-[24px] md:h-[24px] lg:h-[24px]"
+                  />
+                  <p>{petTypePlural[type] || type}</p>
+                </li>
+              ))}
+            </ul>
 
-        <div className="flex  flex-row lg:justify-between lg:gap-12">
-          <ul className="flex flex-wrap gap-2 lg:columns-2 lg:gap-2 mb-8 space-y-2">
-            <div className="flex flex-row justify-between gap-12">
-              <ul className="columns-2 gap-6 mb-8 space-y-2">
-                {veterinarian.petTypes?.map((type) => (
-                  <li key={type} className="flex items-center gap-2 w-[248px]">
-                    <Icon
-                      sprite="/sprites/sprite-animals.svg"
-                      id={petTypeIcons[type] || "icon-dog"}
-                      width="24px"
-                      height="24px"
-                      className="stroke-primary stroke-1 scale-x-[-1]"
-                    />
-                    <p>{petTypePlural[type] || type}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="border-b border-gray-100 pb-2">
-              <h4 className="text-[18px] font-semibold mb-4">
-                Які проблеми лікую:
-              </h4>
-              <ul className="flex flex-wrap gap-2 lg:gap-4 mb-8">
-                {veterinarian.issueTypes?.map((issue) => (
-                  <li
-                    key={issue}
-                    className="flex flex w-auto h-[32px] px-2 justify-center items-center  gap-2 border border-[#e2effb] rounded-full lg:border-none lg:justify-start  gap-2 lg:w-[248px]"
-                  >
-                    <Icon
-                      sprite="/sprites/sprite-problems.svg"
-                      id={issueTypeIcons[issue] || "icon-bones"}
-                      width="20px"
-                      height="20px"
-                      className="stroke-primary stroke-1 scale-x-[-1] lg:w-[24px] lg:h-[24px]"
-                    />
-                    <p>{issue}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-animals.svg"
-                id="icon-dog"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Собаки</p>
-            </li>
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-animals.svg"
-                id="icon-cat"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Коти</p>
-            </li>
-          </ul>
-          <ul className="flex flex-col gap-2">
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-animals.svg"
-                id="icon-bird"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Птахи</p>
-            </li>
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-animals.svg"
-                id="icon-rabbit"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Гризуни</p>
-            </li>
+            <h4 className="text-[16px]  md:text-[18px] lg:text-[18px] font-semibold mb-4">
+              Які проблеми лікую:
+            </h4>
+            <ul className="flex flex-wrap gap-2 md:block  md:columns-2 lg:gap-4">
+              {veterinarian.issueTypes?.map((issue) => (
+                <li
+                  key={issue}
+                  className="flex w-auto h-[32px] px-2 justify-center items-center text-[14px] gap-2 border border-[#e2effb] rounded-full md:border-none md:h-auto md:px-0 md:text-[16px] md:mb-2 md:justify-start md:[break-inside:avoid] lg:border-none lg:justify-start lg:text-[16px]"
+                >
+                  <Icon
+                    sprite="/sprites/sprite-problems.svg"
+                    id={issueTypeIcons[issue] || "icon-bones"}
+                    width="20px"
+                    height="20px"
+                    className="stroke-primary stroke-1 scale-x-[-1] lg:w-[24px] lg:h-[24px]"
+                  />
+                  <p>{issue}</p>
+                </li>
+              ))}
+            </ul>
           </ul>
         </div>
       </div>
-
-      <div>
-        <h4 className="text-[18px] font-semibold mb-4">Які проблеми лікую:</h4>
-        <div className="flex flex-row justify-between gap-12 mb-8">
-          <ul className="flex flex-col gap-2">
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-problems.svg"
-                id="icon-insects"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Блохи/кліщі</p>
-            </li>
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-problems.svg"
-                id="icon-eating-disorder"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Харчовий розлад</p>
-            </li>
-          </ul>
-          <ul className="flex flex-col gap-2">
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-problems.svg"
-                id="icon-skin-infection"
-                width="24px"
-                height="24px"
-                className="stroke-primary stroke-1 scale-x-[-1]"
-              />
-              <p>Шкірні/вушні інфекції</p>
-            </li>
-            <li className="flex items-center gap-2 w-[248px]">
-              <Icon
-                sprite="/sprites/sprite-problems.svg"
-                id="icon-bones"
-                width="24px"
-                height="24px"
-                className="stroke-primary"
-              />
-              <p>Травмування частин тіла</p>
-            </li> */}
-          </ul>
-        </div>
-      </div>
-      <DocReviews reviews={veterinarian.reviews} />
     </div>
   );
 };
