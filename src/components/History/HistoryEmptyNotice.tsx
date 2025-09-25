@@ -4,7 +4,7 @@ import { Button } from "@heroui/react";
 
 export default function HistoryEmptyNotice() {
   return (
-    <div className="w-full h-[calc(100vh-162px)] flex items-center justify-center">
+    <div className="w-full h-[calc(100vh-151px)] flex items-center justify-center">
       <div className="min-w-[216px] max-w-[441px] text-center">
         <Icon
           sprite="/sprites/sprite-sistem.svg"
