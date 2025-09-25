@@ -1,7 +1,9 @@
-export default async function ownerCharts() {
+import ChatsNotFound from "@/components/ChatsNotFound/ChatsNotFound";
+
+export default async function ownerChats() {
   return (
     <div>
-      charts
+      <ChatsNotFound />
     </div>
   );
 }
