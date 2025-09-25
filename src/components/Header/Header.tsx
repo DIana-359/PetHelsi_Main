@@ -7,7 +7,7 @@ import MobDashboardModal from "../MobDashboardModal/MobDashboardModal";
 export default async function Header() {
   return (
     <div className="fixed z-50 top-0 w-full border-b border-primary-200 bg-background">
-      <header className="mx-auto flex flex-row max-w-[1440px] items-center justify-between py-6 px-4 md:px-8 xl:px-16">
+      <header className="mx-auto flex flex-row max-w-[1440px] items-center justify-between p-[16px] md:py-[21px] md:px-[72px]">
         <Link
           className="flex felx-row items-center gap-[4px] md:gap-[6px] group transition-transform duration-300 ease-in-out"
           href="/">

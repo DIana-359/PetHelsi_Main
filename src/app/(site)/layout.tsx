@@ -15,7 +15,7 @@ export default async function SiteLayout({
     <AuthProvider user={dataUser}>
       <div id="app-root">
         <Header />
-        <div className="w-full px-4 md:px-8 xl:px-16 max-w-[1440px] mx-auto pt-[96px] pb-0 md:pt-[105px] *:min-h-[calc(100vh-520px)]">
+        <div className="w-full px-4 md:px-8 xl:px-16 max-w-[1440px] mx-auto pt-[68px] pb-0 md:pt-[87px] *:min-h-[calc(100vh-520px)]">
           {children}
         </div>
       </div>
