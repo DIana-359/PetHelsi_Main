@@ -21,7 +21,7 @@ export default function ChatsNotFound() {
         </p>
         <Link
           href="/owner/veterinarians"
-          className="flex items-center gap-2 border rounded-md border-primary-700 py-[16px] px-[24px] hover:bg-primary-200 active:scale-95 text-primary text-[16px] font-[400] leading-[1]transition-transform duration-300 ease-in-out cursor-pointer">
+          className="flex items-center gap-2 border rounded-md border-primary-700 py-[16px] px-[24px] hover:bg-primary-200 active:scale-95 text-primary text-[16px] font-[400] leading-[1] transition-transform duration-300 ease-in-out cursor-pointer">
           Знайти ветеринара
         </Link>
       </div>
