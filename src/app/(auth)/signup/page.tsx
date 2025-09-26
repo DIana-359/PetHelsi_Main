@@ -3,13 +3,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
-import { Tabs, Tab } from "@heroui/tabs";
 import { useRouter } from "next/navigation";
 import { fetchSignup } from "../../../contextAuth/operations";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
+import AuthInput from "@/components/AuthInput/AuthInput";
+import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
+import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 
 type RoleType = "CLIENT" | "VET";
 
@@ -17,17 +19,12 @@ export default function SignUpForm() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<RoleType | "">("");
   const [tabError, setTabError] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const { setIsVetBackground } = useSistem();
-
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{7,255}$/;
 
   const togglePassword = () => setPasswordVisible(!isPasswordVisible);
 
@@ -78,7 +75,6 @@ export default function SignUpForm() {
       xs:pt-[40px] xs:pb-[32px] xs:px-[66px]"
       onSubmit={onSubmit}>
       <GoBack />
-
       <h2 className="text-[22px] xs:text-[28px] 2xl:text-[30px] font-[500] leading-[1.4] 2xl:leading-[1.5] text-gray-900 mx-auto mb-[24px] lg:mb-[32px]">
         Реєстрація в{" "}
         <span className="text-[22px] xs:text-[28px] 2xl:text-[30px] font-[500] leading-[1.4] 2xl:leading-[1.5] text-primary-700 ">
@@ -86,115 +82,44 @@ export default function SignUpForm() {
         </span>
       </h2>
 
-      <div className="relative block mx-auto">
-        <Tabs
-          className="!bg-background !rounded-[18px]"
-          classNames={{
-            tabList: `!flex !items-center !justify-between bg-background border-[1px] ${
-              tabError ? "border border-red-500 rounded-[8px]" : "border-0"
-            }`,
-          }}
-          fullWidth
-          aria-label="Tabs form"
-          selectedKey={selectedRole}
-          onSelectionChange={key => {
-            const role = key as RoleType | "";
-            setSelectedRole(role);
-            setTabError(false);
-            setIsVetBackground(role === "VET");
-          }}>
-          <Tab
-            key="CLIENT"
-            title={
-              <span
-                className={`text-[12px] xs:text-[14px] font-[400] leading-[1.4] ${
-                  selectedRole === "CLIENT"
-                    ? "text-primary-700"
-                    : "text-gray-900"
-                }`}>
-                Я - власник тварини
-              </span>
-            }
-            className={`!bg-background border-[1px] ${
-              selectedRole === "CLIENT"
-                ? "border-primary-700"
-                : "border-transparent"
-            } !opacity-100`}
-          />
+      <AuthRoleTabs
+        selectedRole={selectedRole}
+        setSelectedRole={setSelectedRole}
+        tabError={tabError}
+        setTabError={setTabError}
+        setIsVetBackground={setIsVetBackground}
+      />
 
-          <Tab
-            key="VET"
-            title={
-              <span
-                className={`text-[12px] xs:text-[14px] font-[400] leading-[1.4] ${
-                  selectedRole === "VET" ? "text-primary-700" : "text-gray-900"
-                }`}>
-                Я - ветеринар
-              </span>
-            }
-            className={`!bg-background border-[1px] ${
-              selectedRole === "VET"
-                ? "border-primary-700"
-                : "border-transparent"
-            } !opacity-100`}
-          />
-        </Tabs>
-
-        {tabError && (
-          <div className="text-[12px] text-error-500 t-1 r-0 absolute">
-            Будь ласка, оберіть варіант
-          </div>
-        )}
-      </div>
-
-      <div className="w-full">
-        <label className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-          E-mail*
-        </label>
-        <input
-          required
-          type="email"
-          placeholder="Введіть E-mail"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className={`w-full px-3 py-2 bg-background border-[1px] rounded-[12px] text-[14px] font-[400] 
-            leading-[1.4] text-gray-900 placeholder:text-gray-400 outline-none
-            ${
-              submitted && !emailRegex.test(email)
-                ? "border-error-500"
-                : "border-primary-300"
-            }`}
-        />
-        {submitted && !emailRegex.test(email) && (
-          <p className="text-[12px] font-[400] text-red-500 mt-2">
-            Будь ласка, введіть коректний E-mail
-          </p>
-        )}
-      </div>
-
-      <div className="w-full">
-        <label className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-          Пароль*
-        </label>
-        <div className="relative">
-          <input
-            required
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Введіть пароль"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className={`w-full px-3 py-2 bg-background border-[1px] rounded-[12px] text-[14px] font-[400] 
-              leading-[1.4] text-gray-900 placeholder:text-gray-400 outline-none
-              ${
-                submitted && !passwordRegex.test(password)
-                  ? "border-error-500"
-                  : "border-primary-300"
-              }`}
-          />
+      <AuthInput
+        id="email"
+        label="E-mail*"
+        placeholder="Введіть E-mail"
+        type="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        error={
+          submitted && !emailRegex.test(email)
+            ? "Будь ласка, введіть коректний E-mail"
+            : null
+        }
+      />
+      <AuthInput
+        id="password"
+        label="Пароль*"
+        placeholder="Введіть пароль"
+        type={isPasswordVisible ? "text" : "password"}
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        error={
+          submitted && !passwordRegex.test(password)
+            ? "Пароль має містити не менше 7 символів, одну велику літеру та одну цифру"
+            : null
+        }
+        rightIcon={
           <button
             type="button"
             onClick={togglePassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 border-0 bg-transparent">
+            className="border-0 bg-transparent flex items-center">
             {isPasswordVisible ? (
               <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
             ) : (
@@ -207,38 +132,25 @@ export default function SignUpForm() {
               />
             )}
           </button>
-        </div>
-        {submitted && !passwordRegex.test(password) && (
-          <p className="text-[12px] font-[400] text-red-500 mt-2">
-            Пароль має містити не менше 7 символів, одну велику літеру та одну
-            цифру
-          </p>
-        )}
-      </div>
-
-      <div className="w-full">
-        <label className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-          Повторіть пароль*
-        </label>
-        <div className="relative">
-          <input
-            required
-            type={isPasswordVisible ? "text" : "password"}
-            placeholder="Повторіть пароль"
-            value={repeatPassword}
-            onChange={e => setRepeatPassword(e.target.value)}
-            className={`w-full px-3 py-2 bg-background border-[1px] rounded-[12px] text-[14px] font-[400] 
-              leading-[1.4] text-gray-900 placeholder:text-gray-400 outline-none
-              ${
-                submitted && password !== repeatPassword
-                  ? "border-error-500"
-                  : "border-primary-300"
-              }`}
-          />
+        }
+      />
+      <AuthInput
+        id="repeatPassword"
+        label="Повторіть пароль*"
+        placeholder="Повторіть пароль"
+        type={isPasswordVisible ? "text" : "password"}
+        value={repeatPassword}
+        onChange={e => setRepeatPassword(e.target.value)}
+        error={
+          submitted && password !== repeatPassword
+            ? "Паролі повинні співпадати"
+            : null
+        }
+        rightIcon={
           <button
             type="button"
             onClick={togglePassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 border-0 bg-transparent">
+            className="border-0 bg-transparent flex items-center">
             {isPasswordVisible ? (
               <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
             ) : (
@@ -251,14 +163,8 @@ export default function SignUpForm() {
               />
             )}
           </button>
-        </div>
-        {submitted && password !== repeatPassword && (
-          <p className="text-[12px] font-[400] text-red-500 mt-2">
-            Паролі повинні співпадати
-          </p>
-        )}
-      </div>
-
+        }
+      />
       <div className="w-full">
         <button
           type="submit"
@@ -275,11 +181,9 @@ export default function SignUpForm() {
           </Link>
         </p>
       </div>
-
       <p className="mx-auto text-[14px] font-[400] leading-[1.4] text-gray-900 mb-1">
         або увійти за допомогою
       </p>
-
       <button
         type="button"
         onClick={() => {
