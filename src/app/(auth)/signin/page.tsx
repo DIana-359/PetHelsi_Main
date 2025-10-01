@@ -9,6 +9,8 @@ import Icon from "@/components/Icon";
 // import ForgotPassword from "@/components/ForgotPassword";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
+import AuthInput from "@/components/AuthInput/AuthInput";
+import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 
 export default function SignInFormCooky() {
   const router = useRouter();
@@ -17,8 +19,6 @@ export default function SignInFormCooky() {
   const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isCheckedRemember, setIsCheckedRemember] = useState<boolean>(false);
-
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   useEffect(() => {
     const savedEmail = Cookies.get("rememberedEmail");
@@ -47,10 +47,7 @@ export default function SignInFormCooky() {
     e.preventDefault();
     setSubmitted(true);
 
-    if (
-      !emailRegex.test(email) ||
-      !/^(?=.*[A-Z])(?=.*\d).{7,255}$/.test(password)
-    ) {
+    if (!emailRegex.test(email) || !passwordRegex.test(password)) {
       return;
     }
 
@@ -87,67 +84,37 @@ export default function SignInFormCooky() {
         </span>
       </h2>
 
-      <div className="w-full">
-        <label
-          htmlFor="email"
-          className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-          E-mail*
-        </label>
-        <input
-          required
-          id="email"
-          name="email"
-          placeholder="Введіть E-mail"
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className={`w-full px-[12px] py-[10px] bg-background border-[1px] rounded-[12px] 
-            text-[14px] font-[400] leading-[1.4] text-gray-900 
-            placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 
-            outline-none
-            ${
-              submitted && (!email || !emailRegex.test(email))
-                ? "border-error-500"
-                : "border-primary-300"
-            }`}
-        />
-        {submitted && (!email || !emailRegex.test(email)) && (
-          <p className="text-[12px] font-[400] text-red-500 mt-2">
-            Будь ласка, введіть коректний E-mail
-          </p>
-        )}
-      </div>
+      <AuthInput
+        id="email"
+        label="E-mail*"
+        type="email"
+        value={email}
+        placeholder="Введіть E-mail"
+        onChange={e => setEmail(e.target.value)}
+        error={
+          submitted && (!email || !emailRegex.test(email))
+            ? "Будь ласка, введіть коректний E-mail"
+            : null
+        }
+      />
 
-      <div className="w-full">
-        <label
-          htmlFor="password"
-          className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-          Пароль*
-        </label>
-        <div className="relative">
-          <input
-            required
-            id="password"
-            name="password"
-            placeholder="Введіть пароль"
-            type={isPasswordVisible ? "text" : "password"}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className={`w-full px-[12px] py-[10px] bg-background border-[1px] rounded-[12px] 
-              text-[14px] font-[400] leading-[1.4] text-gray-900 
-              placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 
-              outline-none
-              ${
-                submitted &&
-                (!password || !/^(?=.*[A-Z])(?=.*\d).{7,255}$/.test(password))
-                  ? "border-error-500"
-                  : "border-primary-300"
-              }`}
-          />
+      <AuthInput
+        id="password"
+        label="Пароль*"
+        type={isPasswordVisible ? "text" : "password"}
+        value={password}
+        placeholder="Введіть пароль"
+        onChange={e => setPassword(e.target.value)}
+        error={
+          submitted && (!password || !passwordRegex.test(password))
+            ? "Пароль має містити не менше 7 символів, одну велику літеру та одну цифру"
+            : null
+        }
+        rightIcon={
           <button
             type="button"
             onClick={togglePassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 border-0 bg-transparent">
+            className="border-0 bg-transparent flex items-center">
             {isPasswordVisible ? (
               <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
             ) : (
@@ -160,17 +127,10 @@ export default function SignInFormCooky() {
               />
             )}
           </button>
-        </div>
-        {submitted &&
-          (!password || !/^(?=.*[A-Z])(?=.*\d).{7,255}$/.test(password)) && (
-            <p className="text-[12px] font-[400] text-red-500 mt-2">
-              Пароль має містити не менше 7 символів, одну велику літеру та одну
-              цифру
-            </p>
-          )}
-      </div>
+        }
+      />
 
-      <div className=" w-full min-w-[256px] max-w-[437px] flex items-center justify-between ">
+      <div className=" w-full min-w-[256px] max-w-[437px] flex items-center justify-between">
         <div className="flex items-center gap-[4px]">
           <input
             type="checkbox"
