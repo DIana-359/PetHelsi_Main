@@ -14,10 +14,11 @@ import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 
 type RoleType = "CLIENT" | "VET";
+type RoleTypeWithEmpty = RoleType | null;
 
 export default function SignUpForm() {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<RoleType | "">("");
+  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(null);
   const [tabError, setTabError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +48,7 @@ export default function SignUpForm() {
       email: email.trim(),
       password: password.trim(),
       repeatPassword: repeatPassword.trim(),
-      roleType: selectedRole.trim(),
+      roleType: selectedRole,
     };
 
     const dataToLogin = {
@@ -71,7 +72,7 @@ export default function SignUpForm() {
 
   return (
     <form
-      className="!z-1 p-[16px] min-w-[311px] max-w-[437px] flex flex-col gap-[16px] bg-background rounded-[18px] 
+      className="!z-1 p-[16px] min-w-[311px] w-full max-w-[437px] flex flex-col gap-[16px] bg-background rounded-[18px] 
       xs:pt-[40px] xs:pb-[32px] xs:px-[66px]"
       onSubmit={onSubmit}>
       <GoBack />

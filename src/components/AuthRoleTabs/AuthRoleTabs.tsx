@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { Tabs, Tab } from "@heroui/tabs";
+import clsx from "clsx";
 
 type RoleType = "CLIENT" | "VET";
+type RoleTypeWithEmpty = RoleType | null;
 
 interface RoleTabsProps {
-  selectedRole: RoleType | "";
-  setSelectedRole: (role: RoleType | "") => void;
+  selectedRole: RoleTypeWithEmpty;
+  setSelectedRole: (role: RoleTypeWithEmpty) => void;
   tabError: boolean;
   setTabError: (value: boolean) => void;
   setIsVetBackground?: (value: boolean) => void;
@@ -20,59 +21,38 @@ export default function AuthRoleTabs({
   setTabError,
   setIsVetBackground,
 }: RoleTabsProps) {
-  return (
-    <div className="relative block mx-auto">
-      <Tabs
-        className="!bg-background !rounded-[18px]"
-        classNames={{
-          tabList: `!flex !items-center !justify-between bg-background border-[1px] ${
-            tabError ? "border border-red-500 rounded-[8px]" : "border-0"
-          }`,
-        }}
-        fullWidth
-        aria-label="Tabs form"
-        selectedKey={selectedRole}
-        onSelectionChange={key => {
-          const role = key as RoleType | "";
-          setSelectedRole(role);
-          setTabError(false);
-          if (setIsVetBackground) setIsVetBackground(role === "VET");
-        }}>
-        <Tab
-          key="CLIENT"
-          title={
-            <span
-              className={`text-[12px] xs:text-[14px] font-[400] leading-[1.4] ${
-                selectedRole === "CLIENT" ? "text-primary-700" : "text-gray-900"
-              }`}>
-              Я - власник тварини
-            </span>
-          }
-          className={`!bg-background border-[1px] ${
-            selectedRole === "CLIENT"
-              ? "border-primary-700"
-              : "border-transparent"
-          } !opacity-100`}
-        />
+  const roles: { key: RoleType; label: string }[] = [
+    { key: "CLIENT", label: "Я - власник тварини" },
+    { key: "VET", label: "Я - ветеринар" },
+  ];
 
-        <Tab
-          key="VET"
-          title={
-            <span
-              className={`text-[12px] xs:text-[14px] font-[400] leading-[1.4] ${
-                selectedRole === "VET" ? "text-primary-700" : "text-gray-900"
-              }`}>
-              Я - ветеринар
-            </span>
-          }
-          className={`!bg-background border-[1px] ${
-            selectedRole === "VET" ? "border-primary-700" : "border-transparent"
-          } !opacity-100`}
-        />
-      </Tabs>
+  const handleClick = (role: RoleType) => {
+    setSelectedRole(role);
+    setTabError(false);
+    setIsVetBackground?.(role === "VET");
+  };
+
+  return (
+    <div className="relative ">
+      <div className={"flex justify-between gap-[4px] bg-background"}>
+        {roles.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => handleClick(key)}
+            className={clsx(
+              "flex-1 p-[8px] text-[14px] font-[400] leading-[100%] tracking-[0%]  text-center rounded-[6px] transition-colors cursor-pointer",
+              selectedRole === key
+                ? "border-[1px] border-primary-700 text-primary-700 bg-background"
+                : "border-[1px] border-transparent text-gray-900 bg-background hover:border-primary-700 hover:text-primary-700"
+            )}>
+            {label}
+          </button>
+        ))}
+      </div>
 
       {tabError && (
-        <div className="text-[12px] text-error-500 t-1 r-0 absolute">
+        <div className="text-[12px] text-error-500 mt-[4px] text-center">
           Будь ласка, оберіть варіант
         </div>
       )}

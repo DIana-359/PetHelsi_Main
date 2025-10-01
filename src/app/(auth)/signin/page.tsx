@@ -10,7 +10,7 @@ import Icon from "@/components/Icon";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
-import { emailRegex } from "@/utils/validation/validationAuth";
+import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 
 export default function SignInFormCooky() {
   const router = useRouter();
@@ -47,10 +47,7 @@ export default function SignInFormCooky() {
     e.preventDefault();
     setSubmitted(true);
 
-    if (
-      !emailRegex.test(email) ||
-      !/^(?=.*[A-Z])(?=.*\d).{7,255}$/.test(password)
-    ) {
+    if (!emailRegex.test(email) || !passwordRegex.test(password)) {
       return;
     }
 
@@ -109,8 +106,7 @@ export default function SignInFormCooky() {
         placeholder="Введіть пароль"
         onChange={e => setPassword(e.target.value)}
         error={
-          submitted &&
-          (!password || !/^(?=.*[A-Z])(?=.*\d).{7,255}$/.test(password))
+          submitted && (!password || !passwordRegex.test(password))
             ? "Пароль має містити не менше 7 символів, одну велику літеру та одну цифру"
             : null
         }

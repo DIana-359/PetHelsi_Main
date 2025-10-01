@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import clsx from "clsx";
 interface AuthInputProps {
   id: string;
   label: string;
@@ -38,11 +38,13 @@ export default function AuthInput({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full px-[12px] py-[10px] bg-background border-[1px] rounded-[12px] 
-            text-[14px] font-[400] leading-[1.4] text-gray-900 
-            placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 
-            outline-none
-            ${error ? "border-error-500" : "border-primary-300"}`}
+          className={clsx(
+            "w-full px-[12px] py-[10px] bg-background border-[1px] rounded-[12px]",
+            "text-[14px] font-[400] leading-[1.4] text-gray-900",
+            "placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400",
+            "outline-none",
+            error ? "border-error-500" : "border-primary-300"
+          )}
         />
         {rightIcon && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
