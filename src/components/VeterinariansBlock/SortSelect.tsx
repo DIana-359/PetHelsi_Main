@@ -6,8 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 export const sorts = [
   // { key: "experience,desc", label: "За стажем" },
   { key: "rating,desc", label: "За рейтингом" },
-  { key: "rate,desc", label: "За більшою вартістю" },
-  { key: "rate,asc", label: "За меншою вартістю" },
+  { key: "rate,desc", label: "За вищою вартістю" },
+  { key: "rate,asc", label: "За нижчою вартістю" },
 ];
 
 export default function SortSelect() {

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Veterinarian } from "@/utils/types/veterinarian";
 import StarsRating from "../StarsRating";
@@ -15,10 +17,14 @@ const DocReviews: React.FC<DocReviewsProps> = ({ reviews }) => {
   if (!reviews || reviews.length === 0) {
     return (
       <div>
-        <h3 className="text-[18px] font-semibold mb-8 ">Відгуки</h3>
+        <h3 className="text-[16px] lg:text-[18px] px-4 font-semibold mt-8 mb-8">
+          Відгуки
+        </h3>
         <div className="flex flex-col items-center">
           <ReviewIcon />
-          <p className="text-gray-500 mt-6">У ветеринара ще немає відгуків</p>
+          <p className="text-gray-500 text-[14px] lg:text-[16px] mt-6">
+            У ветеринара ще немає відгуків
+          </p>
         </div>
       </div>
     );
@@ -26,7 +32,9 @@ const DocReviews: React.FC<DocReviewsProps> = ({ reviews }) => {
 
   return (
     <div>
-      <h2 className="text-[18px] font-semibold mb-6">Відгуки</h2>
+      <h2 className="text-[16px] lg:text-[18px] font-semibold mt-8 mb-6">
+        Відгуки
+      </h2>
 
       {reviews.map((review, index) => {
         const fullText = review.comment;

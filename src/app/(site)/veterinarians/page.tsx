@@ -6,6 +6,7 @@ import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
 import { cookies } from "next/headers";
+import Footer from "@/components/Footer/Footer";
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
 }
@@ -49,7 +50,7 @@ export default async function VeterinariansPage({
         <div className="mt-4 mb-8 lg:w-[85%] -m-4  mx-aut sm:max-w-[50%] lg:max-w-full">
           <VeterinarianSearchForm />
         </div>
-        <div>
+        <div className="mb-[40px] lg:mb-[72px]">
           <div className="xs:flex items-center justify-between mb-4">
             <h2 className="text-black text-xl font-medium mb-4 xs:mb-0">
               Ветеринари
@@ -80,6 +81,9 @@ export default async function VeterinariansPage({
               />
             </div>
           )}
+        </div>
+        <div className="-mx-4 md:mx-0">
+          <Footer token={token ? true : undefined} />
         </div>
       </div>
     );
