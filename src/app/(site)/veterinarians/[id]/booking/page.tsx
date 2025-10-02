@@ -11,11 +11,12 @@ import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
-import Icon from "@/components/Icon"
+import Icon from "@/components/Icon";
+import clsx from "clsx";
 
 const petTypeIcons: Record<string, string> = {
   Собака: "icon-dog",
-  Кіт: "icon-cat", 
+  Кіт: "icon-cat",
   Птах: "icon-bird",
   Гризун: "icon-rabbit",
   Плазун: "icon-turtle",
@@ -50,12 +51,12 @@ export default function BookingPage() {
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
 
   const togglePetType = (petType: string) => {
-  setSelectedPetTypes(prev => 
-    prev.includes(petType) 
-      ? prev.filter(type => type !== petType)
-      : [...prev, petType]
-  );
-};
+    setSelectedPetTypes(prev =>
+      prev.includes(petType)
+        ? prev.filter(type => type !== petType)
+        : [...prev, petType]
+    );
+  };
 
   useEffect(() => {
     if (!vetId) return;
@@ -122,7 +123,6 @@ export default function BookingPage() {
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
-
 
   const handleAddPet = async (pet: Pet) => {
     try {
@@ -211,49 +211,54 @@ export default function BookingPage() {
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
-                {appointmentData?.vet.petTypes && appointmentData.vet.petTypes.map((petType, index) => (
-                  <button 
-                    key={`vet-pet-${index}`}
-                    className={`flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato ${
-                      selectedPetTypes.includes(petType) 
-                        ? 'bg-primary text-white border-primary' 
-                        : 'bg-white text-primary border-primary hover:bg-primary-50'
-                    }`}
-                    onClick={() => togglePetType(petType)}
-                  >
-                    <Icon
-                      sprite="/sprites/sprite-animals.svg"
-                      id={petTypeIcons[petType] || "icon-dog"}
-                      width="24" 
-                      height="24"
-                      className={`stroke-1 scale-x-[-1] ${
-                        selectedPetTypes.includes(petType) ? 'stroke-white' : 'stroke-primary'
-                      }`}
-                    />
-                    <span >{petTypePlural[petType] || petType}</span>
-                  </button>
-                ))}
+                {appointmentData?.vet.petTypes &&
+                  appointmentData.vet.petTypes.map((petType, index) => (
+                    <button
+                      key={`vet-pet-${index}`}
+                      className={clsx(
+                        "flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato",
+                        selectedPetTypes.includes(petType)
+                          ? "bg-primary text-white border-primary"
+                          : "bg-white text-primary border-primary hover:bg-primary-50"
+                      )}
+                      onClick={() => togglePetType(petType)}>
+                      <Icon
+                        sprite="/sprites/sprite-animals.svg"
+                        id={petTypeIcons[petType] || "icon-dog"}
+                        width="24"
+                        height="24"
+                        className={`stroke-1 scale-x-[-1] ${
+                          selectedPetTypes.includes(petType)
+                            ? "stroke-white"
+                            : "stroke-primary"
+                        }`}
+                      />
+                      <span>{petTypePlural[petType] || petType}</span>
+                    </button>
+                  ))}
               </div>
             </div>
 
-                {selectedPetTypes.length > 0 && (
-                  <div className="mb-6">
-                    <h2 className="text-lg font-medium text-gray-900 mb-4">
-                      Причина звернення*
-                    </h2>
-                    
-                    <select 
-                      value={selectedIssue}
-                      onChange={(e) => setSelectedIssue(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato"
-                    >
-                      <option value="Що турбує тварину?">Що турбує тварину?</option>
-                      {appointmentData?.vet.issueTypes && appointmentData.vet.issueTypes.map((issue, index) => (
-                        <option key={index} value={issue}>{issue}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+            {selectedPetTypes.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  Причина звернення*
+                </h2>
+
+                <select
+                  value={selectedIssue}
+                  onChange={e => setSelectedIssue(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato">
+                  <option value="Що турбує тварину?">Що турбує тварину?</option>
+                  {appointmentData?.vet.issueTypes &&
+                    appointmentData.vet.issueTypes.map((issue, index) => (
+                      <option key={index} value={issue}>
+                        {issue}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
 
             <div className="mb-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">
@@ -267,12 +272,12 @@ export default function BookingPage() {
                 onChange={e => setAdditionalInfo(e.target.value)}
               />
             </div>
-              <button
-                onClick={handleSubmit}
-                disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-                className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium">
-                Перейти до оплати
-              </button>
+            <button
+              onClick={handleSubmit}
+              disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
+              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium">
+              Перейти до оплати
+            </button>
           </div>
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <div
@@ -311,12 +316,14 @@ export default function BookingPage() {
                     )}
                   </div>
 
-                  <div className="font-medium text-gray-700">Причина звернення:</div>
+                  <div className="font-medium text-gray-700">
+                    Причина звернення:
+                  </div>
                   <div className="text-gray-600">
-                    {appointmentData?.vet.issueTypes && appointmentData.vet.issueTypes.length > 0 
+                    {appointmentData?.vet.issueTypes &&
+                    appointmentData.vet.issueTypes.length > 0
                       ? appointmentData.vet.issueTypes.join(" , ")
-                      : "—"
-                  }
+                      : "—"}
                   </div>
                 </div>
               </div>
