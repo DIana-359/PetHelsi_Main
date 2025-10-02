@@ -13,13 +13,17 @@ type Props = {
 
 const DocProfile = ({ veterinarian, hasAvatar = true }: Props) => {
   return (
-    <Card className=" shadow-none mt-8 mb-8 lg:col-start-1 lg:row-start-1">
+    <Card className=" shadow-none mt-8  mb-8 lg:col-start-1 lg:row-start-1">
       <CardBody className="flex flex-row gap-8 p-0">
         {hasAvatar && (
-          <Avatar className="w-32 h-32" radius="full" src={vetImg.src} />
+          <Avatar
+            className=" w-26 h-26 lg:w-32 lg:h-32"
+            radius="full"
+            src={vetImg.src}
+          />
         )}
         <div className="flex flex-col gap-2">
-          <h4 className="text-2xl font-medium leading-[150%] text-gray-900">
+          <h4 className="text-[14px] lg:text-[24px] font-medium leading-[150%] text-gray-900">
             {veterinarian.surname} <br /> {veterinarian.name}{" "}
             {veterinarian.patronymic}
           </h4>
@@ -36,7 +40,7 @@ const DocProfile = ({ veterinarian, hasAvatar = true }: Props) => {
               ({veterinarian.reviews_count} відгуки)
             </span>
           </div>
-          <p className="text-base font-normal leading-[140%]">
+          <p className="text-[14px] lg:text-[16px] font-normal leading-[140%]">
             <span className="text-gray-600">Стаж: </span>
             <span className="text-gray-800">
               {veterinarian.experience} {getYearWord(veterinarian.experience)}
