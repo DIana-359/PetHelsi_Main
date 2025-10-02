@@ -25,7 +25,7 @@ export default function AvatarUser({
     ? email.trim().charAt(0).toUpperCase()
     : "";
 
-  if (avatar?.startsWith("http")) {
+  if (avatar && avatar.startsWith("http") && !avatar.endsWith("/null")) {
     return (
       <Image
         src={avatar}
