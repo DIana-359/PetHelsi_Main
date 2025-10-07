@@ -9,9 +9,9 @@ export const optionsAnimals = [
 
 export const optionsProblems = [
   {
-    value: "Харчовий розлад",
-    key: "Харчовий розлад",
-    icon: "icon-eating-disorder",
+    value: "Проблеми з травленням",
+    key: "Проблеми з травленням",
+    icon: "icon-digestive-problems",
   },
   {
     value: "Шкірні/вушні інфекції",
@@ -22,11 +22,6 @@ export const optionsProblems = [
     value: "Проблеми з очима",
     key: "Проблеми з очима",
     icon: "icon-eye-problems",
-  },
-  {
-    value: "Проблеми із травленням",
-    key: "Проблеми із травленням",
-    icon: "icon-digestive-problems",
   },
   { value: "Блохи/кліщі", key: "Блохи/кліщі", icon: "icon-insects" },
   {
