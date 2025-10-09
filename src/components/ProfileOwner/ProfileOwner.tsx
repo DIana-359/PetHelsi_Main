@@ -1,12 +1,14 @@
 "use client";
-import Link from "next/link";
-import Icon from "../Icon";
+
 import AvatarUser from "./AvatarUser";
 import { useAuth } from "@/contextAuth/authContext";
 import { Pulse } from "../Pulse";
+import useMedia from "@/utils/media";
+import EditProfileLink from "./EditProfileLink";
 
 export default function ProfileOwner() {
   const { userData } = useAuth();
+  const isMobile = useMedia();
 
   const ownerData = [
     // { label: "avatar", value: data?.avatar ?? "" },
@@ -21,49 +23,44 @@ export default function ProfileOwner() {
   if (!userData) return <Pulse />;
 
   return (
-    <div>
-      <div className="flex items-center justify-between gap-2 mb-[24px]">
+    <div className="py-[8px] md:py-0">
+      <div className="flex items-center justify-between gap-2 mb-[16px] md:mb-[24px]">
         <h3 className="text-[18px] font-[600] leading-[1] text-gray-900">
           Особистий профіль
         </h3>
-
-        <div className="flex items-center gap-[8px] group">
-          <Icon
-            sprite="/sprites/sprite-sistem.svg"
-            id="icon-pen"
-            width="20px"
-            height="20px"
-            className="stroke-gray-700 fill-background group-hover:stroke-primary-900"
-          />
-          <Link href={"/owner/profile/edit-profile"}>
-            <span className="text-[14px] font-[400] leading-[1] text-primary-700 group-hover:text-primary-900">
-              Редагувати
-            </span>
-          </Link>
+        <div className="hidden md:block">
+          <EditProfileLink />
         </div>
       </div>
 
-      <div className="flex flex-col items-center min:items-start">
-        <div className="flex flex-col min:flex-row min:justify-start gap-[40px] ">
+      <div className="flex flex-col items-start gap-[16px] md:flex-row md:gap-[40px]">
+        <div className="w-full md:max-w-[104px] flex items-center justify-between gap-[16px]">
           <AvatarUser
             avatar={userData?.avatar}
             firstName={userData?.firstName}
             email={userData?.email}
-            size={128}
+            size={isMobile ? 88 : 104}
           />
-          <ul className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-x-[24px] gap-y-[16px] w-full">
-            {ownerData.map((item, i) => (
-              <li key={i} className="w-full">
-                <p className="text-[12px] font-[500] leading-[1] text-gray-500 mb-1">
-                  {item.label}
-                </p>
-                <p className="text-[14px] font-[400] leading-[1] text-gray-900">
-                  {item.value}
-                </p>
-              </li>
-            ))}
-          </ul>
+
+          <div className="block md:hidden">
+            <EditProfileLink />
+          </div>
         </div>
+
+        <ul className="flex flex-wrap justify-start gap-x-[24px] gap-y-[16px] pt-[20px] md:pt-0 border-t border-gray-100 md:border-t-0">
+          {ownerData.map((item, i) => (
+            <li
+              key={i}
+              className="w-[250px] max-w-[343px] xs:w-[250px] xs:max-w-[250px]">
+              <p className="text-[12px] font-[500] leading-[1] text-gray-500 mb-[4px]">
+                {item.label}
+              </p>
+              <p className="text-[14px] font-[400] leading-[1] text-gray-900">
+                {item.value}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
