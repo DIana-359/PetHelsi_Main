@@ -3,8 +3,34 @@ export interface Vet {
   surname: string;
   name: string;
   patronymic: string;
-  issueTypes: string[];
+  rating: number;
+  experience: number;
   rate: number;
+  description: string;
+  photoUrl: string;
+  userId: string;
+  userEmail: string;
+  organization: {
+    name: string;
+    city: string;
+  };
+  issueTypes: string[];
+  petTypes: string[];
+  educations: {
+    id: string;
+    institution: string;
+    startYear: string;
+    endYear: string;
+    diplomaUrls: string[];
+  }[];
+  additionals: {
+    id: string;
+    courseName: string;
+    institution: string;
+    startDate: string;
+    endDate: string;
+    certificateUrl: string;
+  }[];
 }
 
 export interface AppointmentSlot {
