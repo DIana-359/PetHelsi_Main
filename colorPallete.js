@@ -18,6 +18,7 @@ export const colorPallete = {
     300: "#B8BDC8",
     350: "#C0CADE",
     400: "#A2A8B6",
+    450: "#F2F4F8",
     500: "#8B93A5",
     600: "#757E93",
     700: "#5F6981",
