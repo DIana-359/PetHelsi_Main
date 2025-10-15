@@ -8,15 +8,16 @@ import ChatsMessage from "@/components/Chats/ChatsMessage";
 export default async function Chats({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const params = searchParams ? await searchParams : undefined;
   const chatsList = chatsListJson as ChatsResponse;
 
   if (!chatsList?.chats || chatsList.chats.length === 0) {
     return <ChatsNotFound />;
   }
 
-  const chatId = searchParams?.chatId;
+  const chatId = params?.chatId;
   const openChat = chatId
     ? chatsList.chats.find(chat => String(chat.chat_id) === String(chatId))
     : chatsList.chats[0];
