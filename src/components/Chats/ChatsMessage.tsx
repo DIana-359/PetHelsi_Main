@@ -9,7 +9,7 @@ export default function ChatsMessage({ openChat }: ChatsProps) {
   const { last_login_date, dialogs } = openChat;
 
   return (
-    <div className="py-[24px] mb-[8px]">
+    <div className="p-[16px] md:p-[24px] md:pr-0 mb-[8px]">
       <p className="text-center text-[12px] leading-[1] font-[500] text-gray-500 mb-[8px]">
         {last_login_date.slice(5)}
       </p>
@@ -28,7 +28,11 @@ export default function ChatsMessage({ openChat }: ChatsProps) {
               )}>
               {elem.message}
             </p>
-            <p className="text-[12px] leading-[1] font-[500] text-gray-700">
+            <p
+              className={clsx(
+                "text-[12px] leading-[1] font-[500] text-gray-700",
+                elem.sender_type === "VET" ? "text-left" : "text-right"
+              )}>
               {elem.datetime.slice(11, 16)}
             </p>
           </li>
