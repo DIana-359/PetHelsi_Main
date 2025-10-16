@@ -2,6 +2,7 @@
 import AvatarUser from "../ProfileOwner/AvatarUser";
 import type { Chat, VetDialog } from "@/app/types/chatsTypes";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
 interface ChatsSidebarProps {
   chatsList: Chat[];
@@ -11,6 +12,7 @@ export default function ChatsSidebar({ chatsList }: ChatsSidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const activeChat = searchParams.get("chatId");
 
   const updateQueryIdChats = (newQuery: string | number) => {
     const params = new URLSearchParams(searchParams);
@@ -19,12 +21,17 @@ export default function ChatsSidebar({ chatsList }: ChatsSidebarProps) {
   };
 
   return (
-    <ul className="bg-background w-full md:w-[379px] border-r-[1px] border-gray-100 h-[100vh]">
+    <ul className="bg-background w-full md:w-[379px] xs:border-r-[1px] xs:border-gray-100 h-[100vh]">
       {chatsList.map(chat => (
         <li
           key={chat.chat_id}
           onClick={() => updateQueryIdChats(chat.chat_id)}
-          className="w-full py-[16px] px-[12px] bg-background cursor-pointer hover:bg-primary-700 flex items-start group transition-colors duration-300">
+          className={clsx(
+            "w-full py-4 px-3 cursor-pointer flex items-start group transition-colors duration-300",
+            activeChat === String(chat.chat_id)
+              ? "bg-primary-700"
+              : "bg-background hover:bg-primary-700"
+          )}>
           <div className="mr-[16px]">
             <AvatarUser
               // avatar={userData?.avatar}
@@ -35,7 +42,13 @@ export default function ChatsSidebar({ chatsList }: ChatsSidebarProps) {
           </div>
 
           <div className="w-[235px] mr-[8px]">
-            <p className="text-[16px] font-[500] leading-[1] text-gray-900 mb-[4px] group-hover:text-background">
+            <p
+              className={clsx(
+                "text-[16px] font-[500] leading-[1] mb-[4px]",
+                activeChat === String(chat.chat_id)
+                  ? "text-background"
+                  : "text-gray-900 group-hover:text-background"
+              )}>
               {chat.vet_full_name}
             </p>
 
@@ -52,7 +65,13 @@ export default function ChatsSidebar({ chatsList }: ChatsSidebarProps) {
 
               const lastMsg = vetMessages[0];
               return (
-                <div className="text-[14px] font-[400] leading-[1.1] text-gray-700 group-hover:text-background">
+                <div
+                  className={clsx(
+                    "text-[14px] font-[400] leading-[1.1]",
+                    activeChat === String(chat.chat_id)
+                      ? "text-background"
+                      : "text-gray-700 group-hover:text-background"
+                  )}>
                   {lastMsg.message.length > 68
                     ? lastMsg.message.slice(0, 68) + "..."
                     : lastMsg.message}
@@ -62,7 +81,13 @@ export default function ChatsSidebar({ chatsList }: ChatsSidebarProps) {
           </div>
 
           <div className="flex flex-col items-end w-[36px]">
-            <p className="text-[12px] font-[500] leading-[1] text-gray-700 mb-[8px] group-hover:text-background">
+            <p
+              className={clsx(
+                "text-[12px] font-[500] leading-[1] mb-[8px]",
+                activeChat === String(chat.chat_id)
+                  ? "text-background"
+                  : "text-gray-700 group-hover:text-background"
+              )}>
               {chat.last_login_date.slice(5)}
             </p>
             <p className="rounded-full bg-primary-700 w-[24px] h-[24px] flex items-center justify-center text-[12px] font-[500] leading-[1] text-background">

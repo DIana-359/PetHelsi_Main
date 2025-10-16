@@ -32,7 +32,7 @@ export default async function Chats({
                 md:-ml-[32px] md:-my-[32px] md:pr-0
                 2xl:-ml-[40px] 2xl:-my-[40px] flex">
       <ChatsSidebar chatsList={chatsList.chats} />
-      <div className="flex-1 p-[16px] pr-0 md:p-[24px] md:pr-0">
+      <div className="flex-1 pr-0">
         <ChatsHeader openChat={openChat} />
         <ChatsMessage openChat={openChat} />
       </div>
