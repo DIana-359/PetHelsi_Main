@@ -15,7 +15,7 @@ export async function PATCH(request: Request) {
     }
     const body = await request.json();
     const response = await fetch(
-      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/owners/history/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/history/${id}`,
       {
         method: "PATCH",
         headers: {
