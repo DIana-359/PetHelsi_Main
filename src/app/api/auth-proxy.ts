@@ -7,12 +7,15 @@ export const fetchSigninCookieProxy = async ({
   email,
   password,
 }: SigninPayload) => {
-  const response = await fetch("/api/proxy/login-cookie", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/login-cookie`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include",
+    }
+  );
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -20,8 +23,6 @@ export const fetchSigninCookieProxy = async ({
   }
 
   const data = await response.json();
- console.log(data)
-
   return data;
 };
 
@@ -30,13 +31,17 @@ export const fetchSignoutCookieProxy = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch("/api/proxy/logout-cookie", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/logout-cookie
+`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

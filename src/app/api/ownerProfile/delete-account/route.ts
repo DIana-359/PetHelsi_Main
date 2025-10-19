@@ -8,15 +8,12 @@ export async function DELETE() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const res = await fetch(
-      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/owners`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    });
 
     if (res.status === 204) {
       return new NextResponse(null, { status: 204 });

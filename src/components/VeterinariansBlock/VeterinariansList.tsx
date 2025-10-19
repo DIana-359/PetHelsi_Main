@@ -14,7 +14,7 @@ export default function VeterinariansList({ token }: IVeterinariansListProps) {
   useEffect(() => {
     const fetchVets = async () => {
       const res = await fetch(
-        `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=0&size=8`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets?page=0&size=8`
       );
       const result = await res.json();
       setData(result.content);
