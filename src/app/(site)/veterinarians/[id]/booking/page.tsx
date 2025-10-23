@@ -66,7 +66,7 @@ export default function BookingPage() {
       setError(null);
       try {
         const vetRes = await fetch(
-          `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets/${vetId}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}`
         );
         if (!vetRes.ok) throw new Error("Помилка завантаження даних лікаря");
         const vetData: Vet = await vetRes.json();
@@ -78,7 +78,7 @@ export default function BookingPage() {
         };
 
         const petsRes = await fetch(
-          `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/users/pets`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/users/pets`
         );
         const userPets: Pet[] = petsRes.ok ? await petsRes.json() : [];
 
