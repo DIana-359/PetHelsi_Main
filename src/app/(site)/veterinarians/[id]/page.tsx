@@ -1,4 +1,4 @@
-import DoctorPage from '@/components/DoctorPage/DoctorPage';
+import DoctorPage from "@/components/DoctorPage/DoctorPage";
 
 // type Params = { id: string };
 // type PageProps = { params: Params };
@@ -8,13 +8,12 @@ type PageProps = { params: Promise<Params> };
 
 export default async function VeterinarianDetailsPage(props: PageProps) {
   // const { params } = props as PageProps;
-   const params = await props.params;
+  const params = await props.params;
   const { id } = params;
 
-  const res = await fetch(
-    `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets/${id}`,
-    { next: { revalidate: 0 } }
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${id}`, {
+    next: { revalidate: 0 },
+  });
 
   if (!res.ok) {
     return (
@@ -28,5 +27,3 @@ export default async function VeterinarianDetailsPage(props: PageProps) {
 
   return <DoctorPage veterinarian={veterinarian} />;
 }
-
-

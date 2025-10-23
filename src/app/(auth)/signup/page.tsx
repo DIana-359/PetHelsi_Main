@@ -4,7 +4,7 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { fetchSignup } from "../../../contextAuth/operations";
+import { fetchSignup } from "@/app/api/signUp";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
 import GoBack from "@/components/GoBack";
