@@ -38,7 +38,7 @@ export default function BookingPage() {
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedIssue, setSelectedIssue] = useState("Що турбує тварину?");
   const [additionalInfo, setAdditionalInfo] = useState("");
-  const [timeLeft, setTimeLeft] = useState({ minutes: 14, seconds: 58 });
+  const [timeLeft, setTimeLeft] = useState({ minutes: 2, seconds: 58 });
   const [appointmentData, setAppointmentData] =
     useState<AppointmentData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -97,11 +97,54 @@ export default function BookingPage() {
           price: vetData.rate,
         });
       } catch (err) {
-        console.error(err);
-        setError("Не вдалося завантажити дані");
-      } finally {
-        setLoading(false);
-      }
+  console.error(err);
+  setError("Не вдалося завантажити дані");
+  
+  // Mock данные при ошибке сервера
+  const mockVetData: Vet = {
+    id: "1",
+    surname: "Шелудяка",
+    name: "Олена", 
+    patronymic: "Володимирівна",
+    issueTypes: ["Травмування частин тіла", "Шкірні/вушні інфекції", "Проблеми з очима"],
+    petTypes: ["Собака", "Кіт"],
+    rate: 300,
+    rating: 4.8,
+    experience: 5,
+    description: "Лікар ветеринарної медицини",
+    photoUrl: "",
+    userId: "1",
+    userEmail: "vet@example.com",
+    organization: {
+      name: "Ветеринарна клініка",
+      city: "Київ"
+    },
+    educations: [],
+    additionals: []
+  };
+
+  const slotData: AppointmentSlot = {
+    id: "1",
+    dateTime: "2024-02-16T11:00:00Z",
+    available: true,
+  };
+
+  const mockPets: Pet[] = [
+    { id: "1", name: "Тіффані", petTypeName: "Кіт", checked: true, breed: "Домашній кіт", },
+    { id: "2", name: "Стеллі", petTypeName: "Собака", checked: true, breed: "Лабрадор", }
+  ];
+
+  setPets(mockPets);
+  setAppointmentData({
+    vet: mockVetData,
+    slot: slotData,
+    animalType: mockPets.map(p => p.petTypeName).join(", "),
+    reason: "",
+    price: mockVetData.rate,
+  });
+} finally {
+  setLoading(false);
+}
     };
 
     fetchData();
@@ -197,17 +240,17 @@ export default function BookingPage() {
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
           {/* Левая колонка - форма */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl font-semibold text-gray-900 mb-8">
               Бронювання запису
             </h1>
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">
+              <h2 className="text-xl font-medium text-gray-900 mb-4">
                 Оберіть або додайте тварину
               </h2>
               <div className="flex flex-wrap gap-2 mb-4">
                 <button
                   onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato">
+                  className="flex items-center gap-2 border border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato cursor-pointer">
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
@@ -241,7 +284,7 @@ export default function BookingPage() {
 
             {selectedPetTypes.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                <h2 className="text-xl font-medium text-gray-900 mb-4">
                   Причина звернення*
                 </h2>
 
@@ -261,7 +304,7 @@ export default function BookingPage() {
             )}
 
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">
+              <h2 className="text-xl font-medium text-gray-900 mb-4">
                 Надайте додаткову інформацію (за необхідності)
               </h2>
               <textarea
@@ -280,15 +323,21 @@ export default function BookingPage() {
             </button>
           </div>
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
-            <div
-              className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2"
-              style={{ backgroundColor: "#F5F9FE" }}>
-              <p className="text-xl font-bold text-gray-800">
-                {timeLeft.minutes} хв :{" "}
-                {timeLeft.seconds.toString().padStart(2, "0")} сек
-              </p>
-              <p className="text-sm text-gray-600">до завершення бронювання</p>
-            </div>
+              <div className={`rounded-lg p-4 mb-6 transition-colors duration-500 ${
+                timeLeft.minutes < 2 
+                  ? 'bg-[#FFEAEA] text-[#B3261E]' 
+                  : 'bg-primary-100 text-gray-500'
+              }`}>
+                <div className="flex justify-between items-center">
+                  <p className={`text-xl font-bold ${
+                    timeLeft.minutes < 2 ? 'text-[#B3261E]' : 'text-gray-900'
+                  }`}>
+                    {timeLeft.minutes} хв :{" "}
+                    {timeLeft.seconds.toString().padStart(2, "0")} сек
+                  </p>
+                  <p className="text-sm">до завершення бронювання</p>
+                </div>
+              </div>
             {appointmentData && (
               <div className="space-y-4 mb-6">
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -328,7 +377,6 @@ export default function BookingPage() {
                 </div>
               </div>
             )}
-
             <div className="border-t border-b border-gray-200 py-4 my-4">
               <div className="flex justify-between items-center">
                 <div className="font-bold text-gray-800">Вартість:</div>
@@ -340,7 +388,7 @@ export default function BookingPage() {
 
             <button
               onClick={() => setShowModalCancel(true)}
-              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50">
+              className="w-full text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50">
               Скасувати бронювання
             </button>
           </div>
