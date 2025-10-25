@@ -4,6 +4,7 @@ import chatsListJson from "@/utils/chats.json";
 import type { ChatsResponse } from "@/app/types/chatsTypes";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import ChatsMessage from "@/components/Chats/ChatsMessage";
+import MessageInput from "@/components/Chats/MessageInput";
 
 export default async function Chats({
   searchParams,
@@ -28,13 +29,14 @@ export default async function Chats({
 
   return (
     <div
-      className="bg-background -my-[16px] 
+      className="w-full bg-background -my-[16px]
                 md:-ml-[32px] md:-my-[32px] md:pr-0
                 2xl:-ml-[40px] 2xl:-my-[40px] flex">
       <ChatsSidebar chatsList={chatsList.chats} />
-      <div className="flex-1 pr-0">
+      <div className="flex flex-col pr-0 h-[calc(100vh-143px)] relative w-full">
         <ChatsHeader openChat={openChat} />
         <ChatsMessage openChat={openChat} />
+        <MessageInput openChat={openChat} />
       </div>
     </div>
   );
