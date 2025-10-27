@@ -1,7 +1,7 @@
 "use client";
 import { Chat } from "@/app/types/chatsTypes";
 import Icon from "../Icon";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface ChatsProps {
   openChat: Chat;
@@ -9,8 +9,28 @@ interface ChatsProps {
 
 export default function MessageInput({ openChat }: ChatsProps) {
   const { chat_id } = openChat;
-  console.log(openChat, chat_id);
-  const [textMessage, setTextMessage] = useState<string>("fgfg");
+  const draftsRef = useRef<{ [chatId: string]: string }>({});
+  const [textMessage, setTextMessage] = useState(
+    draftsRef.current[chat_id] || ""
+  );
+
+  useEffect(() => {
+    setTextMessage(draftsRef.current[chat_id] || "");
+  }, [chat_id]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTextMessage(value);
+    draftsRef.current[chat_id] = value;
+  };
+
+  const handleSend = () => {
+    if (!textMessage.trim()) return;
+    console.log("Отправка", chat_id, ":", textMessage);
+
+    draftsRef.current[chat_id] = "";
+    setTextMessage("");
+  };
 
   return (
     <div className="mb-[-32px] py-[12px] pl-[32px] pr-0 w-full border-t-[1px] border-gray-100 flex items-center bg-background">
@@ -27,13 +47,13 @@ export default function MessageInput({ openChat }: ChatsProps) {
         type="text"
         placeholder="Написати повідомлення..."
         value={textMessage}
-        onChange={() => {
-          setTextMessage(textMessage);
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          handleChange(e);
         }}
         className="mr-[24px] w-full border-none outline-0 placeholder:font-lato placeholder:font-normal 
              placeholder:text-[14px] placeholder:leading-[100%] 
              placeholder:tracking-[0] placeholder:text-gray-500 text-[14px] leading-[1] font-[400] text-gray-900 bg-background"></input>
-      <button>
+      <button type="button" onClick={handleSend}>
         <Icon
           sprite="/sprites/sprite-sistem.svg"
           id="icon-send"
