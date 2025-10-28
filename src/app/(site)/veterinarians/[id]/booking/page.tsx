@@ -23,13 +23,13 @@ const petTypeIcons: Record<string, string> = {
   Інше: "icon-other",
 };
 
-const petTypePlural: Record<string, string> = {
-  Собака: "Собаки",
-  Кіт: "Коти",
-  Птах: "Птахи",
-  Гризун: "Гризуни",
-  Плазун: "Плазуни",
-};
+// const petTypePlural: Record<string, string> = {
+//   Собака: "Собаки",
+//   Кіт: "Коти",
+//   Птах: "Птахи",
+//   Гризун: "Гризуни",
+//   Плазун: "Плазуни",
+// };
 
 export default function BookingPage() {
   const params = useParams();
@@ -49,11 +49,12 @@ export default function BookingPage() {
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
+  const [newlyAddPet, setNewlyAddPet] = useState<Pet | null>(null);
 
   const togglePetType = (petType: string) => {
-    setSelectedPetTypes(prev =>
+    setSelectedPetTypes((prev) =>
       prev.includes(petType)
-        ? prev.filter(type => type !== petType)
+        ? prev.filter((type) => type !== petType)
         : [...prev, petType]
     );
   };
@@ -92,7 +93,7 @@ export default function BookingPage() {
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map(p => p.petTypeName).join(", "),
+          animalType: userPets.map((p) => p.petTypeName).join(", "),
           reason: "",
           price: vetData.rate,
         });
@@ -108,8 +109,24 @@ export default function BookingPage() {
   }, [vetId]);
 
   useEffect(() => {
+    const saved = localStorage.getItem("addedPets");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setNewlyAddPet(parsed);
+
+      setPets((prev) => {
+        const all = [...prev];
+        parsed.forEach((p: Pet) => {
+          if (!all.some((x) => x.id === p.id)) all.push(p);
+        });
+        return all;
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev.seconds === 0) {
           if (prev.minutes === 0) {
             setShowModalTimeLeft(true);
@@ -135,7 +152,9 @@ export default function BookingPage() {
       if (!res.ok) throw new Error("Помилка збереження тварини");
 
       const savedPet = await res.json();
-      setPets(prev => [...prev, { ...savedPet, checked: true }]);
+      setPets((prev) => [...prev, { ...savedPet, checked: true }]);
+      setNewlyAddPet(savedPet);
+      localStorage.setItem("addedPets", JSON.stringify(savedPet));
     } catch (err) {
       console.error(err);
       alert("Не вдалося зберегти тварину");
@@ -143,15 +162,15 @@ export default function BookingPage() {
   };
 
   const handleSubmit = async () => {
-    if (pets.every(p => !p.checked)) {
+    if (pets.every((p) => !p.checked)) {
       alert("Оберіть хоча б одну тварину");
       return;
     }
     const reason =
       selectedIssue !== "Що турбує тварину?" ? selectedIssue : additionalInfo;
-    setAppointmentData(prev => (prev ? { ...prev, reason } : prev));
+    setAppointmentData((prev) => (prev ? { ...prev, reason } : prev));
 
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setShowModalSuccess(true);
   };
 
@@ -207,35 +226,55 @@ export default function BookingPage() {
               <div className="flex flex-wrap gap-2 mb-4">
                 <button
                   onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato">
+                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato"
+                >
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
-                {appointmentData?.vet.petTypes &&
-                  appointmentData.vet.petTypes.map((petType, index) => (
-                    <button
-                      key={`vet-pet-${index}`}
-                      className={clsx(
-                        "flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato",
-                        selectedPetTypes.includes(petType)
-                          ? "bg-primary text-white border-primary"
-                          : "bg-white text-primary border-primary hover:bg-primary-50"
-                      )}
-                      onClick={() => togglePetType(petType)}>
-                      <Icon
-                        sprite="/sprites/sprite-animals.svg"
-                        id={petTypeIcons[petType] || "icon-dog"}
-                        width="24"
-                        height="24"
-                        className={`stroke-1 scale-x-[-1] ${
-                          selectedPetTypes.includes(petType)
-                            ? "stroke-white"
-                            : "stroke-primary"
-                        }`}
-                      />
-                      <span>{petTypePlural[petType] || petType}</span>
-                    </button>
-                  ))}
+                {newlyAddPet && (
+                  <button
+                    key={newlyAddPet.id}
+                    onClick={() => togglePetType(newlyAddPet.petTypeName)}
+                    className={clsx(
+                      "flex items-center gap-3 border-2 border-primary px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato focus:outline-none focus:ring-2 focus:ring-primary",
+                      selectedPetTypes.includes(newlyAddPet.petTypeName)
+                        ? "bg-primary text-white"
+                        : "bg-white text-primary hover:bg-primary-50"
+                    )}
+                  >
+                    <Icon
+                      sprite="/sprites/sprite-animals.svg"
+                      id={petTypeIcons[newlyAddPet.petTypeName] || "icon-other"}
+                      width="24"
+                      height="24"
+                      className={`stroke-1 scale-x-[-1] ${
+                        selectedPetTypes.includes(newlyAddPet.petTypeName)
+                          ? "stroke-white"
+                          : "stroke-primary"
+                      }`}
+                    />
+                    <span>{newlyAddPet.name}</span>
+                  </button>
+                )}
+                {/* {pets.map((pet) => (
+                  <button
+                    key={pet.id}
+                    className="flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato"
+                  >
+                    <Icon
+                      sprite="/sprites/sprite-animals.svg"
+                      id={petTypeIcons[pet.petTypeName] || "icon-other"}
+                      width="24"
+                      height="24"
+                      className={`stroke-1 scale-x-[-1] ${
+                        selectedPetTypes.includes(pet)
+                          ? "stroke-white"
+                          : "stroke-primary"
+                      }`}
+                    />
+                    <span>{pet.name}</span>
+                  </button>
+                ))} */}
               </div>
             </div>
 
@@ -247,8 +286,9 @@ export default function BookingPage() {
 
                 <select
                   value={selectedIssue}
-                  onChange={e => setSelectedIssue(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato">
+                  onChange={(e) => setSelectedIssue(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato"
+                >
                   <option value="Що турбує тварину?">Що турбує тварину?</option>
                   {appointmentData?.vet.issueTypes &&
                     appointmentData.vet.issueTypes.map((issue, index) => (
@@ -269,20 +309,22 @@ export default function BookingPage() {
                 className="w-full border border-gray-300 rounded-lg p-3 text-primary-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows={4}
                 value={additionalInfo}
-                onChange={e => setAdditionalInfo(e.target.value)}
+                onChange={(e) => setAdditionalInfo(e.target.value)}
               />
             </div>
             <button
               onClick={handleSubmit}
               disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium">
+              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium"
+            >
               Перейти до оплати
             </button>
           </div>
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <div
               className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2"
-              style={{ backgroundColor: "#F5F9FE" }}>
+              style={{ backgroundColor: "#F5F9FE" }}
+            >
               <p className="text-xl font-bold text-gray-800">
                 {timeLeft.minutes} хв :{" "}
                 {timeLeft.seconds.toString().padStart(2, "0")} сек
@@ -340,7 +382,8 @@ export default function BookingPage() {
 
             <button
               onClick={() => setShowModalCancel(true)}
-              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50">
+              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50"
+            >
               Скасувати бронювання
             </button>
           </div>
