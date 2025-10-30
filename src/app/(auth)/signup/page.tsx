@@ -12,6 +12,7 @@ import { handleGoogleLogin } from "../AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
+import clsx from "clsx";
 
 type RoleType = "CLIENT" | "VET";
 type RoleTypeWithEmpty = RoleType | null;
@@ -104,37 +105,46 @@ export default function SignUpForm() {
             : null
         }
       />
-      <AuthInput
-        id="password"
-        label="Пароль*"
-        placeholder="Введіть пароль"
-        type={isPasswordVisible ? "text" : "password"}
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        error={
-          submitted && !passwordRegex.test(password)
-            ? "Пароль має містити не менше 7 символів, одну велику літеру та одну цифру"
-            : null
-        }
-        rightIcon={
-          <button
-            type="button"
-            onClick={togglePassword}
-            className="border-0 bg-transparent flex items-center">
-            {isPasswordVisible ? (
-              <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
-            ) : (
-              <Icon
-                sprite="/sprites/sprite-sistem.svg"
-                id="icon-view_hide"
-                width="24px"
-                height="24px"
-                className="stroke-gray-350 cursor-pointer"
-              />
-            )}
-          </button>
-        }
-      />
+      <div>
+        <div className="mb-[4px]">
+          <AuthInput
+            id="password"
+            label="Пароль*"
+            placeholder="Введіть пароль"
+            type={isPasswordVisible ? "text" : "password"}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            rightIcon={
+              <button
+                type="button"
+                onClick={togglePassword}
+                className="border-0 bg-transparent flex items-center">
+                {isPasswordVisible ? (
+                  <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
+                ) : (
+                  <Icon
+                    sprite="/sprites/sprite-sistem.svg"
+                    id="icon-view_hide"
+                    width="24px"
+                    height="24px"
+                    className="stroke-gray-350 cursor-pointer"
+                  />
+                )}
+              </button>
+            }
+          />
+        </div>
+        <p
+          className={clsx(
+            "text-[12px] font-[400] leading-[1.1]",
+            submitted && !passwordRegex.test(password)
+              ? "text-error-500"
+              : "text-gray-900"
+          )}>
+          Пароль має містити мінімум 7 символів: одну велику літеру і цифру
+        </p>
+      </div>
+
       <AuthInput
         id="repeatPassword"
         label="Повторіть пароль*"
