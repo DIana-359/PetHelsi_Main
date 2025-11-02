@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const body: Pet = await req.json();
 
     const res = await fetch(
-      "https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/owners/pets",
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/pets`,
       {
         method: "POST",
         headers: {
@@ -27,6 +27,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(data, { status: res.status });
   } catch (err) {
     console.error("Add pet error:", err);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

@@ -42,7 +42,7 @@ export default function AvatarUser({
 
   return (
     <div
-      className="flex-shrink-0 flex items-center justify-center rounded-full bg-primary-800 text-white select-none cursor-pointer hover:bg-primary-900 transition-colors duration-300"
+      className="flex-shrink-0 flex items-center justify-center rounded-full bg-gray-300 text-background text-[52px] select-none cursor-pointer "
       style={style}
       aria-label="User initial"
       title={initial || undefined}>

@@ -30,7 +30,7 @@ export default async function VeterinariansPage({
 
   try {
     const res = await fetch(
-      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/vets?page=${
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets?page=${
         page - 1
       }&size=12&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
       { next: { revalidate: 0 } }
