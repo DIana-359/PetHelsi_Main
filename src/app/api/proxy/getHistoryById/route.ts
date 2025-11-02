@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     }
 
     const response = await fetch(
-      `https://om6auk3tiqy3ih6ad5ad2my63q0xmqcs.lambda-url.eu-north-1.on.aws/api/v1/owners/history/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/history/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
