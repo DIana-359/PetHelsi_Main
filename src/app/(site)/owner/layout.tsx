@@ -15,7 +15,7 @@ export default function ProtectedLayout({
             <OwnerNav />
           </div>
           <div
-            className="w-full h-[calc(100vh-112px)] py-[16px] md:pl-[32px] md:py-[32px] md:pr-0 2xl:pl-[40px] 2xl:py-[40px] overflow-y-auto scroll-hidden"
+            className="w-full h-[calc(100vh-112px)] py-[16px] md:pl-[32px] md:py-[32px] md:pr-0 2xl:pl-[40px] 2xl:py-[40px] overflow-hidden"
             style={{ scrollbarWidth: "none" }}>
             {children}
           </div>
