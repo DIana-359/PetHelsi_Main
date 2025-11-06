@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-// import Stepper from "./stepper";
 import { BookingAddPetModal } from "./BookingAddPetModal";
 import { Pet } from "@/app/types/pet";
 import { ModalBookingSuccess } from "./ModalBookingSuccess";
 import { ModalBookingCancel } from "./ModalBookingCancel";
 import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
+import ModalDeletePet from "./ModalDeletePet";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
+import { readLocalArray, writeLocalArray } from "@/utils/types/readLocalArray";
 
 const petTypeIcons: Record<string, string> = {
   Собака: "icon-dog",
@@ -22,14 +23,6 @@ const petTypeIcons: Record<string, string> = {
   Плазун: "icon-turtle",
   Інше: "icon-other",
 };
-
-// const petTypePlural: Record<string, string> = {
-//   Собака: "Собаки",
-//   Кіт: "Коти",
-//   Птах: "Птахи",
-//   Гризун: "Гризуни",
-//   Плазун: "Плазуни",
-// };
 
 export default function BookingPage() {
   const params = useParams();
@@ -42,14 +35,14 @@ export default function BookingPage() {
   const [appointmentData, setAppointmentData] =
     useState<AppointmentData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  console.log(error, setSelectedIssue);
+  const [, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalSuccess, setShowModalSuccess] = useState(false);
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
-  const [newlyAddPet, setNewlyAddPet] = useState<Pet | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [petToDeleteId, setPetToDeleteId] = useState<string | null>(null);
 
   const togglePetType = (petType: string) => {
     setSelectedPetTypes((prev) =>
@@ -58,6 +51,19 @@ export default function BookingPage() {
         : [...prev, petType]
     );
   };
+
+  const mergePets = (existing: Pet[], additions: Pet[]) => {
+    const map = new Map<string, Pet>();
+    existing.forEach((p) => map.set((p.id ?? "").toString(), p));
+    additions.forEach((p, idx) => {
+      const id = p.id?.toString() || `local-${idx}`;
+      map.set(id, { ...p, id, checked: true } as Pet);
+    });
+    return Array.from(map.values());
+  };
+
+  const readRemovedIds = () =>
+    readLocalArray<string>("removedPets").map(String);
 
   useEffect(() => {
     if (!vetId) return;
@@ -83,17 +89,23 @@ export default function BookingPage() {
         );
         const userPets: Pet[] = petsRes.ok ? await petsRes.json() : [];
 
-        setPets(
-          userPets.map((p, idx) => ({
-            ...p,
-            checked: true,
-            id: p.id?.toString() || (idx + 1).toString(),
-          }))
+        const savedPets = readLocalArray<Pet>("addedPets");
+
+        const removedIds = readRemovedIds();
+
+        const filteredUserPets = userPets.filter(
+          (p) => !removedIds.includes((p.id ?? "").toString())
         );
+        const filteredSavedPets = savedPets.filter(
+          (p) => !removedIds.includes((p.id ?? "").toString())
+        );
+        const allPets = mergePets(filteredUserPets, filteredSavedPets);
+        setPets(allPets);
+
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map((p) => p.petTypeName).join(", "),
+          animalType: allPets.map((p) => p.petTypeName).join(", "),
           reason: "",
           price: vetData.rate,
         });
@@ -109,36 +121,25 @@ export default function BookingPage() {
   }, [vetId]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("addedPets");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setNewlyAddPet(parsed);
-
-      setPets((prev) => {
-        const all = [...prev];
-        parsed.forEach((p: Pet) => {
-          if (!all.some((x) => x.id === p.id)) all.push(p);
-        });
-        return all;
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
+    const id = setInterval(() => {
       setTimeLeft((prev) => {
+        if (prev.minutes === 0 && prev.seconds === 0) {
+          return prev;
+        }
         if (prev.seconds === 0) {
-          if (prev.minutes === 0) {
-            setShowModalTimeLeft(true);
-            clearInterval(timer);
-            return { minutes: 0, seconds: 0 };
-          }
           return { minutes: prev.minutes - 1, seconds: 59 };
         }
         return { ...prev, seconds: prev.seconds - 1 };
       });
     }, 1000);
-    return () => clearInterval(timer);
+
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (timeLeft.minutes === 0 && timeLeft.seconds === 0) {
+      setShowModalTimeLeft(true);
+    }
   }, [timeLeft]);
 
   const handleAddPet = async (pet: Pet) => {
@@ -152,12 +153,97 @@ export default function BookingPage() {
       if (!res.ok) throw new Error("Помилка збереження тварини");
 
       const savedPet = await res.json();
-      setPets((prev) => [...prev, { ...savedPet, checked: true }]);
-      setNewlyAddPet(savedPet);
-      localStorage.setItem("addedPets", JSON.stringify(savedPet));
+
+      setPets((prev) => mergePets(prev, [savedPet]));
+
+      const existing = readLocalArray<Pet>("addedPets");
+      const id = savedPet.id?.toString() ?? `${Date.now()}`;
+      const merged = [
+        ...existing.filter((p) => p.id?.toString() !== id),
+        savedPet,
+      ];
+      writeLocalArray("addedPets", merged);
+
+      const rem = readLocalArray<string>("removedPets").filter(
+        (rid) => rid !== id
+      );
+
+      writeLocalArray("removedPets", rem);
     } catch (err) {
       console.error(err);
       alert("Не вдалося зберегти тварину");
+    }
+  };
+
+  const performDeletePet = async (id: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || ""}/v1/owners/pets/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (res.status === 204) {
+        setPets((prev) => {
+          const newList = prev.filter((p) => p.id !== id);
+
+          setSelectedPetTypes((prevTypes) =>
+            prevTypes.filter((type) =>
+              newList.some((p) => p.petTypeName === type)
+            )
+          );
+          return newList;
+        });
+
+        try {
+          const added = readLocalArray<Pet>("addedPets").filter(
+            (p) => p.id?.toString() !== id
+          );
+          writeLocalArray("addedPets", added);
+        } catch (e) {
+          console.warn("Не вдалося оновити addedPets у localStorage:", e);
+        }
+
+        try {
+          const rem = readLocalArray<string>("removedPets");
+          const idStr = id.toString();
+          if (!rem.includes(idStr)) {
+            rem.push(idStr);
+            writeLocalArray("removedPets", rem);
+          }
+        } catch (e) {
+          console.warn("Не вдалося оновити removedPets у localStorage:", e);
+        }
+
+        setShowDeleteModal(false);
+        setPetToDeleteId(null);
+        // toast.success("Тварину успішно видалено");
+        return;
+      }
+      const errText = await res.text();
+      throw new Error(
+        `Не вдалося видалити тварину. Статус ${res.status}. ${errText}`
+      );
+    } catch (err) {
+      console.error("performDeletePet error:", err);
+      // toast.error("Сталася помилка при видаленні тварини. Спробуй пізніше.");
+      try {
+        const listRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL || ""}/v1/owners/pets`,
+          { credentials: "include" }
+        );
+        if (listRes.ok) {
+          const all: Pet[] = await listRes.json();
+          const removedIds = readRemovedIds();
+          const filtered = all.filter(
+            (p) => !removedIds.includes((p.id ?? "").toString())
+          );
+          setPets(filtered.map((p) => ({ ...p, checked: true })));
+        }
+      } catch (e) {
+        console.warn("Не вдалося отримати оновлений список тварин:", e);
+      }
     }
   };
 
@@ -231,50 +317,42 @@ export default function BookingPage() {
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
-                {newlyAddPet && (
-                  <button
-                    key={newlyAddPet.id}
-                    onClick={() => togglePetType(newlyAddPet.petTypeName)}
-                    className={clsx(
-                      "flex items-center gap-3 border-2 border-primary px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato focus:outline-none focus:ring-2 focus:ring-primary",
-                      selectedPetTypes.includes(newlyAddPet.petTypeName)
-                        ? "bg-primary text-white"
-                        : "bg-white text-primary hover:bg-primary-50"
-                    )}
-                  >
-                    <Icon
-                      sprite="/sprites/sprite-animals.svg"
-                      id={petTypeIcons[newlyAddPet.petTypeName] || "icon-other"}
-                      width="24"
-                      height="24"
-                      className={`stroke-1 scale-x-[-1] ${
-                        selectedPetTypes.includes(newlyAddPet.petTypeName)
-                          ? "stroke-white"
-                          : "stroke-primary"
-                      }`}
-                    />
-                    <span>{newlyAddPet.name}</span>
-                  </button>
-                )}
-                {/* {pets.map((pet) => (
-                  <button
-                    key={pet.id}
-                    className="flex items-center gap-3 border-2 px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato"
-                  >
-                    <Icon
-                      sprite="/sprites/sprite-animals.svg"
-                      id={petTypeIcons[pet.petTypeName] || "icon-other"}
-                      width="24"
-                      height="24"
-                      className={`stroke-1 scale-x-[-1] ${
-                        selectedPetTypes.includes(pet)
-                          ? "stroke-white"
-                          : "stroke-primary"
-                      }`}
-                    />
-                    <span>{pet.name}</span>
-                  </button>
-                ))} */}
+                <button
+                  onClick={() => {
+                    setPetToDeleteId(pets[0]?.id ?? null);
+                    setShowDeleteModal(true);
+                  }}
+                  disabled={pets.length === 0}
+                  className="flex items-center gap-2 border-2 border-red-500 bg-white text-red-500 rounded-lg px-4 py-3 hover:bg-red-50 transition-colors font-lato disabled:opacity-50"
+                >
+                  Видалити тварину
+                </button>
+                {pets.map((pet) => (
+                  <div key={pet.id} className="flex items-center gap-3">
+                    <button
+                      onClick={() => togglePetType(pet.petTypeName)}
+                      className={clsx(
+                        "flex items-center gap-3 border-2 border-primary px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato focus:outline-none focus:ring-2 focus:ring-primary",
+                        selectedPetTypes.includes(pet.petTypeName)
+                          ? "bg-primary text-white"
+                          : "bg-white text-primary hover:bg-primary-50"
+                      )}
+                    >
+                      <Icon
+                        sprite="/sprites/sprite-animals.svg"
+                        id={petTypeIcons[pet.petTypeName] || "icon-other"}
+                        width="24"
+                        height="24"
+                        className={`stroke-1 scale-x-[-1] ${
+                          selectedPetTypes.includes(pet.petTypeName)
+                            ? "stroke-white"
+                            : "stroke-primary"
+                        }`}
+                      />
+                      <span>{pet.name}</span>
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -390,7 +468,6 @@ export default function BookingPage() {
         </div>
       </div>
 
-      {/* Модалки */}
       {showModal && (
         <BookingAddPetModal
           isOpen={showModal}
@@ -398,7 +475,6 @@ export default function BookingPage() {
           onClose={() => setShowModal(false)}
         />
       )}
-
       {showModalSuccess && (
         <ModalBookingSuccess
           isOpen={showModalSuccess}
@@ -416,6 +492,18 @@ export default function BookingPage() {
           isOpen={showModalTimeLeft}
           setTimeLeft={() => setTimeLeft({ minutes: 14, seconds: 58 })}
           onClose={() => setShowModalTimeLeft(false)}
+        />
+      )}
+      {showDeleteModal && (
+        <ModalDeletePet
+          isOpen={showDeleteModal}
+          pets={pets}
+          initialSelectedId={petToDeleteId}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setPetToDeleteId(null);
+          }}
+          onConfirmDelete={performDeletePet}
         />
       )}
     </div>
