@@ -73,7 +73,10 @@ export default function BookingPage() {
       setError(null);
       try {
         const vetRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}`,
+          {
+            credentials: "include",
+          }
         );
         if (!vetRes.ok) throw new Error("Помилка завантаження даних лікаря");
         const vetData: Vet = await vetRes.json();
@@ -85,7 +88,10 @@ export default function BookingPage() {
         };
 
         const petsRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/users/pets`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/users/pets`,
+          {
+            credentials: "include",
+          }
         );
         const userPets: Pet[] = petsRes.ok ? await petsRes.json() : [];
 
@@ -148,6 +154,7 @@ export default function BookingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(pet),
+        credentials: "include",
       });
 
       if (!res.ok) throw new Error("Помилка збереження тварини");
