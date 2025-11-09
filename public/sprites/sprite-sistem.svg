@@ -528,5 +528,12 @@
 <path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.0213" d="M10.846 9.775h11.414"></path>
 <path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.0213" d="M10.846 16.891h5.707"></path>
 </symbol>
+<symbol id="icon-chat-any-selected" viewBox="0 0 32 32">
+<path stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="0.75" d="M19.334 24.667h-10c-1.105 0-2-0.895-2-2v-11.333c0-2.209 1.791-4 4-4h9.333c2.209 0 4 1.791 4 4v4"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="0.75" d="M10 14h9.333"></path>
+<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="0.75" d="M10 18h6.667"></path>
+<path stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="0.75" d="M24.96 20.667c0 1.634-1.325 2.958-2.958 2.958s-2.958-1.325-2.958-2.958c0-1.634 1.325-2.958 2.958-2.958s2.958 1.325 2.958 2.958z"></path>
+<path stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="0.75" d="M25.334 24l2 2"></path>
+</symbol>
 </defs>
 </svg>

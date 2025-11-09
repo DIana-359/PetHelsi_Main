@@ -9,14 +9,14 @@ export default function ProtectedLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="min-h-[calc(100vh-276px)]">
-        <div className="flex flex-row">
+      <div
+        className="min-h-screen overflow-hidden"
+        style={{ height: "calc(100vh - 87px)" }}>
+        <div className="flex flex-row h-full">
           <div className="hidden md:block">
             <OwnerNav />
           </div>
-          <div
-            className="w-full h-[calc(100vh-112px)] py-[16px] md:pl-[32px] md:py-[32px] md:pr-0 2xl:pl-[40px] 2xl:py-[40px] overflow-hidden"
-            style={{ scrollbarWidth: "none" }}>
+          <div className="flex-1 flex flex-col overflow-auto scrollbar-none py-[16px] md:pl-[32px] md:py-[32px] md:pr-0 2xl:pl-[40px] 2xl:py-[40px]">
             {children}
           </div>
         </div>
