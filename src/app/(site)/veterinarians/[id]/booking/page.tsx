@@ -13,16 +13,11 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { readLocalArray, writeLocalArray } from "@/utils/types/readLocalArray";
-
-const petTypeIcons: Record<string, string> = {
-  Собака: "icon-dog",
-  Кіт: "icon-cat",
-  Птах: "icon-bird",
-  Гризун: "icon-rabbit",
-  Плазун: "icon-turtle",
-  Інше: "icon-other",
-};
+import {
+  loadArrayFromLocalStorage,
+  saveArrayToLocalStorage,
+} from "@/utils/types/loadArrayFromLocalStorage";
+import { petTypeIcons } from "@/utils/types/petTypeIcons";
 
 export default function BookingPage() {
   const params = useParams();
@@ -63,7 +58,7 @@ export default function BookingPage() {
   };
 
   const readRemovedIds = () =>
-    readLocalArray<string>("removedPets").map(String);
+    loadArrayFromLocalStorage<string>("removedPets").map(String);
 
   useEffect(() => {
     if (!vetId) return;
@@ -95,7 +90,7 @@ export default function BookingPage() {
         );
         const userPets: Pet[] = petsRes.ok ? await petsRes.json() : [];
 
-        const savedPets = readLocalArray<Pet>("addedPets");
+        const savedPets = loadArrayFromLocalStorage<Pet>("addedPets");
 
         const removedIds = readRemovedIds();
 
@@ -163,19 +158,19 @@ export default function BookingPage() {
 
       setPets((prev) => mergePets(prev, [savedPet]));
 
-      const existing = readLocalArray<Pet>("addedPets");
+      const existing = loadArrayFromLocalStorage<Pet>("addedPets");
       const id = savedPet.id?.toString() ?? `${Date.now()}`;
       const merged = [
         ...existing.filter((p) => p.id?.toString() !== id),
         savedPet,
       ];
-      writeLocalArray("addedPets", merged);
+      saveArrayToLocalStorage("addedPets", merged);
 
-      const rem = readLocalArray<string>("removedPets").filter(
-        (rid) => rid !== id
-      );
+      const updatedRemovedPets = loadArrayFromLocalStorage<string>(
+        "removedPets"
+      ).filter((rid) => rid !== id);
 
-      writeLocalArray("removedPets", rem);
+      saveArrayToLocalStorage("removedPets", updatedRemovedPets);
     } catch (err) {
       console.error(err);
       alert("Не вдалося зберегти тварину");
@@ -191,41 +186,23 @@ export default function BookingPage() {
           credentials: "include",
         }
       );
+
       if (res.status === 204) {
-        setPets((prev) => {
-          const newList = prev.filter((p) => p.id !== id);
-
-          setSelectedPetTypes((prevTypes) =>
-            prevTypes.filter((type) =>
-              newList.some((p) => p.petTypeName === type)
-            )
-          );
-          return newList;
-        });
-
-        try {
-          const added = readLocalArray<Pet>("addedPets").filter(
-            (p) => p.id?.toString() !== id
-          );
-          writeLocalArray("addedPets", added);
-        } catch (e) {
-          console.warn("Не вдалося оновити addedPets у localStorage:", e);
-        }
-
-        try {
-          const rem = readLocalArray<string>("removedPets");
-          const idStr = id.toString();
-          if (!rem.includes(idStr)) {
-            rem.push(idStr);
-            writeLocalArray("removedPets", rem);
-          }
-        } catch (e) {
-          console.warn("Не вдалося оновити removedPets у localStorage:", e);
-        }
-
+        setPets((prev) => prev.filter((p) => p.id !== id));
         setShowDeleteModal(false);
         setPetToDeleteId(null);
+
         // toast.success("Тварину успішно видалено");
+        const added = loadArrayFromLocalStorage<Pet>("addedPets").filter(
+          (p) => p.id?.toString() !== id
+        );
+        saveArrayToLocalStorage("addedPets", added);
+
+        const removed = loadArrayFromLocalStorage<string>("removedPets");
+        if (!removed.includes(id)) {
+          removed.push(id);
+          saveArrayToLocalStorage("removedPets", removed);
+        }
         return;
       }
       const errText = await res.text();
