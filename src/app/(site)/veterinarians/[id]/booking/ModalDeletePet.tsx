@@ -11,15 +11,8 @@ import {
 } from "@heroui/modal";
 import Icon from "@/components/Icon";
 import { Button } from "@heroui/react";
-
-const petTypeIcons: Record<string, string> = {
-  Собака: "icon-dog",
-  Кіт: "icon-cat",
-  Птах: "icon-bird",
-  Гризун: "icon-rabbit",
-  Плазун: "icon-turtle",
-  Інше: "icon-other",
-};
+import { petTypeIcons } from "@/utils/types/petTypeIcons";
+import clsx from "clsx";
 
 type ModalDeletePetProps = {
   isOpen: boolean;
@@ -109,9 +102,10 @@ export default function ModalDeletePet({
                   return (
                     <li key={p.id}>
                       <label
-                        className={`flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-gray-50 ${
-                          isSelected ? "bg-primary-50" : ""
-                        }`}
+                        className={clsx(
+                          "flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-gray-50",
+                          isSelected && "bg-primary-50"
+                        )}
                       >
                         <input
                           type="radio"
@@ -128,9 +122,10 @@ export default function ModalDeletePet({
                             id={iconId}
                             width="24"
                             height="24"
-                            className={`stroke-1 ${
-                              isSelected ? "stroke-primary" : "stroke-primary"
-                            } ${isSelected ? "fill-primary-800" : ""}`}
+                            className={clsx(
+                              "stroke-1 stroke-primary",
+                              isSelected && "fill-primary-800"
+                            )}
                           />
                         </div>
                         <div className="flex-1">

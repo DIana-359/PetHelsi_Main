@@ -9,11 +9,11 @@ const safeParseArray = <T>(raw: string | null): T[] => {
   }
 };
 
-export const readLocalArray = <T>(key: string): T[] => {
+export const loadArrayFromLocalStorage = <T>(key: string): T[] => {
   return safeParseArray<T>(localStorage.getItem(key));
 };
 
-export const writeLocalArray = <T>(key: string, arr: T[]) => {
+export const saveArrayToLocalStorage = <T>(key: string, arr: T[]) => {
   try {
     localStorage.setItem(key, JSON.stringify(arr));
   } catch (e) {
