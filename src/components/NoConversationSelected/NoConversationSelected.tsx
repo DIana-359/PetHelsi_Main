@@ -2,7 +2,7 @@ import Icon from "../Icon";
 
 export default function NoConversationSelected() {
   return (
-    <div className="flex items-center justify-center w-full bg-background p-[16px]">
+    <div className=" hidden 2xl:flex items-center justify-center w-full bg-background p-[16px]">
       <div className="flex flex-col items-center">
         <Icon
           sprite="/sprites/sprite-sistem.svg"

@@ -50,7 +50,7 @@ export default function MessageInput({ openChat }: ChatsProps) {
   };
 
   return (
-    <div className="py-[12px] pl-[32px] pr-0 w-full border-t-[1px] border-gray-100 flex items-end bg-background align-bottom min-h-[56px] max-h-[146px]">
+    <div className="md:py-[12px] md:pl-[32px] pr-0 w-full border-t-[1px] border-gray-100 flex items-end bg-background align-bottom min-h-[56px] max-h-[146px]">
       <button className="mr-[16px]">
         <Icon
           sprite="/sprites/sprite-sistem.svg"

@@ -9,9 +9,7 @@ export default function ProtectedLayout({
 }) {
   return (
     <AuthGuard>
-      <div
-        className="min-h-screen overflow-hidden"
-        style={{ height: "calc(100vh - 87px)" }}>
+      <div className="min-h-screen h-[calc(100vh-87px)] overflow-hidden">
         <div className="flex flex-row h-full">
           <div className="hidden md:block">
             <OwnerNav />
