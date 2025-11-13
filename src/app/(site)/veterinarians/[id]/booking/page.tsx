@@ -14,9 +14,10 @@ import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
 import {
-  loadArrayFromLocalStorage,
-  saveArrayToLocalStorage,
-} from "@/utils/types/loadArrayFromLocalStorage";
+  getPetsClient,
+  addPetClient,
+  deletePetClient,
+} from "@/app/services/pet.client";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
 
 export default function BookingPage() {
@@ -38,6 +39,7 @@ export default function BookingPage() {
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [petToDeleteId, setPetToDeleteId] = useState<string | null>(null);
+  const [selectedPetIds, setSelectedPetIds] = useState<string[]>([]);
 
   const togglePetType = (petType: string) => {
     setSelectedPetTypes((prev) =>
@@ -46,19 +48,6 @@ export default function BookingPage() {
         : [...prev, petType]
     );
   };
-
-  const mergePets = (existing: Pet[], additions: Pet[]) => {
-    const map = new Map<string, Pet>();
-    existing.forEach((p) => map.set((p.id ?? "").toString(), p));
-    additions.forEach((p, idx) => {
-      const id = p.id?.toString() || `local-${idx}`;
-      map.set(id, { ...p, id, checked: true } as Pet);
-    });
-    return Array.from(map.values());
-  };
-
-  const readRemovedIds = () =>
-    loadArrayFromLocalStorage<string>("removedPets").map(String);
 
   useEffect(() => {
     if (!vetId) return;
@@ -82,31 +71,14 @@ export default function BookingPage() {
           available: true,
         };
 
-        const petsRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/users/pets`,
-          {
-            credentials: "include",
-          }
-        );
-        const userPets: Pet[] = petsRes.ok ? await petsRes.json() : [];
+        const userPets = await getPetsClient();
 
-        const savedPets = loadArrayFromLocalStorage<Pet>("addedPets");
-
-        const removedIds = readRemovedIds();
-
-        const filteredUserPets = userPets.filter(
-          (p) => !removedIds.includes((p.id ?? "").toString())
-        );
-        const filteredSavedPets = savedPets.filter(
-          (p) => !removedIds.includes((p.id ?? "").toString())
-        );
-        const allPets = mergePets(filteredUserPets, filteredSavedPets);
-        setPets(allPets);
+        setPets(userPets);
 
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: allPets.map((p) => p.petTypeName).join(", "),
+          animalType: userPets.map((p) => p.petTypeName).join(", "),
           reason: "",
           price: vetData.rate,
         });
@@ -145,32 +117,8 @@ export default function BookingPage() {
 
   const handleAddPet = async (pet: Pet) => {
     try {
-      const res = await fetch("/api/ownerProfile/add-pet", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pet),
-        credentials: "include",
-      });
-
-      if (!res.ok) throw new Error("Помилка збереження тварини");
-
-      const savedPet = await res.json();
-
-      setPets((prev) => mergePets(prev, [savedPet]));
-
-      const existing = loadArrayFromLocalStorage<Pet>("addedPets");
-      const id = savedPet.id?.toString() ?? `${Date.now()}`;
-      const merged = [
-        ...existing.filter((p) => p.id?.toString() !== id),
-        savedPet,
-      ];
-      saveArrayToLocalStorage("addedPets", merged);
-
-      const updatedRemovedPets = loadArrayFromLocalStorage<string>(
-        "removedPets"
-      ).filter((rid) => rid !== id);
-
-      saveArrayToLocalStorage("removedPets", updatedRemovedPets);
+      const savedPet = await addPetClient(pet);
+      setPets((prevPets) => [...prevPets, savedPet]);
     } catch (err) {
       console.error(err);
       alert("Не вдалося зберегти тварину");
@@ -179,60 +127,21 @@ export default function BookingPage() {
 
   const performDeletePet = async (id: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || ""}/v1/owners/pets/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      await deletePetClient(id);
 
-      if (res.status === 204) {
-        setPets((prev) => prev.filter((p) => p.id !== id));
-        setShowDeleteModal(false);
-        setPetToDeleteId(null);
+      setPets((prev) => prev.filter((p) => p.id !== id));
+      setSelectedPetIds((prev) => prev.filter((pid) => pid !== id));
 
-        // toast.success("Тварину успішно видалено");
-        const added = loadArrayFromLocalStorage<Pet>("addedPets").filter(
-          (p) => p.id?.toString() !== id
-        );
-        saveArrayToLocalStorage("addedPets", added);
-
-        const removed = loadArrayFromLocalStorage<string>("removedPets");
-        if (!removed.includes(id)) {
-          removed.push(id);
-          saveArrayToLocalStorage("removedPets", removed);
-        }
-        return;
-      }
-      const errText = await res.text();
-      throw new Error(
-        `Не вдалося видалити тварину. Статус ${res.status}. ${errText}`
-      );
+      setShowDeleteModal(false);
+      setPetToDeleteId(null);
     } catch (err) {
       console.error("performDeletePet error:", err);
-      // toast.error("Сталася помилка при видаленні тварини. Спробуй пізніше.");
-      try {
-        const listRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL || ""}/v1/owners/pets`,
-          { credentials: "include" }
-        );
-        if (listRes.ok) {
-          const all: Pet[] = await listRes.json();
-          const removedIds = readRemovedIds();
-          const filtered = all.filter(
-            (p) => !removedIds.includes((p.id ?? "").toString())
-          );
-          setPets(filtered.map((p) => ({ ...p, checked: true })));
-        }
-      } catch (e) {
-        console.warn("Не вдалося отримати оновлений список тварин:", e);
-      }
+      alert("Сталася помилка при видаленні тварини. Спробуй пізніше.");
     }
   };
 
   const handleSubmit = async () => {
-    if (pets.every((p) => !p.checked)) {
+    if (selectedPetIds.length === 0) {
       alert("Оберіть хоча б одну тварину");
       return;
     }
