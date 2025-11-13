@@ -24,18 +24,17 @@ export default async function Chats({
     ? chatsList.chats.find(chat => String(chat.chat_id) === String(chatId))
     : null;
 
-  if (!chatsList) {
-    return <ChatsNotFound />;
-  }
-
   return (
     <div className="flex-1 bg-background -my-[16px] md:-ml-[32px] md:-my-[32px] md:pr-0 2xl:-ml-[40px] 2xl:-my-[40px] flex overflow-hidden">
-      <ChatsSidebar chatsList={chatsList.chats} />
+      <ChatsSidebar
+        chatsList={chatsList.chats}
+        openChat={openChat?.chat_id?.toString()}
+      />
 
       {!openChat ? (
         <NoConversationSelected />
       ) : (
-        <div className="flex flex-col pr-0 relative flex-1">
+        <div className="flex flex-col pr-0 relative flex-1 h-[calc(100vh-87px)]">
           <ChatsHeader openChat={openChat} />
           <div className="flex-1 overflow-y-auto scrollbar-none">
             <ChatsMessage openChat={openChat} />
