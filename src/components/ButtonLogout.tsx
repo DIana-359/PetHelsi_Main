@@ -11,13 +11,12 @@ const ButtonLogout = () => {
     setIsModalOpen(true);
   };
 
-
   return (
     <button
       onClick={() => {
         confirmLogout();
       }}
-      className={"flex items-center gap-[8px] cursor-pointer group"}>
+      className={"flex items-center gap-[8px] cursor-pointer group mb-[32px]"}>
       <Icon
         sprite="/sprites/sprite-sistem.svg"
         id={"icon-logOut-mob-menu"}

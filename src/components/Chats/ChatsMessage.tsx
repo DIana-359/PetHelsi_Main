@@ -9,7 +9,7 @@ export default function ChatsMessage({ openChat }: ChatsProps) {
   const { last_login_date, dialogs } = openChat;
 
   return (
-    <div className="p-[16px] md:p-[24px] md:pr-0 mb-[8px] flex-1 overflow-y-auto scrollbar-none">
+    <div className="py-[16px] md:p-[24px] md:pr-0 mb-[8px] scrollbar-none">
       <p className="text-center text-[12px] leading-[1] font-[500] text-gray-500 mb-[8px]">
         {last_login_date.slice(5)}
       </p>

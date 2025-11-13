@@ -5,6 +5,7 @@ import type { ChatsResponse } from "@/app/types/chatsTypes";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import ChatsMessage from "@/components/Chats/ChatsMessage";
 import MessageInput from "@/components/Chats/MessageInput";
+import NoConversationSelected from "@/components/NoConversationSelected/NoConversationSelected";
 
 export default async function Chats({
   searchParams,
@@ -21,20 +22,26 @@ export default async function Chats({
   const chatId = params?.chatId;
   const openChat = chatId
     ? chatsList.chats.find(chat => String(chat.chat_id) === String(chatId))
-    : chatsList.chats[0];
-
-  if (!openChat) {
-    return <ChatsNotFound />;
-  }
+    : null;
 
   return (
-    <div className="flex-1 bg-background -my-[16px] md:-ml-[32px] md:-my-[32px] md:pr-0 2xl:-ml-[40px] 2xl:-my-[40px] flex">
-      <ChatsSidebar chatsList={chatsList.chats} />
-      <div className="flex flex-col pr-0 h-[calc(100vh-143px)] relative flex-1">
-        <ChatsHeader openChat={openChat} />
-        <ChatsMessage openChat={openChat} />
-        <MessageInput openChat={openChat} />
-      </div>
+    <div className="flex-1 bg-background -my-[16px] md:-ml-[32px] md:-my-[32px] md:pr-0 2xl:-ml-[40px] 2xl:-my-[40px] flex overflow-hidden">
+      <ChatsSidebar
+        chatsList={chatsList.chats}
+        openChat={openChat?.chat_id?.toString()}
+      />
+
+      {!openChat ? (
+        <NoConversationSelected />
+      ) : (
+        <div className="flex flex-col pr-0 relative flex-1 h-[calc(100vh-87px)]">
+          <ChatsHeader openChat={openChat} />
+          <div className="flex-1 overflow-y-auto scrollbar-none">
+            <ChatsMessage openChat={openChat} />
+          </div>
+          <MessageInput openChat={openChat} />
+        </div>
+      )}
     </div>
   );
 }
