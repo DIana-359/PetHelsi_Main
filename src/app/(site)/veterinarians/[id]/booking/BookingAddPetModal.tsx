@@ -22,7 +22,11 @@ interface BookingAddPetModalProps {
   isOpen: boolean;
 }
 
-export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAddPetModalProps) {
+export function BookingAddPetModal({
+  handleAddPet,
+  onClose,
+  isOpen,
+}: BookingAddPetModalProps) {
   const [newPet, setNewPet] = useState<Partial<Pet>>({});
 
   const handleFormSubmit = () => {
@@ -46,12 +50,12 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose} 
-      size="md" 
-      placement="center" 
-      hideCloseButton={true} 
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="md"
+      placement="center"
+      hideCloseButton={true}
       className="rounded-[18px] max-h-[95vh] lg:max-h-[80vh] overflow-y-auto"
     >
       <ModalContent className="flex flex-col max-h-[95vh] lg:max-h-[80vh] overflow-y-auto outline-none">
@@ -77,7 +81,11 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
 
         <ModalBody className="pt-0 pb-6 sm:pb-10 px-6 sm:px-10 md:px-15 gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-[#C9E2F8] scrollbar-track-transparent scrollbar-thumb-rounded [&::-webkit-scrollbar]:w-[6px]">
           <div>
-            <label id="label-petName" htmlFor="petName" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petName"
+              htmlFor="petName"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Ім’я тварини*
             </label>
             <Input
@@ -90,14 +98,20 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               value={newPet.name || ""}
               onChange={(e) => setNewPet({ ...newPet, name: e.target.value })}
               classNames={{
-                input: "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
-                inputWrapper: "border-primary-300 hover:!border-primary focus:!border-primary data-[focus=true]:!border-primary focus-visible:!border-primary shadow-none",
+                input:
+                  "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
+                inputWrapper:
+                  "border-primary-300 hover:!border-primary focus:!border-primary data-[focus=true]:!border-primary focus-visible:!border-primary shadow-none",
               }}
             />
           </div>
 
           <div>
-            <label id="label-petType" htmlFor="petType" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petType"
+              htmlFor="petType"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Вид тварини*
             </label>
             <Select
@@ -109,12 +123,16 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               selectedKeys={newPet.petTypeName ? [newPet.petTypeName] : []}
               radius="sm"
               onSelectionChange={(keys) =>
-                setNewPet({ ...newPet, petTypeName: Array.from(keys)[0]?.toString() })
+                setNewPet({
+                  ...newPet,
+                  petTypeName: Array.from(keys)[0]?.toString(),
+                })
               }
               classNames={{
-                trigger: "text-left border-primary-300 hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary",
+                trigger:
+                  "text-left border-primary-300 hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary",
                 value: "!text-gray-350",
-                popoverContent: "rounded-lg"
+                popoverContent: "rounded-lg",
               }}
               listboxProps={{
                 classNames: {
@@ -122,7 +140,7 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
                 },
                 itemClasses: {
                   base: "data-[selected=true]:!bg-primary-100 data-[selected=true]:!text-primary-700 hover:!bg-primary-200",
-                }
+                },
               }}
             >
               {optionsAnimals.map((animal) => (
@@ -132,7 +150,11 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
           </div>
 
           <div>
-            <label id="label-petBreed" htmlFor="petBreed" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petBreed"
+              htmlFor="petBreed"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Порода*
             </label>
             <Input
@@ -145,14 +167,20 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               value={newPet.breed || ""}
               onChange={(e) => setNewPet({ ...newPet, breed: e.target.value })}
               classNames={{
-                input: "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
-                inputWrapper: "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
+                input:
+                  "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
+                inputWrapper:
+                  "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
               }}
             />
           </div>
 
           <div>
-            <label id="label-petSex" htmlFor="petSex" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petSex"
+              htmlFor="petSex"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Стать тварини*
             </label>
             <Select
@@ -161,29 +189,39 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               aria-labelledby="label-petSex"
               variant="bordered"
               placeholder="Оберіть стать"
-              selectedKeys={newPet.genderTypeName ? [newPet.genderTypeName] : []}
+              selectedKeys={
+                newPet.genderTypeName ? [newPet.genderTypeName] : []
+              }
               radius="sm"
               onSelectionChange={(keys) =>
-                setNewPet({ ...newPet, genderTypeName: Array.from(keys)[0]?.toString() })
+                setNewPet({
+                  ...newPet,
+                  genderTypeName: Array.from(keys)[0]?.toString(),
+                })
               }
               classNames={{
-                trigger: "data-[open=true]:!border-primary text-left border-primary-300 hover:!border-primary focus:!border-primary shadow-none",
+                trigger:
+                  "data-[open=true]:!border-primary text-left border-primary-300 hover:!border-primary focus:!border-primary shadow-none",
                 value: "!text-gray-350",
-                popoverContent: "rounded-lg"
+                popoverContent: "rounded-lg",
               }}
               listboxProps={{
                 itemClasses: {
                   base: "data-[selected=true]:!bg-primary-100 data-[selected=true]:!text-primary-700 hover:!bg-primary-200",
-                }
+                },
               }}
             >
-              <SelectItem key="Хлопчик">Хлопчик</SelectItem>
-              <SelectItem key="Дівчинка">Дівчинка</SelectItem>
+              <SelectItem key="Хлопчик">Самець</SelectItem>
+              <SelectItem key="Дівчинка">Самка</SelectItem>
             </Select>
           </div>
 
           <div>
-            <label id="label-petWeight" htmlFor="petWeight" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petWeight"
+              htmlFor="petWeight"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Вага, кг
             </label>
             <Input
@@ -192,6 +230,7 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               aria-labelledby="label-petWeight"
               variant="bordered"
               type="number"
+              min={0}
               placeholder="Вкажіть вагу"
               radius="sm"
               value={newPet.weight?.toString() || ""}
@@ -199,14 +238,20 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
                 setNewPet({ ...newPet, weight: Number(e.target.value) })
               }
               classNames={{
-                input: "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
-                inputWrapper: "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
+                input:
+                  "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
+                inputWrapper:
+                  "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
               }}
             />
           </div>
 
           <div>
-            <label id="label-petAge" htmlFor="petAge" className="text-xs block mb-2 font-medium text-gray-700">
+            <label
+              id="label-petAge"
+              htmlFor="petAge"
+              className="text-xs block mb-2 font-medium text-gray-700"
+            >
               Вік, роки
             </label>
             <Input
@@ -215,25 +260,33 @@ export function BookingAddPetModal({ handleAddPet, onClose, isOpen }: BookingAdd
               aria-labelledby="label-petAge"
               variant="bordered"
               type="number"
+              min={0}
               placeholder="Вкажіть вік"
               radius="sm"
               value={newPet.ages?.toString() || ""}
-              onChange={(e) =>
-                setNewPet({ ...newPet, ages: Number(e.target.value) })
-              }
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setNewPet({ ...newPet, ages: value < 0 ? 0 : value });
+              }}
               classNames={{
-                input: "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
-                inputWrapper: "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
+                input:
+                  "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
+                inputWrapper:
+                  "border-primary-300 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
               }}
             />
           </div>
         </ModalBody>
 
         <ModalFooter className="flex flex-col gap-2 pt-0 px-6 sm:px-10 md:px-15 pb-6 sm:pb-8">
-          <Button color="primary" onPress={handleFormSubmit} className="w-full rounded-md">
+          <Button
+            color="primary"
+            onPress={handleFormSubmit}
+            className="w-full rounded-md"
+          >
             Додати тварину
           </Button>
-          <Button 
+          <Button
             variant="light"
             onPress={onClose}
             className="w-full rounded-md text-[16px] font-[400] leading-[1.4] text-primary-700 bg-background border-[1px] border-primary-700"
