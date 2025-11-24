@@ -13,11 +13,9 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import {
-  getPetsClient,
-  addPetClient,
-  deletePetClient,
-} from "@/app/services/pet.client";
+import { addPets } from "@/app/services/addPets";
+import { getPets } from "@/app/services/getPets";
+import { deletePets } from "@/app/services/deletePets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
 
 export default function BookingPage() {
@@ -71,7 +69,7 @@ export default function BookingPage() {
           available: true,
         };
 
-        const userPets = await getPetsClient();
+        const userPets: Pet[] = await getPets();
 
         setPets(userPets);
 
@@ -117,7 +115,7 @@ export default function BookingPage() {
 
   const handleAddPet = async (pet: Pet) => {
     try {
-      const savedPet = await addPetClient(pet);
+      const savedPet = await addPets(pet);
       setPets((prevPets) => [...prevPets, savedPet]);
     } catch (err) {
       console.error(err);
@@ -127,7 +125,7 @@ export default function BookingPage() {
 
   const performDeletePet = async (id: string) => {
     try {
-      await deletePetClient(id);
+      await deletePets(id);
 
       setPets((prev) => prev.filter((p) => p.id !== id));
       setSelectedPetIds((prev) => prev.filter((pid) => pid !== id));

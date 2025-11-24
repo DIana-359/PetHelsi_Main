@@ -36,9 +36,9 @@ export default function ModalDeletePet({
 
   useEffect(() => {
     if (isOpen) {
-      setSelectedId(initialSelectedId ?? pets[0]?.id ?? null);
+      setSelectedId(initialSelectedId ?? null);
     }
-  }, [isOpen, initialSelectedId, pets]);
+  }, [isOpen, initialSelectedId]);
 
   if (!isOpen) return null;
 
