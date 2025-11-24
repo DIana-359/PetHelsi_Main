@@ -281,6 +281,7 @@ export function BookingAddPetModal({
         <ModalFooter className="flex flex-col gap-2 pt-0 px-6 sm:px-10 md:px-15 pb-6 sm:pb-8">
           <Button
             color="primary"
+            type="button"
             onPress={handleFormSubmit}
             className="w-full rounded-md"
           >
