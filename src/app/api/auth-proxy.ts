@@ -7,8 +7,7 @@ export const fetchSigninCookieProxy = async ({
   email,
   password,
 }: SigninPayload) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/login-cookie`,
+  const response = await fetch("/api/proxy/login-cookie",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -31,9 +30,7 @@ export const fetchSignoutCookieProxy = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/logout-cookie
-`,
+    const response = await fetch("/api/proxy/logout-cookie",
       {
         method: "POST",
         headers: {
