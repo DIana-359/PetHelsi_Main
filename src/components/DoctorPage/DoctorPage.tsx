@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DocProfile from "./DocProfile";
 import { Veterinarian } from "@/utils/types/veterinarian";
@@ -13,6 +13,15 @@ import EducationTab from "./EducationTab";
 import clsx from "clsx";
 import EmptyCalendar from "../EmptyCalendar";
 import DocReviews from "./DocReviews";
+import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
+import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
+import { useFreeScheduleSlots } from "@/hooks/vet/useFreeScheduleSlots";
+import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
+import useMedia from "@/utils/media";
+import Icon from "../Icon";
+import { useBooking } from "@/contextBooking/contextBooking";
+import BookingSummaryMobile from "./BookingSummaryMobile";
+import dayjs from "dayjs";
 
 type Props = {
   veterinarian: Veterinarian;
@@ -20,6 +29,20 @@ type Props = {
 
 export default function DoctorPage({ veterinarian }: Props) {
   const [selected, setSelected] = useState("profile");
+  const { setSelectedDate, setSelectedTime, setPrice, setSlotId} = useBooking()
+  const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isMobile = useMedia();
+
+  useEffect(() => {
+    if (!isLoading && freeScheduleSlots.length > 0) {
+      const firstSlot = freeScheduleSlots[0]
+      setSelectedDate(dayjs(firstSlot.date))      
+      setSelectedTime(firstSlot.startTime.slice(0, 5))
+      setPrice(firstSlot.rate)
+      setSlotId(firstSlot.id)
+    }
+  }, [isLoading, freeScheduleSlots, setSelectedDate, setSelectedTime, setPrice, setSlotId])
 
   const tabs = [
     {
@@ -42,8 +65,14 @@ export default function DoctorPage({ veterinarian }: Props) {
   const fullName = `${veterinarian.surname} ${veterinarian.name} ${veterinarian.patronymic}`;
 
   return (
-    <div className="grid grid-cols-1 md:pt-8 md:grid-cols-[minmax(0,1fr)_286px] lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-x-8 lg:gap-y-0">
-      <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+    <div className="md:pt-8 grid grid-cols-1 lg:gap-x-8 lg:gap-y-0">
+      <BookingCalendarMobileModal
+        vetId={veterinarian.id}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      <div className="min-w-0 flex flex-col gap-8 lg:col-start-1">
         <Breadcrumbs
           segments={[
             { label: "Ветеринари", href: "/veterinarians" },
@@ -52,13 +81,27 @@ export default function DoctorPage({ veterinarian }: Props) {
         />
 
         <DocProfile veterinarian={veterinarian} />
-      </div>
-      <aside className="min-w-0 md:col-start-2 md:row-start-1 md:row-span-2 md:justify-self-end md:sticky md:top-6 md:self-start lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:justify-self-end lg:sticky lg:top-6">
-        <div className="w-auto md:w-[286px] lg:w-[360px]">
-          <EmptyCalendar />
-        </div>
-      </aside>
-      <div className="md:col-start-1 md:row-start-2 lg:col-start-1 md:mt-0 lg:row-start-2 lg:mt-0">
+
+        {isMobile && !isLoading && (
+          <>
+            <FreeVetScheduleSlots freeScheduleSlots={freeScheduleSlots} />
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="text-gray w-full text-base flex gap-1 items-center"
+            >
+              Більше вільних годин
+              <Icon
+                sprite="/sprites/sprite-sistem.svg"
+                id="arrow-rigth"
+                width="24px"
+                height="24px"
+                className="stroke-gray"
+              />
+            </button>
+          </>
+        )}
+
         <div className="flex w-full flex-col">
           <Tabs
             aria-label="Doctor tabs"
@@ -68,7 +111,6 @@ export default function DoctorPage({ veterinarian }: Props) {
             classNames={{
               base: 'relative [&_[data-slot="cursor"]]:hidden',
               tabList: "grid grid-cols-3 border-b border-gray-100 mb-6",
-              tabContent: "",
               panel: "pt-4",
             }}
           >
@@ -78,7 +120,7 @@ export default function DoctorPage({ veterinarian }: Props) {
                 title={
                   <div
                     className={clsx(
-                      "w-[127px] lg:w-[228px] text-center  py-2 text-[16px] lg:text-[18px] font-medium",
+                      "w-[127px] lg:w-[228px] text-center py-2 text-[16px] lg:text-[18px] font-medium",
                       selected === item.id
                         ? "text-primary-700 bg-primary-100 rounded-t-md border-b-2 border-primary-700 -mb-[4px]"
                         : "text-gray-500"
@@ -95,18 +137,19 @@ export default function DoctorPage({ veterinarian }: Props) {
             ))}
           </Tabs>
         </div>
+
+        <footer className="border-t border-gray-100 pb-8">
+          <DocReviews reviews={veterinarian.reviews} />
+        </footer>
       </div>
-      {/* <div className="lg:col-start-2 lg:row-end-2">
-        <Link
-          className="mt-30 text-gray-900 hover:text-primary-700 cursor-pointer transition-transform duration-300 hover:underline"
-          href={"/veterinarians/8/booking"}
-        >
-          Booking page
-        </Link>
-      </div> */}
-      <footer className="lg:col-span-2 lg:row-start-3 border-t border-gray-100 pb-8 ">
-        <DocReviews reviews={veterinarian.reviews} />
-      </footer>
+
+      {!isMobile && !isLoading && (
+        <div className="lg:col-start-2 lg:row-span-full">
+            <BookingCalendar vetId={veterinarian.id} />
+        </div>
+      )}
+
+      {isMobile && <BookingSummaryMobile />}
     </div>
   );
 }
