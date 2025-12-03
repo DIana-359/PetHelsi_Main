@@ -8,7 +8,7 @@ export async function DELETE() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners`, {
+    const res = await fetch(`${process.env.API_URL}/v1/owners`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token.value}`,
@@ -16,7 +16,9 @@ export async function DELETE() {
     });
 
     if (res.status === 204) {
-      return new NextResponse(null, { status: 204 });
+      const response = new NextResponse(null, { status: 204 });
+      response.cookies.set("auth-token", "", { path: "/", maxAge: 0 });
+      return response;
     }
 
     const data = await res.json();

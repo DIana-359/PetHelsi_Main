@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dayjs } from "dayjs";
-import { fetchScheduleSlots } from "@/app/services/vet/fetchScheduleSlots";
+import { fetchScheduleSlots } from "@/app/services/vets/fetchScheduleSlots";
 
 export function useScheduleSlots(vetId: string, date: Dayjs | null) {
   return useQuery({

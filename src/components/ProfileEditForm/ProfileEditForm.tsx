@@ -90,13 +90,6 @@ export default function ProfileEditForm() {
 
     try {
       await updateProfile(formData);
-      const res = await fetch("/api/proxy/get-profile", {
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        throw new Error("Не вдалося отримати оновлений профіль");
-      }
 
       const updatedProfile = await getProfileClient();
       if (updatedProfile) {
