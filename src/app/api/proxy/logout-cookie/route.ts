@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 export async function POST() {
   try {
     const backendResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/logout-cookie`,
+      `${process.env.API_URL}/v1/auth/logout-cookie`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

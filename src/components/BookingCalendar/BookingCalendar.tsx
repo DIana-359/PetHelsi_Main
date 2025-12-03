@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 import { TimeZoneDisplay } from "./ui/TimeZoneDisplay";
 import TimeSlots from "./ui/TimeSlots";
 import BookingSummary from "./ui/BookingSummary";
-import { useScheduleSlots } from "@/hooks/vet/useScheduleSlots";
+import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
 import { useBooking } from "@/contextBooking/contextBooking";
+import { holdSlot } from "@/app/services/vets/holdSlot";
 import clsx from "clsx";
 
 type Props = {
@@ -31,22 +32,8 @@ export default function BookingCalendar({ vetId, variant = "desktop" }: Props) {
     try {
       setError(null);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/vets/${vetId}/schedule-slots/${slotId}/hold`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: 'include'
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.message || "Не вдалося забронювати слот");
-      }
-
-      const data = await res.json();
+      const data = await holdSlot(vetId, slotId);
       console.log("Slot successfully held:", data);
-
       return data;
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Сталася помилка під час бронювання";

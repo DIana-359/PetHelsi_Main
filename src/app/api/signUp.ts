@@ -7,15 +7,11 @@ interface IArgumentsSingup {
 
 export const fetchSignup = async (userData: IArgumentsSingup) => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/register`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-        credentials: "include",
-      }
-    );
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData)
+    });
 
     if (!response.ok) {
       switch (response.status) {
@@ -30,8 +26,7 @@ export const fetchSignup = async (userData: IArgumentsSingup) => {
       }
     }
 
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch {
     throw new Error("Сталася помилка. Спробуйте ще раз.");
   }
