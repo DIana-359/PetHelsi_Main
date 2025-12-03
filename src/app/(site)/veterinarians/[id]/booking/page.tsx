@@ -12,9 +12,10 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPets } from "@/app/services/addPets";
+import { addPet } from "@/app/services/addPet";
 import { getPets } from "@/app/services/getPets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
+import { getVet } from "@/app/services/vets/getVet";
 
 export default function BookingPage() {
   const params = useParams();
@@ -50,14 +51,7 @@ export default function BookingPage() {
       setLoading(true);
       setError(null);
       try {
-        const vetRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!vetRes.ok) throw new Error("Помилка завантаження даних лікаря");
-        const vetData: Vet = await vetRes.json();
+        const vetData: Vet = await getVet(vetId);
 
         const slotData: AppointmentSlot = {
           id: "1",
@@ -110,12 +104,15 @@ export default function BookingPage() {
   }, [timeLeft]);
 
   const handleAddPet = async (pet: Pet) => {
-    try {
-      const savedPet = await addPets(pet);
-      setPets((prevPets) => [...prevPets, savedPet]);
-    } catch (err) {
-      console.error(err);
-      alert("Не вдалося зберегти тварину");
+    const { data, error } = await addPet(pet);
+
+    if (error) {
+      alert(`Не вдалося зберегти тварину: ${error}`);
+      return;
+    }
+
+    if (data) {
+      setPets((prevPets) => [...prevPets, data]);
     }
   };
 
