@@ -1,4 +1,3 @@
-// app/api/ownerProfile/change-password/route.ts
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +12,7 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/change-password`,
+      `${process.env.API_URL}/v1/owners/change-password`,
       {
         method: "PUT",
         headers: {
