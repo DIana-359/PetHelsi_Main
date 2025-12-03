@@ -12,11 +12,12 @@ export async function GET() {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/history`,
+      `${process.env.API_URL}/v1/owners/history`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        cache: "no-store",
       }
     );
 

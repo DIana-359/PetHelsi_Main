@@ -15,7 +15,7 @@ import EmptyCalendar from "../EmptyCalendar";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
 import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
-import { useFreeScheduleSlots } from "@/hooks/vet/useFreeScheduleSlots";
+import { useFreeScheduleSlots } from "@/hooks/vets/useFreeScheduleSlots";
 import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
 import useMedia from "@/utils/media";
 import Icon from "../Icon";

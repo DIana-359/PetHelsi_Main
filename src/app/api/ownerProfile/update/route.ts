@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/update-profile`,
+      `${process.env.API_URL}/v1/owners/update-profile`,
       {
         method: "PUT",
         headers: {

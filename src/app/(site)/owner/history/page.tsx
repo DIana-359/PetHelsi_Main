@@ -13,17 +13,12 @@ export default function History() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/proxy/getHistoryAllItems", {
-      credentials: "include",
-    })
-      .then(async res => {
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.error || "Помилка завантаження");
-        }
-        return res.json();
+    fetch("/api/proxy/getHistoryAllItems")
+      .then(res => res.json().then(data => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error(data.error || "Помилка завантаження");
+        setHistoryAllList(data);
       })
-      .then(setHistoryAllList)
       .catch(err => setError(err.message));
   }, []);
 

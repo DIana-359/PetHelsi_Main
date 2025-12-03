@@ -14,13 +14,17 @@ export async function GET(req: NextRequest) {
 
     console.log("Fetching AWS free schedule slots:", vetId);
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}/free-schedule-slots`,
-      { headers: { "Content-Type": "application/json" } }
-    );
+    const res = await fetch(`${process.env.API_URL}/v1/vets/${vetId}/free-schedule-slots`);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      return NextResponse.json(
+        { message: "Failed to fetch schedule slots", details: errorText },
+        { status: res.status }
+      );
+    }
 
     const data = await res.json();
-
     return NextResponse.json(data);
   } catch (err) {
     console.error("Fetch free schedule slots error:", err);
