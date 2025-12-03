@@ -11,7 +11,7 @@ export default async function VeterinarianDetailsPage(props: PageProps) {
   const params = await props.params;
   const { id } = params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${id}`, {
+  const res = await fetch(`${process.env.API_URL}/v1/vets/${id}`, {
     next: { revalidate: 0 },
   });
 

@@ -1,6 +1,6 @@
 export async function getProfileSSR(token: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/profile`,
+    `${process.env.API_URL}/v1/owners/profile`,
     {
       headers: {
         Accept: "application/json",

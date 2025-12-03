@@ -2,26 +2,16 @@
 
 import { Vet } from "@/utils/types/vet";
 import VetCardHomePage from "./VetCardHomePage";
-import { useEffect, useState } from "react";
+import { useVetsByCriteria } from "@/hooks/vets/useVets";
 
 interface IVeterinariansListProps {
   token?: true;
 }
 
 export default function VeterinariansList({ token }: IVeterinariansListProps) {
-  const [data, setData] = useState<Vet[]>([]);
+  const { data = [], isLoading } = useVetsByCriteria({ page: 0, size: 8 });
 
-  useEffect(() => {
-    const fetchVets = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets?page=0&size=8`
-      );
-      const result = await res.json();
-      setData(result.content);
-    };
-
-    fetchVets();
-  }, []);
+  if (isLoading) return <p>Завантаження ветеринарів...</p>;
 
   return (
     <div id="veterinariansList" className="flex gap-[13px] lg:gap-6">
