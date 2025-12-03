@@ -9,7 +9,7 @@ export async function GET() {
     }
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/pets`,
+      `${process.env.API_URL}/v1/owners/pets`,
       {
         method: "GET",
         headers: {
