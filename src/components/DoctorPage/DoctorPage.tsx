@@ -11,7 +11,6 @@ import WorkTab from "./WorkTab";
 import EducationTab from "./EducationTab";
 // import Link from "next/link";
 import clsx from "clsx";
-import EmptyCalendar from "../EmptyCalendar";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
 import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
@@ -21,14 +20,17 @@ import useMedia from "@/utils/media";
 import Icon from "../Icon";
 import { useBooking } from "@/contextBooking/contextBooking";
 import BookingSummaryMobile from "./BookingSummaryMobile";
+import SignUpModal from "@/components/ModalSignUp";
 import dayjs from "dayjs";
 
 type Props = {
   veterinarian: Veterinarian;
+  token?: boolean;
 };
 
-export default function DoctorPage({ veterinarian }: Props) {
+export default function DoctorPage({ veterinarian, token }: Props) {
   const [selected, setSelected] = useState("profile");
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const { setSelectedDate, setSelectedTime, setPrice, setSlotId} = useBooking()
   const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -145,11 +147,15 @@ export default function DoctorPage({ veterinarian }: Props) {
 
       {!isMobile && !isLoading && (
         <div className="lg:col-start-2 lg:row-span-full">
-            <BookingCalendar vetId={veterinarian.id} />
+            <BookingCalendar vetId={veterinarian.id} openSignUp={!token ? () => setIsSignUpOpen(true) : undefined} />
         </div>
       )}
 
-      {isMobile && <BookingSummaryMobile />}
+      {isMobile && <BookingSummaryMobile vetId={veterinarian.id} openSignUp={!token ? () => setIsSignUpOpen(true) : undefined} />}
+      <SignUpModal
+        isOpen={isSignUpOpen}
+        onClose={() => setIsSignUpOpen(false)}
+      />
     </div>
   );
 }

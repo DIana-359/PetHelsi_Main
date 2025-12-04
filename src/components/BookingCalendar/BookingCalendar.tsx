@@ -1,57 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { Dayjs } from "dayjs";
 import CalendarWeek from "./ui/CalendarWeek";
-import { useRouter } from "next/navigation";
 import { TimeZoneDisplay } from "./ui/TimeZoneDisplay";
 import TimeSlots from "./ui/TimeSlots";
 import BookingSummary from "./ui/BookingSummary";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
 import { useBooking } from "@/contextBooking/contextBooking";
-import { holdSlot } from "@/app/services/vets/holdSlot";
 import clsx from "clsx";
+import { useBookingFlow } from "@/hooks/booking/useBookingFlow";
 
 type Props = {
   vetId: string;
   variant?: "desktop" | "mobile";
+  openSignUp?: () => void;
 };
 
-export default function BookingCalendar({ vetId, variant = "desktop" }: Props) {
-  const router = useRouter();
-  const {selectedDate, setSelectedDate, selectedTime, setSelectedTime, slotId} = useBooking();
+export default function BookingCalendar({ vetId, variant = "desktop", openSignUp }: Props) {
+  const { selectedDate, setSelectedDate, setSelectedTime } = useBooking();
   const { data: timeSlots = [], isLoading } = useScheduleSlots(vetId, selectedDate);
-  const [error, setError] = useState<string | null>(null);
 
-  const holdSelectedSlot = async () => {
-    if (!slotId) {
-      setError("Не вдалось визначити слот для бронювання");
-      return;
-    }
-
-    try {
-      setError(null);
-
-      const data = await holdSlot(vetId, slotId);
-      console.log("Slot successfully held:", data);
-      return data;
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Сталася помилка під час бронювання";
-      setError(message);
-    }
-  };
-
-  const handleBooking = async () => {
-    if (!selectedDate || !selectedTime) {
-      setError("Оберіть час, щоб записатися на прийом");
-      return;
-    }
-
-    setError(null);
-    const result = await holdSelectedSlot();
-    if (!result) return;
-    router.push(`/veterinarians/${vetId}/booking`);
-  };
+  const { error, handleBooking } = useBookingFlow({ vetId, openSignUp });
 
   const handleSelectDate = (date: Dayjs) => {
     setSelectedDate(date);
