@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { vetId: string } }) {
-  const { vetId } = params;
+export async function GET(request: Request, { params }: { params: Promise<{ vetId: string }> }) {
+  const { vetId } = await params;
 
   try {
     const res = await fetch(
