@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { vetId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ vetId: string }> }) {
   const { vetId } = await params;
 
   try {
