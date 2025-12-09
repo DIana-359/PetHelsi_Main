@@ -15,6 +15,7 @@ export default function BookingCalendarMobileModal({ vetId, isOpen, onClose }: P
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
+      isDismissable={false}
       size="full"
       scrollBehavior="inside"
       hideCloseButton={true}

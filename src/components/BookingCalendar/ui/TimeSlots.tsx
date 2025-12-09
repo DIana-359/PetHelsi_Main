@@ -14,7 +14,15 @@ interface Props {
 export default function TimeSlots({ timeSlots, variant = "desktop" }: Props) {
   const {selectedTime, setSelectedTime, setSlotId} = useBooking()
   if (timeSlots.length === 0) {
-    return <p className="text-center text-gray-500 mt-4">Вільних слотів немає</p>;
+    return (
+      <p className="text-sm text-center text-gray-500 mt-4">
+        Нажаль, ветеринар в цей день не працює.
+        <br />
+        Перегляньте інший день та оберіть
+        <br />
+        доступний слот часу.
+      </p>
+    );
   }
 
   const handleSelectTimeSlot = (formattedTime: string, slotId: number, isAvailable: boolean) => {
