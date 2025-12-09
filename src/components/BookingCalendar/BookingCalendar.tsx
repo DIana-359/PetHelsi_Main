@@ -8,19 +8,18 @@ import BookingSummary from "./ui/BookingSummary";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
 import { useBooking } from "@/contextBooking/contextBooking";
 import clsx from "clsx";
-import { useBookingFlow } from "@/hooks/booking/useBookingFlow";
+import { Pulse } from "@/components/Pulse";
 
 type Props = {
   vetId: string;
   variant?: "desktop" | "mobile";
-  openSignUp?: () => void;
+  onBook?: () => void;
+  error?: string | null;
 };
 
-export default function BookingCalendar({ vetId, variant = "desktop", openSignUp }: Props) {
+export default function BookingCalendar({ vetId, variant = "desktop", onBook, error }: Props) {
   const { selectedDate, setSelectedDate, setSelectedTime } = useBooking();
   const { data: timeSlots = [], isLoading } = useScheduleSlots(vetId, selectedDate);
-
-  const { error, handleBooking } = useBookingFlow({ vetId, openSignUp });
 
   const handleSelectDate = (date: Dayjs) => {
     setSelectedDate(date);
@@ -30,8 +29,8 @@ export default function BookingCalendar({ vetId, variant = "desktop", openSignUp
   return (
     <div 
       className={clsx(
-        variant === "desktop" && "hidden md:block w-[465px] border border-gray-100 text-gray-900 rounded-[8px] px-10 py-8 mt-21",
-        variant === "mobile" && "block md:hidden w-full"
+        variant === "desktop" && "hidden lg:block w-[465px] border border-gray-100 text-gray-900 rounded-[8px] px-10 py-8 mt-21",
+        variant === "mobile" && "block w-full"
       )}
     >
 
@@ -39,7 +38,7 @@ export default function BookingCalendar({ vetId, variant = "desktop", openSignUp
 
       <TimeZoneDisplay />
 
-      {isLoading && <p className="text-sm text-gray-500">Завантаження…</p>}
+      {isLoading && <Pulse />}
 
       {selectedDate && !isLoading && (
         <div className="mb-8">
@@ -53,7 +52,9 @@ export default function BookingCalendar({ vetId, variant = "desktop", openSignUp
         </div>
       )}
 
-      {variant === "desktop" && <BookingSummary onBook={handleBooking} />}
+      {variant === "desktop" && timeSlots.length !== 0 && onBook && (
+        <BookingSummary onBook={onBook} />
+      )}
     </div>
   );
 }
