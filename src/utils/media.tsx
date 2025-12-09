@@ -7,7 +7,7 @@ export default function useMedia() {
 
   useEffect(() => {
     const checkViewport = () => {
-      const isMobile = window.innerWidth < 768;
+      const isMobile = window.innerWidth < 1024;
       setIsMobileViewport(isMobile);
 
       if (!isMobile) {
