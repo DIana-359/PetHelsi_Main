@@ -4,7 +4,7 @@ import { Dayjs } from "dayjs";
 import CalendarWeek from "./ui/CalendarWeek";
 import { TimeZoneDisplay } from "./ui/TimeZoneDisplay";
 import TimeSlots from "./ui/TimeSlots";
-import BookingSummary from "./ui/BookingSummary";
+import BookingSummary from "@/components/BookingCalendar/ui/BookingSummary";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
 import { useBooking } from "@/contextBooking/contextBooking";
 import clsx from "clsx";
