@@ -14,6 +14,7 @@ export function useBookingFlow({ vetId, openSignUp }: Params) {
   const router = useRouter();
   const { selectedDate, selectedTime, slotId } = useBooking();
   const [error, setError] = useState<string | null>(null);
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
 
   const holdSelectedSlot = async () => {
     if (!slotId) {
@@ -33,6 +34,8 @@ export function useBookingFlow({ vetId, openSignUp }: Params) {
   };
 
   const handleBooking = async () => {
+    if (isBookingLoading) return;
+
     if (openSignUp) {
       openSignUp();
       return;
@@ -44,9 +47,14 @@ export function useBookingFlow({ vetId, openSignUp }: Params) {
     }
 
     setError(null);
+    setIsBookingLoading(true);
 
     const result = await holdSelectedSlot();
-    if (!result) return;
+
+    if (!result) {
+      setIsBookingLoading(false);
+      return;
+    }
 
     router.push(`/veterinarians/${vetId}/booking`);
   };
@@ -54,5 +62,6 @@ export function useBookingFlow({ vetId, openSignUp }: Params) {
   return {
     error,
     handleBooking,
+    isBookingLoading
   };
 }
