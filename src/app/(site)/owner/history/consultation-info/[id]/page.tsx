@@ -17,9 +17,7 @@ export default function ConsultationInfo() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`/api/proxy/getHistoryById?id=${id}`, {
-      credentials: "include",
-    })
+    fetch(`/api/proxy/getHistoryById?id=${id}`)
       .then(async res => {
         if (!res.ok) {
           const err = await res.json();

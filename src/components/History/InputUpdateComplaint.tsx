@@ -3,6 +3,7 @@ import { IHistoryItem } from "@/app/types/historyTypes";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoSaveOutline } from "react-icons/io5";
+import { updateComplaint } from "@/app/services/history";
 
 type InputValueUpdateProps = {
   complaint: string;
@@ -19,32 +20,29 @@ export default function InputUpdateComplaint({
   const [value, setValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  function handleUpdateComplaint() {
+  const handleUpdateComplaint = async () => {
     if (!value.trim()) {
       setError("Поле не може бути порожнім");
       return;
     }
 
-    fetch(`/api/proxy/updateComplaint?id=${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ complaint: value }),
-    })
-      .then(async res => {
-        if (!res.ok) {
-          const err = await res.json();
-          console.error("API error body:", err);
-          throw new Error(err.error || "Помилка завантаження");
-        }
-        setOpenUpdatehistory?.(false);
-        return res.json();
-      })
-      .then(setHistoryItem)
-      .catch(err => setError(err.message));
-  }
+    if (!id) {
+      setError("Невідомий запис історії");
+      return;
+    }
+
+    const idParam = Array.isArray(id) ? id[0] : id;
+
+    try {
+      setError(null);
+      const updatedItem = await updateComplaint(idParam, value);
+      setHistoryItem?.(updatedItem);
+      setOpenUpdatehistory?.(false);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Сталася помилка";
+      setError(message);
+    }
+  };
 
   useEffect(() => {
     setValue(complaint || "");
