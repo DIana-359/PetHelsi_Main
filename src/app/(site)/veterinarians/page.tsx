@@ -7,6 +7,7 @@ import VeterinariansListPage from "@/components/VeterinariansBlock/Veterinarians
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
 import { cookies } from "next/headers";
 import Footer from "@/components/Footer/Footer";
+import { getVetsByCriteriaServer } from "@/app/services/vets/getVetsByCriteriaServer";
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
 }
@@ -29,20 +30,14 @@ export default async function VeterinariansPage({
   const date = typeof params?.date === "string" ? params.date : "";
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets?page=${
-        page - 1
-      }&size=12&sort=${sort}&petTypeName=${petType}&issueTypeName=${issueType}&date=${date}`,
-      { next: { revalidate: 0 } }
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("API error", res.status, text);
-      throw new Error("Не вдалося завантажити ветеринарів");
-    }
-
-    const data = await res.json();
+    const data = await getVetsByCriteriaServer({
+      page: page - 1,
+      size: 12,
+      sort,
+      petTypeName: petType,
+      issueTypeName: issueType,
+      date,
+    });
 
     return (
       <div className="text-gray-500 pt-5 md:pt-8">

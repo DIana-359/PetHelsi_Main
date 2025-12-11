@@ -1,18 +1,10 @@
 import { Veterinarian } from "@/utils/types/veterinarian";
 import Icon from "../Icon";
 import { useState } from "react";
+import { petTypeIcons } from "@/utils/types/petTypeIcons";
 
 type Props = {
   veterinarian: Veterinarian;
-};
-
-const petTypeIcons: Record<string, string> = {
-  Собака: "icon-dog",
-  Кіт: "icon-cat",
-  Птах: "icon-bird",
-  Гризун: "icon-rabbit",
-  Плазун: "icon-turtle",
-  Інше: "icon-other",
 };
 
 const petTypePlural: Record<string, string> = {

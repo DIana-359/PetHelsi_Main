@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/history/${id}`,
+      `${process.env.API_URL}/v1/owners/history/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

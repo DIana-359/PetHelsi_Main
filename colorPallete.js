@@ -27,6 +27,18 @@ export const colorPallete = {
     950: "#011B25",
     DEFAULT: "#333F5D",
   },
+  red: {
+    100: "#FFE8E8",
+    200: "#FDBB9E",
+    300: "#FA8D6D",
+    400: "#F66148",
+    500: "#F11C0E",
+    600: "#CF0A0E",
+    700: "#AD0718",
+    800: "#8B041D",
+    900: "#730221",
+    DEFAULT: "#F11C0E",
+  },
   success: {
     100: "#E2F9D5",
     200: "#C1F4AD",
