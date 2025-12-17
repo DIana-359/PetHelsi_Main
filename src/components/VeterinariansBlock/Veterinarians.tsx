@@ -35,7 +35,7 @@ export default function Veterinarians({ token }: IVeterinariansProps) {
           />
         </Link>
       </div>
-      <div className="lg:col-span-7">
+      <div className="lg:col-span-7 flex flex-col">
         <CarouselVets token={token} />
       </div>
     </div>
