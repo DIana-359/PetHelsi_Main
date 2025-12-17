@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
 import Icon from "@/components/Icon";
-// import ForgotPassword from "@/components/ForgotPassword";
+import ForgotPassword from "@/components/ForgotPassword";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
@@ -19,6 +19,8 @@ export default function SignInFormCooky() {
   const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isCheckedRemember, setIsCheckedRemember] = useState<boolean>(false);
+  const [isOpenModalChangePassword, setOpenModalChangePassword] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const savedEmail = Cookies.get("rememberedEmail");
@@ -142,6 +144,12 @@ export default function SignInFormCooky() {
             Запам&apos;ятати мене
           </label>
         </div>
+        <button
+          type="button"
+          onClick={() => setOpenModalChangePassword(true)}
+          className="text-[12px] font-[400] leading-[1.4] text-primary-700 hover:text-primary-800 underline transition-colors hover:cursor-pointer">
+          Забули пароль?
+        </button>
       </div>
 
       <div className="w-full">
@@ -178,6 +186,10 @@ export default function SignInFormCooky() {
           Зареєструйтесь
         </Link>
       </p>
+      <ForgotPassword
+        isOpenModalChangePassword={isOpenModalChangePassword}
+        setOpenModalChangePassword={setOpenModalChangePassword}
+      />
     </form>
   );
 }
