@@ -1,3 +1,5 @@
+type HoldSlotError = Error & { status: number };
+
 export const holdSlot = async (vetId: string, slotId: number) => {
   try {
     const res = await fetch(`/api/vets/hold-slot?vetId=${vetId}&slotId=${slotId}`, {
@@ -6,13 +8,26 @@ export const holdSlot = async (vetId: string, slotId: number) => {
     });
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ message: "Hold slot failed" }));
-      throw new Error(errorData.message || "Hold slot failed");
+      let errorData: { message?: string } = {};
+      try {
+        errorData = await res.json();
+      } catch {}
+
+      const error = new Error(errorData.message || "Hold slot failed") as HoldSlotError;
+      error.status = res.status;
+      throw error;
     }
 
     return await res.json();
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Hold slot failed";
-    throw new Error(message);
+    if (err instanceof Error && 'status' in err) {
+      throw err as HoldSlotError;
+    }
+
+    const error = new Error(
+      err instanceof Error ? err.message : "Hold slot failed"
+    ) as HoldSlotError;
+    error.status = 0;
+    throw error;
   }
 };

@@ -9,6 +9,7 @@ import { Card, CardBody } from "@heroui/react";
 import AboutTab from "./AboutTab";
 import WorkTab from "./WorkTab";
 import EducationTab from "./EducationTab";
+import SlotUnavailableModal from "@/components/SlotUnavailableModal"
 // import Link from "next/link";
 import clsx from "clsx";
 import DocReviews from "./DocReviews";
@@ -38,10 +39,12 @@ export default function DoctorPage({ veterinarian, token }: Props) {
   const { data: timeSlots = [] } = useScheduleSlots(veterinarian.id, selectedDate);
   const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSlotConflictOpen, setIsSlotConflictOpen] = useState(false);
   const isMobile = useMedia();
   const bookingFlow = useBookingFlow({
     vetId: veterinarian.id,
     openSignUp: !token ? () => setIsSignUpOpen(true) : undefined,
+    onSlotConflict: () => setIsSlotConflictOpen(true),
   });
 
   useEffect(() => {
@@ -165,6 +168,7 @@ export default function DoctorPage({ veterinarian, token }: Props) {
                 vetId={veterinarian.id}
                 onBook={bookingFlow.handleBooking}
                 error={bookingFlow.error}
+                setError={bookingFlow.setError}
               />
           </div>
         )}
@@ -178,6 +182,11 @@ export default function DoctorPage({ veterinarian, token }: Props) {
         <SignUpModal
           isOpen={isSignUpOpen}
           onClose={() => setIsSignUpOpen(false)}
+          hideRoleTabs={true}
+        />
+        <SlotUnavailableModal 
+          isOpen={isSlotConflictOpen}
+          onClose={() => setIsSlotConflictOpen(false)}
         />
       </div>
     </div>

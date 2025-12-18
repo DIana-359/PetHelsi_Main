@@ -16,10 +16,13 @@ import clsx from "clsx";
 
 type RoleType = "CLIENT" | "VET";
 type RoleTypeWithEmpty = RoleType | null;
+type SignUpFormProps = {
+  hideRoleTabs?: boolean;
+};
 
-export default function SignUpForm() {
+export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(null);
+  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(hideRoleTabs ? "CLIENT" : null);
   const [tabError, setTabError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,13 +87,15 @@ export default function SignUpForm() {
         </span>
       </h2>
 
-      <AuthRoleTabs
-        selectedRole={selectedRole}
-        setSelectedRole={setSelectedRole}
-        tabError={tabError}
-        setTabError={setTabError}
-        setIsVetBackground={setIsVetBackground}
-      />
+      {!hideRoleTabs && (
+        <AuthRoleTabs
+          selectedRole={selectedRole}
+          setSelectedRole={setSelectedRole}
+          tabError={tabError}
+          setTabError={setTabError}
+          setIsVetBackground={setIsVetBackground}
+        />
+      )}
 
       <AuthInput
         id="email"
