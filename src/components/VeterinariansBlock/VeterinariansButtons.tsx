@@ -65,6 +65,7 @@ export default function VeterinariansButtons({
       <SignUpModal
         isOpen={isSignUpOpen}
         onClose={() => setIsSignUpOpen(false)}
+        hideRoleTabs={true}
       />
     </>
   );
