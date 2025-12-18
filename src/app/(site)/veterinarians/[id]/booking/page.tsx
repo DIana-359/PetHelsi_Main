@@ -7,16 +7,15 @@ import { Pet } from "@/app/types/pet";
 import { ModalBookingSuccess } from "./ModalBookingSuccess";
 import { ModalBookingCancel } from "./ModalBookingCancel";
 import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
-import ModalDeletePet from "./ModalDeletePet";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPets } from "@/app/services/addPets";
+import { addPet } from "@/app/services/addPet";
 import { getPets } from "@/app/services/getPets";
-import { deletePets } from "@/app/services/deletePets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
+import { getVet } from "@/app/services/vets/getVet";
 
 export default function BookingPage() {
   const params = useParams();
@@ -35,9 +34,7 @@ export default function BookingPage() {
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [petToDeleteId, setPetToDeleteId] = useState<string | null>(null);
-  const [selectedPetIds, setSelectedPetIds] = useState<string[]>([]);
+  const [selectedPetIds] = useState<string[]>([]);
 
   const togglePetType = (petType: string) => {
     setSelectedPetTypes((prev) =>
@@ -54,14 +51,7 @@ export default function BookingPage() {
       setLoading(true);
       setError(null);
       try {
-        const vetRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${vetId}`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!vetRes.ok) throw new Error("Помилка завантаження даних лікаря");
-        const vetData: Vet = await vetRes.json();
+        const vetData: Vet = await getVet(vetId);
 
         const slotData: AppointmentSlot = {
           id: "1",
@@ -114,27 +104,15 @@ export default function BookingPage() {
   }, [timeLeft]);
 
   const handleAddPet = async (pet: Pet) => {
-    try {
-      const savedPet = await addPets(pet);
-      setPets((prevPets) => [...prevPets, savedPet]);
-    } catch (err) {
-      console.error(err);
-      alert("Не вдалося зберегти тварину");
+    const { data, error } = await addPet(pet);
+
+    if (error) {
+      alert(`Не вдалося зберегти тварину: ${error}`);
+      return;
     }
-  };
 
-  const performDeletePet = async (id: string) => {
-    try {
-      await deletePets(id);
-
-      setPets((prev) => prev.filter((p) => p.id !== id));
-      setSelectedPetIds((prev) => prev.filter((pid) => pid !== id));
-
-      setShowDeleteModal(false);
-      setPetToDeleteId(null);
-    } catch (err) {
-      console.error("performDeletePet error:", err);
-      alert("Сталася помилка при видаленні тварини. Спробуй пізніше.");
+    if (data) {
+      setPets((prevPets) => [...prevPets, data]);
     }
   };
 
@@ -207,16 +185,6 @@ export default function BookingPage() {
                 >
                   <span className="text-lg">+</span>
                   Додати тварину
-                </button>
-                <button
-                  onClick={() => {
-                    setPetToDeleteId(pets[0]?.id ?? null);
-                    setShowDeleteModal(true);
-                  }}
-                  disabled={pets.length === 0}
-                  className="flex items-center gap-2 border-2 border-red-500 bg-white text-red-500 rounded-lg px-4 py-3 hover:bg-red-50 transition-colors font-lato disabled:opacity-50"
-                >
-                  Видалити тварину
                 </button>
                 {pets.map((pet) => (
                   <div key={pet.id} className="flex items-center gap-3">
@@ -383,18 +351,6 @@ export default function BookingPage() {
           isOpen={showModalTimeLeft}
           setTimeLeft={() => setTimeLeft({ minutes: 14, seconds: 58 })}
           onClose={() => setShowModalTimeLeft(false)}
-        />
-      )}
-      {showDeleteModal && (
-        <ModalDeletePet
-          isOpen={showDeleteModal}
-          pets={pets}
-          initialSelectedId={petToDeleteId}
-          onClose={() => {
-            setShowDeleteModal(false);
-            setPetToDeleteId(null);
-          }}
-          onConfirmDelete={performDeletePet}
         />
       )}
     </div>

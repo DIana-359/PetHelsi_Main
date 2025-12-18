@@ -1,17 +1,15 @@
 import DoctorPage from "@/components/DoctorPage/DoctorPage";
-
-// type Params = { id: string };
-// type PageProps = { params: Params };
+import { checkToken } from "@/app/api/checkToken";
 
 type Params = { id: string };
 type PageProps = { params: Promise<Params> };
 
 export default async function VeterinarianDetailsPage(props: PageProps) {
-  // const { params } = props as PageProps;
   const params = await props.params;
+  const token = await checkToken();
   const { id } = params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/vets/${id}`, {
+  const res = await fetch(`${process.env.API_URL}/v1/vets/${id}`, {
     next: { revalidate: 0 },
   });
 
@@ -25,5 +23,5 @@ export default async function VeterinarianDetailsPage(props: PageProps) {
 
   const veterinarian = await res.json();
 
-  return <DoctorPage veterinarian={veterinarian} />;
+  return <DoctorPage veterinarian={veterinarian} token={token ? true : undefined} />;
 }

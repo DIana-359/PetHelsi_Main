@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useSistem } from "@/contextSistem/contextSistem";
 
 export default function useMedia() {
-  const [isMobileViewport, setIsMobileViewport] = useState<boolean>(false);
+  const [isMobileViewport, setIsMobileViewport] = useState<boolean | null>(null);
   const { setIsOpenModalDashboard } = useSistem();
 
   useEffect(() => {
     const checkViewport = () => {
-      const isMobile = window.innerWidth < 768;
+      const isMobile = window.innerWidth < 1024;
       setIsMobileViewport(isMobile);
 
       if (!isMobile) {

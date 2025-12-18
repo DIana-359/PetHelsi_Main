@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const body: Pet = await req.json();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/owners/pets`,
+      `${process.env.API_URL}/v1/owners/pets`,
       {
         method: "POST",
         headers: {

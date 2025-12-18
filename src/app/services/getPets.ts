@@ -13,7 +13,7 @@ export async function getPets() {
       throw new Error(errorData.message || "Failed to get pet");
     }
     if (res.status === 204) {
-      return { message: "Pet geteted" };
+      return { message: "Pets received" };
     }
 
     return await res.json();
