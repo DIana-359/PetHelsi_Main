@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal, ModalContent, ModalBody } from "@heroui/modal";
-import SignUpForm from "@/app/(auth)/signup/page";
+import SignUpForm from "@/app/(auth)/signup/SignUpForm";
 import Icon from "./Icon";
 
 type SignUpModalProps = {
