@@ -15,15 +15,17 @@ type Props = {
   variant?: "desktop" | "mobile";
   onBook?: () => void;
   error?: string | null;
+  setError?: (error: string | null) => void;
 };
 
-export default function BookingCalendar({ vetId, variant = "desktop", onBook, error }: Props) {
+export default function BookingCalendar({ vetId, variant = "desktop", onBook, error, setError }: Props) {
   const { selectedDate, setSelectedDate, setSelectedTime } = useBooking();
   const { data: timeSlots = [], isLoading } = useScheduleSlots(vetId, selectedDate);
 
   const handleSelectDate = (date: Dayjs) => {
     setSelectedDate(date);
     setSelectedTime(null);
+    setError?.(null);
   };
 
   return (

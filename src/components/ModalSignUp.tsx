@@ -1,15 +1,16 @@
 "use client";
 
 import { Modal, ModalContent, ModalBody } from "@heroui/modal";
-import SignUpForm from "@/app/(auth)/signup/page";
+import SignUpForm from "@/app/(auth)/signup/SignUpForm";
 import Icon from "./Icon";
 
 type SignUpModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  hideRoleTabs?: boolean;
 };
 
-export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
+export default function SignUpModal({ isOpen, onClose, hideRoleTabs = false }: SignUpModalProps) {
   return (
     <Modal
       isOpen={isOpen}
@@ -33,7 +34,7 @@ export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
         </button>
 
         <ModalBody className="p-0">
-          <SignUpForm />
+          <SignUpForm hideRoleTabs={hideRoleTabs} />
         </ModalBody>
       </ModalContent>
     </Modal>
