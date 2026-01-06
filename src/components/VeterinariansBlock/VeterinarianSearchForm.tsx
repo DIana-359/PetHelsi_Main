@@ -1,9 +1,14 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Form, Select, SelectItem, DatePicker } from "@heroui/react";
-import { today, DateValue, getLocalTimeZone } from "@internationalized/date";
-import { optionsAnimals, optionsProblems } from "./Constants";
+import {
+  today,
+  DateValue,
+  getLocalTimeZone,
+  parseDate,
+} from "@internationalized/date";
+import { optionsAnimals, optionsProblems } from "../../app/Constants";
 import Icon from "../Icon";
 import { checkAuth } from "@/utils/checkAuth";
 
@@ -15,11 +20,24 @@ interface FormData {
 
 export const VeterinarianSearchForm = () => {
   const router = useRouter();
-  const [formData, setFormData] = React.useState<FormData>({
+  const params = useSearchParams();
+  const [formData, setFormData] = useState<FormData>({
     petTypeName: "",
     issueTypeName: "",
     date: today(getLocalTimeZone()),
   });
+
+  useEffect(() => {
+    const petType = params.get("petTypeName") || "";
+    const issueType = params.get("issueTypeName") || "";
+    const dateParam = params.get("date");
+
+    setFormData({
+      petTypeName: petType,
+      issueTypeName: issueType,
+      date: dateParam ? parseDate(dateParam) : today(getLocalTimeZone()),
+    });
+  }, [params]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,8 +45,8 @@ export const VeterinarianSearchForm = () => {
     const queryParams = new URLSearchParams();
 
     const filters = {
-      petTypeName: formData.petTypeName,
-      issueTypeName: formData.issueTypeName,
+      petTypeName: formData?.petTypeName,
+      issueTypeName: formData?.issueTypeName,
       date: formData.date?.toString(),
     };
 
@@ -65,10 +83,13 @@ export const VeterinarianSearchForm = () => {
           },
         }}
         name="petTypeName"
-        value={formData.petTypeName}
-        onChange={event =>
-          setFormData({ ...formData, petTypeName: event.target.value })
+        selectedKeys={
+          formData.petTypeName ? new Set([formData.petTypeName]) : new Set()
         }
+        onSelectionChange={keys => {
+          const value = Array.from(keys)[0];
+          setFormData({ ...formData, petTypeName: value ? String(value) : "" });
+        }}
         aria-labelledby="animal"
         variant="bordered"
         placeholder="Тварина"
@@ -131,10 +152,16 @@ export const VeterinarianSearchForm = () => {
           },
         }}
         name="issueTypeName"
-        value={formData.issueTypeName}
-        onChange={event =>
-          setFormData({ ...formData, issueTypeName: event.target.value })
+        selectedKeys={
+          formData.issueTypeName ? new Set([formData.issueTypeName]) : new Set()
         }
+        onSelectionChange={keys => {
+          const value = Array.from(keys)[0] ?? "";
+          setFormData({
+            ...formData,
+            issueTypeName: value ? String(value) : "",
+          });
+        }}
         aria-labelledby="problem"
         variant="bordered"
         placeholder="Що турбує тварину?"

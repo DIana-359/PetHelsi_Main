@@ -1,4 +1,4 @@
-import { VeterinarianSearchForm } from "@/components/Hero/VeterinarianSearchForm";
+import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
@@ -24,7 +24,7 @@ export default async function ownerVeterinarians({
   const date = typeof params?.date === "string" ? params.date : "";
 
   try {
-     const data = await getVetsByCriteriaServer({
+    const data = await getVetsByCriteriaServer({
       page: page - 1,
       size: 12,
       sort,
