@@ -89,4 +89,4 @@ export const optionsProblems = [
   { value: "Інше", key: "Інше", icon: "icon-allproblems" },
 ];
 
-export const WEEK_DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"];
+export const WEEK_DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"] as const;

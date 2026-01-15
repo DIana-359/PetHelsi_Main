@@ -4,7 +4,7 @@ import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import VeterinariansPagination from "@/components/VeterinariansBlock/VeterinariansPagination";
 import { Vet } from "@/utils/types/vet";
-import { getVetsByCriteriaServer } from "@/app/services/vets/getVetsByCriteriaServer";
+import { getVetsByCriteriaServer } from "@/services/vets/getVetsByCriteriaServer";
 
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;

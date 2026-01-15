@@ -1,4 +1,4 @@
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import InputUpdateComplaint from "./InputUpdateComplaint";
 import Icon from "../Icon";
 interface Props {

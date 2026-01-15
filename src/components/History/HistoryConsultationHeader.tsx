@@ -1,6 +1,6 @@
 import Image from "next/image";
 import DownloadPDFButton from "../History/DownloadPDFButton";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 
 interface Props {
   historyItem: IHistoryItem;

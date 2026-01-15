@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchFreeScheduleSlots } from "@/app/services/vets/fetchFreeScheduleSlots";
+import { fetchFreeScheduleSlots } from "@/services/vets/fetchFreeScheduleSlots";
 
 export function useFreeScheduleSlots(vetId: string) {
   return useQuery({

@@ -1,5 +1,5 @@
 import { Vet } from "@/utils/types/vet";
-import { GetVetsParams } from "@/app/types/vetTypes";
+import { GetVetsParams } from "@/types/vetTypes";
 
 export async function getVetsByCriteria(params: GetVetsParams = {}): Promise<Vet[]> {
   try {

@@ -7,7 +7,7 @@ import VeterinariansListPage from "@/components/VeterinariansBlock/Veterinarians
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
 import { cookies } from "next/headers";
 import Footer from "@/components/Footer/Footer";
-import { getVetsByCriteriaServer } from "@/app/services/vets/getVetsByCriteriaServer";
+import { getVetsByCriteriaServer } from "@/services/vets/getVetsByCriteriaServer";
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
 }
