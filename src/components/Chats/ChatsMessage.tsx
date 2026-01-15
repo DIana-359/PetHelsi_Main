@@ -1,4 +1,4 @@
-import { Chat } from "@/app/types/chatsTypes";
+import { Chat } from "@/types/chatsTypes";
 import clsx from "clsx";
 
 interface ChatsProps {

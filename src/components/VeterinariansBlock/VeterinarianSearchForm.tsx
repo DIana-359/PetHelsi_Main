@@ -8,7 +8,7 @@ import {
   getLocalTimeZone,
   parseDate,
 } from "@internationalized/date";
-import { optionsAnimals, optionsProblems } from "../../app/Constants";
+import { optionsAnimals, optionsProblems } from "../../Constants";
 import Icon from "../Icon";
 import { checkAuth } from "@/utils/checkAuth";
 

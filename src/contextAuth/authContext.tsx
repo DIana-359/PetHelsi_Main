@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState } from "react";
-import { IProfileOwner } from "@/app/types/ownerTypes";
+import { IProfileOwner } from "@/types/ownerTypes";
 
 interface IAuth {
   userData: IProfileOwner | null;

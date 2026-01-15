@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { BookingAddPetModal } from "./BookingAddPetModal";
-import { Pet } from "@/app/types/pet";
+import { Pet } from "@/types/pet";
 import { ModalBookingSuccess } from "./ModalBookingSuccess";
 import { ModalBookingCancel } from "./ModalBookingCancel";
 import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
@@ -12,10 +12,10 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPet } from "@/app/services/addPet";
-import { getPets } from "@/app/services/getPets";
+import { addPet } from "@/services/addPet";
+import { getPets } from "@/services/getPets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
-import { getVet } from "@/app/services/vets/getVet";
+import { getVet } from "@/services/vets/getVet";
 
 export default function BookingPage() {
   const params = useParams();

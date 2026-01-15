@@ -3,7 +3,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/uk";
 import { useEffect, useMemo, useState } from "react";
-import { WEEK_DAYS } from "@/app/Constants";
+import { WEEK_DAYS } from "@/Constants";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
 import isoWeek from "dayjs/plugin/isoWeek";

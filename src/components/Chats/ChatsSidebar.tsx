@@ -1,6 +1,6 @@
 "use client";
 import AvatarUser from "../ProfileOwner/AvatarUser";
-import type { Chat, VetDialog } from "@/app/types/chatsTypes";
+import type { Chat, VetDialog } from "@/types/chatsTypes";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import useMedia from "@/utils/useMedia";
