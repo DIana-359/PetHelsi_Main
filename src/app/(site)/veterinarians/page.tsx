@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { VeterinarianSearchForm } from "@/components/Hero/VeterinarianSearchForm";
+import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 import VeterinariansPagination from "@/components/VeterinariansBlock/VeterinariansPagination";
 import { Vet } from "@/utils/types/vet";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
