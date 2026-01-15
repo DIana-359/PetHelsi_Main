@@ -16,7 +16,7 @@ export default function TimeSlots({ timeSlots, variant = "desktop" }: Props) {
   if (timeSlots.length === 0) {
     return (
       <p className="text-sm text-center text-gray-500 mt-4">
-        Нажаль, ветеринар в цей день не працює.
+        На жаль, ветеринар в цей день не працює.
         <br />
         Перегляньте інший день та оберіть
         <br />
