@@ -1,9 +1,9 @@
 "use client";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoSaveOutline } from "react-icons/io5";
-import { updateComplaint } from "@/app/services/history";
+import { updateComplaint } from "@/services/history";
 
 type InputValueUpdateProps = {
   complaint: string;

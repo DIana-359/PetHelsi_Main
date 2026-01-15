@@ -1,5 +1,5 @@
 "use client";
-import { Chat } from "@/app/types/chatsTypes";
+import { Chat } from "@/types/chatsTypes";
 import Icon from "../Icon";
 import { useState, useRef, useEffect } from "react";
 

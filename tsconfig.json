@@ -31,7 +31,7 @@
     "src/app/(site)/signupп",
     ".env.example.ts",
     "next.config.ts",
-    "src/app/services/deletePet.serverts"
+    "src/services/deletePet.serverts"
 , "src/app/api/forgot-password"  ],
   "exclude": ["node_modules"]
 }

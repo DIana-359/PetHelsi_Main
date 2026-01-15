@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Pet } from "@/app/types/pet";
-import { optionsAnimals } from "@/app/Constants";
+import { Pet } from "@/types/pet";
+import { optionsAnimals } from "@/Constants";
 import {
   Modal,
   ModalContent,
