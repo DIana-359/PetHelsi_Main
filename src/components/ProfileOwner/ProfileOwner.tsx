@@ -11,7 +11,6 @@ export default function ProfileOwner() {
   const isMobile = useMedia();
 
   const ownerData = [
-    // { label: "avatar", value: data?.avatar ?? "" },
     { label: "Ім’я", value: userData?.firstName ?? "Не вказано" },
     { label: "Прізвище", value: userData?.lastName ?? "Не вказано" },
     { label: "По-батькові", value: userData?.middleName ?? "Не вказано" },
