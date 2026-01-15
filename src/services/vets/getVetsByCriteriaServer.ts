@@ -1,4 +1,4 @@
-import { GetVetsParams } from "@/app/types/vetTypes";
+import { GetVetsParams } from "@/types/vetTypes";
 
 export async function getVetsByCriteriaServer(params: GetVetsParams = {}) {
   const query = new URLSearchParams(

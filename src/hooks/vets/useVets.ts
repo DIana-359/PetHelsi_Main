@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getVetsByCriteria } from "@/app/services/vets/getVetsByCriteria";
-import { GetVetsParams } from "@/app/types/vetTypes";
+import { getVetsByCriteria } from "@/services/vets/getVetsByCriteria";
+import { GetVetsParams } from "@/types/vetTypes";
 
 export function useVetsByCriteria(params: GetVetsParams) {
   return useQuery({

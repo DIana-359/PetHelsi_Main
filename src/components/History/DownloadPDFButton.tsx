@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import Icon from "../Icon";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import { usePathname } from "next/navigation";
 import PdfGenerator from "./PdfGenerator";
 

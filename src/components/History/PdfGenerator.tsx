@@ -1,5 +1,5 @@
 "use client";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import HistoryMedicalReport from "./HistoryMedicalReport";
 import { RefObject, useEffect, useState } from "react";
 import Modal from "react-modal";

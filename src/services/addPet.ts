@@ -1,4 +1,4 @@
-import { Pet } from "@/app/types/pet";
+import { Pet } from "@/types/pet";
 
 interface AddPetResult {
   data: Pet | null;

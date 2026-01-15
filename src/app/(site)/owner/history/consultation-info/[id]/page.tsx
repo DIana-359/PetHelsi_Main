@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import GoBack from "@/components/GoBack";
 import HistoryDetailsConsultationHeader from "@/components/History/HistoryConsultationHeader";
 import HistoryMedicalReport from "@/components/History/HistoryMedicalReport";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import HistoryUploadedFiles from "@/components/History/HistoryUploadedFiles";
 import { Pulse } from "@/components/Pulse";
 import { useParams } from "next/navigation";
