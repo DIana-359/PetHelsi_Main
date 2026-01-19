@@ -1,4 +1,4 @@
-import { NAV_ITEMS } from "@/app/Constants";
+import { NAV_ITEMS } from "@/Constants";
 import { NavLink } from "./NavLink";
 
 export default function Navigation() {

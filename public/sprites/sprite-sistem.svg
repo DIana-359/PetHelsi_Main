@@ -356,8 +356,8 @@
 <path fill="#1e88e5" style="fill: var(--color1, #1e88e5)" d="M21.517 14.091l-8.71-4.355c-1.596-0.798-3.473 0.363-3.473 2.147v8.233c0 1.784 1.878 2.945 3.473 2.147l8.71-4.355c1.572-0.786 1.572-3.030 0-3.816z"></path>
 </symbol>
 <symbol id="icon-plus" viewBox="0 0 32 32">
-<path stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.3333" d="M16 8v16"></path>
-<path stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.3333" d="M24 16h-16"></path>
+<path stroke="currentColor" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.333" d="M16 8v16"></path>
+<path stroke="currentColor" stroke-linejoin="miter" stroke-linecap="round" stroke-miterlimit="4" stroke-width="1.3333" d="M24 16h-16"></path>
 </symbol>
 <symbol id="icon-minus" viewBox="0 0 24 24">
 <path d="M18 12L6 12" fill="none" stroke="#1E88E5" stroke-linecap="round"/>

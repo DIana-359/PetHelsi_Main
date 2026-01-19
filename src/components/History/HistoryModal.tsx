@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { IoEyeOutline } from "react-icons/io5";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import Icon from "../Icon";
 import DownloadPDFButton from "./DownloadPDFButton";
 

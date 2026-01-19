@@ -1,10 +1,10 @@
-import { VeterinarianSearchForm } from "@/components/Hero/VeterinarianSearchForm";
+import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import VeterinariansPagination from "@/components/VeterinariansBlock/VeterinariansPagination";
 import { Vet } from "@/utils/types/vet";
-import { getVetsByCriteriaServer } from "@/app/services/vets/getVetsByCriteriaServer";
+import { getVetsByCriteriaServer } from "@/services/vets/getVetsByCriteriaServer";
 
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
@@ -24,7 +24,7 @@ export default async function ownerVeterinarians({
   const date = typeof params?.date === "string" ? params.date : "";
 
   try {
-     const data = await getVetsByCriteriaServer({
+    const data = await getVetsByCriteriaServer({
       page: page - 1,
       size: 12,
       sort,

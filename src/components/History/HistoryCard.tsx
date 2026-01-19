@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IHistoryItem, StatusType } from "../../app/types/historyTypes";
+import { IHistoryItem, StatusType } from "../../types/historyTypes";
 import Image from "next/image";
 import HistoryDetailsConsultation from "./HistoryDetailsConsultation";
 import HistoryInfoMobile from "@/components/History/HistoryInfoMobile";

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { Pet } from "@/app/types/pet";
+import { Pet } from "@/types/pet";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,17 +11,14 @@ export async function POST(req: NextRequest) {
 
     const body: Pet = await req.json();
 
-    const res = await fetch(
-      `${process.env.API_URL}/v1/owners/pets`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const res = await fetch(`${process.env.API_URL}/v1/owners/pets`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.value}`,
+      },
+      body: JSON.stringify(body),
+    });
 
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });

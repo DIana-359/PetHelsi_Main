@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchSignoutCookieProxy } from "@/app/api/auth-proxy";
-import { deleteAccount } from "@/app/services/deleteAccount";
+import { deleteAccount } from "@/services/deleteAccount";
 import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
 
