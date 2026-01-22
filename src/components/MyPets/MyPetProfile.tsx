@@ -11,6 +11,22 @@ import { SterilizedLabel } from "./SterilizedLabel";
 const formatBirthDateUA = (dateString?: string) => {
   if (!dateString) return "Не вказано";
 
+  const [year, month, day] = dateString.split("-");
+
+  if (month === "01" && day === "01") {
+    return year;
+  }
+
+  if (day === "01") {
+    const date = new Date(Number(year), Number(month) - 1);
+    return new Intl.DateTimeFormat("uk-UA", {
+      month: "long",
+      year: "numeric",
+    })
+      .format(date)
+      .replace(/^./, (c) => c.toUpperCase())
+      .replace(/\s?р\.?$/, "");
+  }
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return "Не вказано";
 
@@ -48,7 +64,7 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
     { label: "Вид", value: activePet.petTypeName || "Не вказано" },
     { label: "Порода", value: activePet.breed || "Не вказано" },
     { label: "Стать", value: activePet.genderTypeName || "Не вказано" },
-    { label: "Забарвлення", value: activePet.color || "Не вказано" },
+
     { label: "Дата народження", value: formatBirthDateUA(activePet.birthDate) },
     {
       label: "Вага",
@@ -122,7 +138,7 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
               <UpdateProfilePetLink />
             </div>
           </div>
-          <ul className="flex flex-col flex-wrap md:flex-row justify-between  gap-y-[16px] pt-8 md:pt-1  border-t border-gray-100 md:border-t-0 ">
+          <ul className="flex flex-col flex-wrap md:flex-row  gap-y-[16px] pt-8 md:pt-1  border-t border-gray-100 md:border-t-0 ">
             {petData.map((item, i) => (
               <li key={i} className=" md:w-[252px] ">
                 <p className="text-[12px] font-[500] leading-[1] text-gray-500 mb-[4px]">

@@ -21,8 +21,9 @@ export default function EditPetPage() {
   const [selected, setSelected] = useState<Date>();
   const [isOpenCalendar, setIsOpenCalendar] = useState(false);
   const [isBirthDateUnknown, setIsBirthDateUnknown] = useState(false);
+  const [birthMonth, setBirthMonth] = useState<string | undefined>();
+  const [birthYear, setBirthYear] = useState<string | undefined>();
 
-  /** 🔹 Отримання даних тваринки */
   useEffect(() => {
     async function fetchPet() {
       const res = await fetch(`/api/pets/${id}`);
@@ -36,7 +37,6 @@ export default function EditPetPage() {
     fetchPet();
   }, [id]);
 
-  /** 🔹 Скасувати зміни */
   const handleCancel = () => {
     if (!initialPet) return;
     setPet(initialPet);
@@ -83,6 +83,10 @@ export default function EditPetPage() {
                   setIsOpenCalendar={setIsOpenCalendar}
                   isBirthDateUnknown={isBirthDateUnknown}
                   setIsBirthDateUnknown={setIsBirthDateUnknown}
+                  birthMonth={birthMonth}
+                  setBirthMonth={setBirthMonth}
+                  birthYear={birthYear}
+                  setBirthYear={setBirthYear}
                 />
                 <EditPetFormBtns
                   pet={pet}

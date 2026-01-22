@@ -11,6 +11,10 @@ interface AddPetFormBtnProps {
   image: { preview: string; file: File } | null;
   setCreatedPet: (pet: Pet) => void;
   setIsCreatedModalOpen: (v: boolean) => void;
+  isBirthDateUnknown: boolean;
+  birthMonth?: string;
+  birthYear?: string;
+  validate: () => boolean;
 }
 
 export default function AddPetFormBtn({
@@ -18,45 +22,15 @@ export default function AddPetFormBtn({
   image,
   setCreatedPet,
   setIsCreatedModalOpen,
+  // isBirthDateUnknown,
+  birthMonth,
+  birthYear,
+  validate,
 }: AddPetFormBtnProps) {
   const router = useRouter();
 
   const handleAddForm = async () => {
-    if (!newPet.name) {
-      alert("Вкажіть ім’я тварини");
-      return;
-    }
-
-    if (!newPet.petTypeName) {
-      alert("Оберіть вид тварини");
-      return;
-    }
-
-    if (!newPet.genderTypeName) {
-      alert("Оберіть стать тварини");
-      return;
-    }
-
-    if (!newPet.weight || newPet.weight <= 0) {
-      alert("Вкажіть коректну вагу тварини");
-      return;
-    }
-
-    if (!newPet.birthDate) {
-      alert("Вкажіть дату народження тварини");
-      return;
-    }
-
-    const birth = new Date(newPet.birthDate);
-    if (isNaN(birth.getTime()) || birth > new Date()) {
-      alert("Дата народження некоректна");
-      return;
-    }
-
-    if (newPet.sterilized === undefined) {
-      alert("Оберіть варіант стерилізації");
-      return;
-    }
+    if (!validate()) return;
 
     const pet: Pet = {
       name: newPet.name!,
@@ -65,7 +39,11 @@ export default function AddPetFormBtn({
       genderTypeName: newPet.genderTypeName!,
       color: newPet.color,
       weight: newPet.weight!,
-      birthDate: newPet.birthDate,
+      birthDate: newPet.birthDate
+        ? newPet.birthDate
+        : birthMonth
+          ? `${birthYear}-${birthMonth.padStart(2, "0")}-01`
+          : `${birthYear}-01-01`,
       avatar: newPet.avatar,
       sterilized: newPet.sterilized!,
       allergies: newPet.allergies || [],

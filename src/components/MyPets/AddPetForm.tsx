@@ -3,8 +3,7 @@
 import { Pet } from "@/types/pet";
 import { optionsAnimals } from "@/Constants";
 import { Input, Select, SelectItem } from "@heroui/react";
-import { DayPicker } from "react-day-picker";
-import { uk } from "react-day-picker/locale";
+import PetBirthDateFiled from "./PetBirthDateField";
 import { SterilizedLabel } from "@/components/MyPets/SterilizedLabel";
 import { Dispatch, SetStateAction } from "react";
 
@@ -17,6 +16,12 @@ interface AddPetFormProps {
   setIsOpenCalendar: Dispatch<SetStateAction<boolean>>;
   isBirthDateUnknown: boolean;
   setIsBirthDateUnknown: Dispatch<SetStateAction<boolean>>;
+  birthMonth: string | undefined;
+  setBirthMonth: Dispatch<SetStateAction<string | undefined>>;
+  birthYear: string | undefined;
+  setBirthYear: Dispatch<SetStateAction<string | undefined>>;
+  getError: (field: string) => string | undefined;
+  clearError: (field: string) => void;
 }
 
 export default function AddPetForm({
@@ -28,21 +33,13 @@ export default function AddPetForm({
   setIsOpenCalendar,
   isBirthDateUnknown,
   setIsBirthDateUnknown,
+  birthMonth,
+  setBirthMonth,
+  birthYear,
+  setBirthYear,
+  getError,
+  clearError,
 }: AddPetFormProps) {
-  const formatDateLocal = (date: Date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  };
-
-  const formatDateForInput = (date: Date) => {
-    const d = String(date.getDate()).padStart(2, "0");
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const y = date.getFullYear();
-    return `${d} / ${m} / ${y}`;
-  };
-
   return (
     <>
       <div className="w-full md:w-[304px]">
@@ -61,20 +58,29 @@ export default function AddPetForm({
           placeholder="Введіть ім’я тварини"
           radius="sm"
           value={newPet.name || ""}
-          onChange={(e) => setNewPet({ ...newPet, name: e.target.value })}
+          onChange={(e) => {
+            setNewPet({ ...newPet, name: e.target.value });
+            clearError("name");
+          }}
           classNames={{
             input:
-              "text-left focus:outline-none text-gray-350 placeholder:text-gray-350",
-            inputWrapper:
-              "border-primary-300 mb-4 w-full hover:!border-primary focus:!border-primary data-[focus=true]:!border-primary focus-visible:!border-primary shadow-none",
+              "text-left focus:outline-none text-gray-900 placeholder:text-gray-350",
+            inputWrapper: `border-primary-300  w-full ${
+              getError("name") ? "border-red-500" : "border-primary-300"
+            } hover:!border-primary focus:!border-primary`,
           }}
         />
+        {getError("name") && (
+          <span className="text-red-500 text-[12px] mt-1">
+            {getError("name")}
+          </span>
+        )}
       </div>
       <div className="w-full md:w-[304px]">
         <label
           id="label-petType"
           htmlFor="petType"
-          className="text-[12px] block mb-2 font-medium text-gray-700"
+          className="text-[12px] block mb-2 mt-4 font-medium text-gray-700"
         >
           Вид*
         </label>
@@ -86,16 +92,21 @@ export default function AddPetForm({
           placeholder="Оберіть вид тварини"
           selectedKeys={newPet.petTypeName ? [newPet.petTypeName] : []}
           radius="sm"
-          onSelectionChange={(keys) =>
+          onSelectionChange={(keys) => {
             setNewPet({
               ...newPet,
               petTypeName: Array.from(keys)[0]?.toString(),
-            })
-          }
+            });
+            clearError("petTypeName");
+          }}
           classNames={{
-            trigger:
-              "text-left mb-4 border-primary-300 hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary",
-            value: newPet.petTypeName ? "!text-gray-900" : "!text-gray-350",
+            trigger: `text-left w-full border ${
+              getError("petTypeName") ? "border-red-500" : "border-primary-300"
+            } hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary`,
+            value: newPet.petTypeName
+              ? "!text-gray-900 text-[14px]"
+              : "!text-gray-350 text-[14px]",
+            selectorIcon: "text-[#1E88E5] w-6 h-6",
             popoverContent: "rounded-lg",
           }}
           listboxProps={{
@@ -111,12 +122,17 @@ export default function AddPetForm({
             <SelectItem key={animal.key}>{animal.value}</SelectItem>
           ))}
         </Select>
+        {getError("petTypeName") && (
+          <span className="text-red-500 text-[12px] mt-1">
+            {getError("petTypeName")}
+          </span>
+        )}
       </div>
       <div className="w-full md:w-[304px]">
         <label
           id="label-petBreed"
           htmlFor="petBreed"
-          className="text-[12px] block mb-2 font-medium text-gray-700"
+          className="text-[12px] block mb-2 mt-4 font-medium text-gray-700"
         >
           Порода
         </label>
@@ -147,165 +163,64 @@ export default function AddPetForm({
           Стать тварини*
         </label>
 
-        <div className="flex pl-1 gap-6">
-          <label className="flex mb-4 text-gray-900 text-[14px] items-center gap-2 cursor-pointer">
+        <div
+          className={`flex pl-1 gap-6 p-2 rounded-lg ${
+            getError("genderTypeName") ? "border border-red-500" : ""
+          }`}
+        >
+          <label className="flex text-gray-900 text-[14px] items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="petSex"
               value="Хлопчик"
               checked={newPet.genderTypeName === "Хлопчик"}
-              onChange={() =>
-                setNewPet({ ...newPet, genderTypeName: "Хлопчик" })
-              }
+              onChange={() => {
+                setNewPet({ ...newPet, genderTypeName: "Хлопчик" });
+                clearError("genderTypeName");
+              }}
             />
             <span>Самець</span>
           </label>
 
-          {/* Самка */}
-          <label className="flex mb-4 text-gray-900 text-[14px] items-center gap-2 cursor-pointer">
+          <label className="flex  text-gray-900 text-[14px] items-center gap-2 cursor-pointer">
             <input
               type="radio"
               name="petSex"
               value="Дівчинка"
               checked={newPet.genderTypeName === "Дівчинка"}
-              onChange={() =>
+              onChange={() => {
                 setNewPet({
                   ...newPet,
                   genderTypeName: "Дівчинка",
-                })
-              }
+                });
+                clearError("genderTypeName");
+              }}
             />
             <span>Самка</span>
           </label>
         </div>
-      </div>
-
-      <div className="w-full md:w-[304px]">
-        <label
-          id="label-petColoring"
-          htmlFor="petColoring"
-          className="text-[12px] block mb-2 font-medium text-gray-700"
-        >
-          Забарвлення
-        </label>
-        <textarea
-          placeholder="Наприклад: білого кольору з чорними лапками"
-          className={`w-full  border mb-4 border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none ${
-            newPet.color ? "text-gray-900" : "text-gray-350"
-          } placeholder:text-gray-350`}
-          rows={4}
-          value={newPet.color || ""}
-          onChange={(e) => setNewPet({ ...newPet, color: e.target.value })}
-        />
-      </div>
-      <div className="w-full md:w-[304px]">
-        <label
-          id="label-petBirth"
-          htmlFor="petBirth"
-          className="text-[12px] block mb-2 font-medium text-gray-700"
-        >
-          Дата народження*
-        </label>
-        <div className="w-full relative">
-          <Input
-            name="petBirth"
-            placeholder="ДД / ММ / РРРР"
-            value={selected ? formatDateForInput(selected) : ""}
-            variant="bordered"
-            readOnly
-            onClick={() => setIsOpenCalendar(!isOpenCalendar)}
-            classNames={{
-              input: `text-left text-[14px] focus:outline-none ${
-                newPet.birthDate ? "text-gray-900" : "text-gray-350"
-              } placeholder:text-gray-350`,
-              inputWrapper:
-                "border-primary-300 w-full rounded-[8px] mb-4 hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
-            }}
-          />
-          <div className=" flex items-start mb-6 gap-2">
-            <input
-              type="checkbox"
-              id="birthDateUnknown"
-              className=" accent-primary w-4  h-4  rounded  border border-primary-300"
-              checked={isBirthDateUnknown}
-              onChange={(e) => {
-                const checked = e.target.checked;
-                setIsBirthDateUnknown(checked);
-
-                if (checked) {
-                  setSelected(undefined);
-                  setNewPet({
-                    ...newPet,
-                    birthDate: undefined,
-                  });
-                  setIsOpenCalendar(false);
-                }
-              }}
-            />
-            <label
-              htmlFor="birthDateUnknown"
-              className="text-[12px] text-gray-400 cursor-pointer"
-            >
-              Я не пам’ятаю точної дати народження
-            </label>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsOpenCalendar(!isOpenCalendar)}
-            className="absolute right-2 top-1/2 -translate-y-4/3 cursor-pointer"
-          >
-            <svg
-              width="24"
-              height="24"
-              className="stroke-primary-700 fill-background hover:stroke-primary-900 transition-colors duration-300 pointer-events-none"
-            >
-              <use href="/sprites/sprite-sistem.svg#icon-calendar" />
-            </svg>
-          </button>
-        </div>
-
-        {isOpenCalendar && (
-          <div className="z-99910 w-[318px] absolute top-[82px] bg-white border rounded p-[16px] border-none shadow-sm shadow-gray-300">
-            <DayPicker
-              mode="single"
-              locale={uk}
-              selected={selected}
-              onSelect={(date) => {
-                if (!date) return;
-
-                const birthDate = formatDateLocal(date);
-
-                setSelected(date);
-
-                setNewPet({
-                  ...newPet,
-                  birthDate,
-                });
-
-                setIsOpenCalendar(false);
-              }}
-              captionLayout="dropdown"
-              classNames={{
-                root: "z-10 bg-background",
-                weekday: "p-[9px] hover:bg-blue-100 rounded-md",
-                day_button: "p-[9px] hover:bg-blue-100 rounded-md",
-                selected: "hover:hover:bg-blue-100",
-                today: "text-primary-700",
-                nav_button:
-                  "text-gray-400 hover:text-gray-600 disabled:opacity-50",
-                chevron: "fill-gray-500",
-                caption_dropdowns: "flex gap-4 justify-center items-center",
-                dropdown:
-                  "px-2 py-2 rounded-lg border border-primary-300 bg-white text-gray-900 text-base font-medium focus:border-primary-700 focus:outline-none transition",
-              }}
-              styles={{
-                caption_label: { display: "none" },
-              }}
-            />
-          </div>
+        {getError("genderTypeName") && (
+          <span className="text-red-500 text-[12px] mt-1">
+            {getError("genderTypeName")}
+          </span>
         )}
       </div>
+      <PetBirthDateFiled
+        newPet={newPet}
+        setNewPet={setNewPet}
+        selected={selected}
+        setSelected={setSelected}
+        isOpenCalendar={isOpenCalendar}
+        setIsOpenCalendar={setIsOpenCalendar}
+        isBirthDateUnknown={isBirthDateUnknown}
+        setIsBirthDateUnknown={setIsBirthDateUnknown}
+        birthMonth={birthMonth}
+        setBirthMonth={setBirthMonth}
+        birthYear={birthYear}
+        setBirthYear={setBirthYear}
+        getError={getError}
+        clearError={clearError}
+      />
       <div className="w-full mb-4 md:w-[304px]">
         <label
           id="label-petWeight"
@@ -325,40 +240,53 @@ export default function AddPetForm({
           placeholder="Вкажіть вагу"
           radius="sm"
           value={newPet.weight?.toString() || ""}
-          onChange={(e) =>
-            setNewPet({ ...newPet, weight: Number(e.target.value) })
-          }
+          onChange={(e) => {
+            setNewPet({ ...newPet, weight: Number(e.target.value) });
+            clearError("weight");
+          }}
           classNames={{
             input: `text-left focus:outline-none ${
               newPet.weight ? "text-gray-900" : "text-gray-350"
             } placeholder:text-gray-350`,
-            inputWrapper:
-              "border-primary-300 w-full  hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
+            inputWrapper: `border w-full ${
+              getError("weight") ? "border-red-500" : "border-primary-300"
+            } hover:!border-primary focus:!border-primary shadow-none`,
           }}
         />
-        <small className="text-gray-700 mb-4 text-[12px]">
-          Дозволені лише цифри та кома (наприклад: 4,6)
-        </small>
-
+        <div className="flex flex-col">
+          {getError("weight") && (
+            <span className="text-red-500 text-[12px] mt-1">
+              {getError("weight")}
+            </span>
+          )}
+          <small className="text-gray-700 mb-4 text-[12px]">
+            Дозволені лише цифри та кома (наприклад: 4,6)
+          </small>
+        </div>
         {newPet.genderTypeName && (
           <div className="mt-4">
             <label className="text-[12px] block mb-2 font-medium text-gray-700">
               Стерилізація*
             </label>
 
-            <div className="flex pl-1 gap-6">
-              <label className="inline-flex mb-4 text-gray-900 text-[14px] items-center cursor-pointer gap-2">
+            <div
+              className={`flex pl-1 gap-6 p-2 rounded-lg ${
+                getError("sterilized") ? "border border-red-500" : ""
+              }`}
+            >
+              <label className="inline-flex text-gray-900 text-[14px] items-center cursor-pointer gap-2">
                 <input
                   type="radio"
                   name="sterilized"
                   value="yes"
                   checked={newPet.sterilized === true}
-                  onChange={() =>
+                  onChange={() => {
                     setNewPet({
                       ...newPet,
                       sterilized: true,
-                    })
-                  }
+                    });
+                    clearError("sterilized");
+                  }}
                 />
                 <span>
                   <SterilizedLabel
@@ -367,25 +295,31 @@ export default function AddPetForm({
                   />
                 </span>
               </label>
-              <label className="inline-flex items-center text-gray-900 text-[14px] mb-4  cursor-pointer gap-2">
+              <label className="inline-flex items-center text-gray-900 text-[14px] cursor-pointer gap-2">
                 <input
                   type="radio"
                   checked={newPet.sterilized === false}
-                  onChange={() =>
+                  onChange={() => {
                     setNewPet({
                       ...newPet,
                       sterilized: false,
-                    })
-                  }
+                    });
+                    clearError("sterilized");
+                  }}
                 />
                 <span>
                   <SterilizedLabel
-                    sterilized={true}
+                    sterilized={false}
                     gender={newPet.genderTypeName}
                   />
                 </span>
               </label>
             </div>
+            {getError("sterilized") && (
+              <span className="text-red-500 text-[12px] mt-1">
+                {getError("sterilized")}
+              </span>
+            )}
           </div>
         )}
       </div>

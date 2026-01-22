@@ -7,17 +7,26 @@ import PetCreatedModal from "@/components/MyPets/PetCreatedModal";
 import AddPetForm from "@/components/MyPets/AddPetForm";
 import AddPetFormBtn from "@/components/MyPets/AddPetFormBtn";
 import UsePetAvatar from "@/components/MyPets/UsePetAvatar";
+import { usePetValidation } from "@/hooks/PetFieldError/usePetValidation";
 
 export default function AddNewPet() {
   const [newPet, setNewPet] = useState<Partial<Pet>>({});
   const [image, setImage] = useState<{ preview: string; file: File } | null>(
-    null
+    null,
   );
   const [selected, setSelected] = useState<Date>();
   const [isOpenCalendar, setIsOpenCalendar] = useState<boolean>(false);
   const [isBirthDateUnknown, setIsBirthDateUnknown] = useState(false);
+  const [birthMonth, setBirthMonth] = useState<string | undefined>();
+  const [birthYear, setBirthYear] = useState<string | undefined>();
   const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
   const [createdPet, setCreatedPet] = useState<Pet | null>(null);
+
+  const { validate, getError, clearError } = usePetValidation({
+    newPet,
+    isBirthDateUnknown,
+    birthYear,
+  });
 
   useEffect(() => {
     if (newPet.birthDate && !selected) {
@@ -62,12 +71,22 @@ export default function AddNewPet() {
                   setIsOpenCalendar={setIsOpenCalendar}
                   isBirthDateUnknown={isBirthDateUnknown}
                   setIsBirthDateUnknown={setIsBirthDateUnknown}
+                  birthMonth={birthMonth}
+                  setBirthMonth={setBirthMonth}
+                  birthYear={birthYear}
+                  setBirthYear={setBirthYear}
+                  getError={getError}
+                  clearError={clearError}
                 />
                 <AddPetFormBtn
                   newPet={newPet}
                   image={image}
                   setCreatedPet={setCreatedPet}
                   setIsCreatedModalOpen={setIsCreatedModalOpen}
+                  isBirthDateUnknown={isBirthDateUnknown}
+                  birthMonth={birthMonth}
+                  birthYear={birthYear}
+                  validate={validate}
                 />
               </div>
             </div>

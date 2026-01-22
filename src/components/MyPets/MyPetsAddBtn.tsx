@@ -18,12 +18,12 @@ export default function MypetsAddBtn({ className }: MyPetsAddBtnProps) {
   };
 
   return (
-    <div className="mb-4">
+    <div className="flex flex-col items-center mb-4">
       <button
         onClick={handleButtonClick}
         className={
           className ??
-          "flex w-full items-center justify-center text-[14px] text-white  gap-2 border-2 border-primary  rounded-[6px] px-6 py-2 hover:bg-primary-50 hover:text-primary transition-colors font-[400]"
+          "flex w-full items-center justify-center lg:w-[216px] text-[14px] text-primary  gap-2 border-2 border-primary  rounded-[6px] px-6 py-2 bg-white  hover:bg-primary-50 hover:text-primary transition-colors font-[400]"
         }
       >
         <Icon
