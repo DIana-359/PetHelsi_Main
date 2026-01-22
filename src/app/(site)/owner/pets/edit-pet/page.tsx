@@ -7,6 +7,7 @@ import GoBackPets from "@/components/MyPets/GobackPets";
 import AddPetForm from "@/components/MyPets/AddPetForm";
 import UsePetAvatar from "@/components/MyPets/UsePetAvatar";
 import EditPetFormBtns from "@/components/MyPets/EditPetFormBtn";
+import { usePetValidation } from "@/hooks/PetFieldError/usePetValidation";
 
 export default function EditPetPage() {
   const { id } = useParams();
@@ -16,13 +17,19 @@ export default function EditPetPage() {
   const [initialPet, setInitialPet] = useState<Pet | null>(null);
 
   const [image, setImage] = useState<{ preview: string; file: File } | null>(
-    null
+    null,
   );
   const [selected, setSelected] = useState<Date>();
   const [isOpenCalendar, setIsOpenCalendar] = useState(false);
   const [isBirthDateUnknown, setIsBirthDateUnknown] = useState(false);
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
   const [birthYear, setBirthYear] = useState<string | undefined>();
+
+  const { getError, clearError } = usePetValidation({
+    newPet: pet,
+    isBirthDateUnknown,
+    birthYear,
+  });
 
   useEffect(() => {
     async function fetchPet() {
@@ -42,7 +49,7 @@ export default function EditPetPage() {
     setPet(initialPet);
     setImage(null);
     setSelected(
-      initialPet?.birthDate ? new Date(initialPet.birthDate) : undefined
+      initialPet?.birthDate ? new Date(initialPet.birthDate) : undefined,
     );
   };
 
@@ -87,6 +94,8 @@ export default function EditPetPage() {
                   setBirthMonth={setBirthMonth}
                   birthYear={birthYear}
                   setBirthYear={setBirthYear}
+                  getError={getError}
+                  clearError={clearError}
                 />
                 <EditPetFormBtns
                   pet={pet}

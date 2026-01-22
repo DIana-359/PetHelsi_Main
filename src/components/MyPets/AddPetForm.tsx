@@ -7,7 +7,7 @@ import PetBirthDateFiled from "./PetBirthDateField";
 import { SterilizedLabel } from "@/components/MyPets/SterilizedLabel";
 import { Dispatch, SetStateAction } from "react";
 
-interface AddPetFormProps {
+export interface AddPetFormProps {
   newPet: Partial<Pet>;
   setNewPet: Dispatch<SetStateAction<Partial<Pet>>>;
   selected: Date | undefined;
@@ -20,7 +20,7 @@ interface AddPetFormProps {
   setBirthMonth: Dispatch<SetStateAction<string | undefined>>;
   birthYear: string | undefined;
   setBirthYear: Dispatch<SetStateAction<string | undefined>>;
-  getError: (field: string) => string | undefined;
+  getError: (field: string) => string;
   clearError: (field: string) => void;
 }
 

@@ -36,7 +36,7 @@ export function usePetValidation({
     return Object.keys(newErrors).length === 0;
   };
 
-  const getError = (field: string) => errors[field];
+  const getError = (field: string) => errors[field] || "";
 
   const clearError = (field: string) => {
     setErrors((prev) => {
