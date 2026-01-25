@@ -3,7 +3,7 @@
 import { Button } from "@heroui/react";
 import { Pet } from "@/types/pet";
 import { addPet } from "@/services/addPet";
-import { addPetAvatar } from "@/app/services/addPetAvatar";
+import { addPetAvatar } from "@/services/addPetAvatar";
 import { useRouter } from "next/navigation";
 
 interface AddPetFormBtnProps {

@@ -5,7 +5,7 @@ export interface AddPetAvatarResult {
 
 export async function addPetAvatar(
   petId: string,
-  file: File
+  file: File,
 ): Promise<AddPetAvatarResult> {
   try {
     const formData = new FormData();
