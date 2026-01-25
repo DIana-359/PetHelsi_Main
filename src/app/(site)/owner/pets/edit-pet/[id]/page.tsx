@@ -128,3 +128,8 @@
 //     </>
 //   );
 // }
+"use client";
+
+export default function Page() {
+  return <div>Сторінка редагування в процесі розробки</div>;
+}
