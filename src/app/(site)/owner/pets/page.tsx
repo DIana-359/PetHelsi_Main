@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import MyPetsEmpty from "@/components/MyPets/MyPetsEmpty";
 import PetProfile from "@/components/MyPets/MyPetProfile";
 import { Pet } from "@/types/pet";
-import { getPets } from "@/services/getPets";
+import { getPets } from "@/services/pets/getPets";
 import { useRouter } from "next/navigation";
 
 export default function OwnerPets() {

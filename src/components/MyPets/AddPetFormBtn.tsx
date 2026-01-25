@@ -2,8 +2,8 @@
 
 import { Button } from "@heroui/react";
 import { Pet } from "@/types/pet";
-import { addPet } from "@/services/addPet";
-import { addPetAvatar } from "@/services/addPetAvatar";
+import { addPet } from "@/services/pets/addPet";
+import { addPetAvatar } from "@/services/pets/addPetAvatar";
 import { useRouter } from "next/navigation";
 
 interface AddPetFormBtnProps {
