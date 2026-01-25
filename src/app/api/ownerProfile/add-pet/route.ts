@@ -11,17 +11,14 @@ export async function POST(req: NextRequest) {
 
     const body: Pet = await req.json();
 
-    const res = await fetch(
-      `${process.env.API_URL}/v1/owners/pets`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const res = await fetch(`${process.env.API_URL}/v1/owners/pets`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.value}`,
+      },
+      body: JSON.stringify(body),
+    });
 
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });

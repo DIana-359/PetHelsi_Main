@@ -12,8 +12,8 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPet } from "@/services/addPet";
-import { getPets } from "@/services/getPets";
+import { addPet } from "@/services/pets/addPet";
+import { getPets } from "@/services/pets/getPets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
 import { getVet } from "@/services/vets/getVet";
 
@@ -24,7 +24,7 @@ export default function BookingPage() {
   const issueTypeFromUrl = issueVizit.get("issueTypeName");
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedIssue, setSelectedIssue] = useState(
-    issueTypeFromUrl || "Що турбує тварину?"
+    issueTypeFromUrl || "Що турбує тварину?",
   );
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [timeLeft, setTimeLeft] = useState({ minutes: 14, seconds: 58 });
@@ -40,10 +40,10 @@ export default function BookingPage() {
   const [selectedPetIds] = useState<string[]>([]);
 
   const togglePetType = (petType: string) => {
-    setSelectedPetTypes(prev =>
+    setSelectedPetTypes((prev) =>
       prev.includes(petType)
-        ? prev.filter(type => type !== petType)
-        : [...prev, petType]
+        ? prev.filter((type) => type !== petType)
+        : [...prev, petType],
     );
   };
 
@@ -69,7 +69,7 @@ export default function BookingPage() {
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map(p => p.petTypeName).join(", "),
+          animalType: userPets.map((p) => p.petTypeName).join(", "),
           reason: "",
           price: vetData.rate,
         });
@@ -86,7 +86,7 @@ export default function BookingPage() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev.minutes === 0 && prev.seconds === 0) {
           return prev;
         }
@@ -115,7 +115,7 @@ export default function BookingPage() {
     }
 
     if (data) {
-      setPets(prevPets => [...prevPets, data]);
+      setPets((prevPets) => [...prevPets, data]);
     }
   };
 
@@ -126,9 +126,9 @@ export default function BookingPage() {
     }
     const reason =
       selectedIssue !== "Що турбує тварину?" ? selectedIssue : additionalInfo;
-    setAppointmentData(prev => (prev ? { ...prev, reason } : prev));
+    setAppointmentData((prev) => (prev ? { ...prev, reason } : prev));
 
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setShowModalSuccess(true);
   };
 
@@ -155,7 +155,7 @@ export default function BookingPage() {
   const formatDoctorName = (
     surname: string,
     name: string,
-    patronymic: string
+    patronymic: string,
   ) => {
     return `${surname} ${name.charAt(0)}. ${patronymic.charAt(0)}.`;
   };
@@ -185,11 +185,12 @@ export default function BookingPage() {
               <div className="flex flex-wrap gap-2 mb-4">
                 <button
                   onClick={() => setShowModal(true)}
-                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato">
+                  className="flex items-center gap-2 border-2 border-primary bg-white rounded-lg px-4 py-3 text-primary hover:bg-primary-50 transition-colors font-lato"
+                >
                   <span className="text-lg">+</span>
                   Додати тварину
                 </button>
-                {pets.map(pet => (
+                {pets.map((pet) => (
                   <div key={pet.id} className="flex items-center gap-3">
                     <button
                       onClick={() => togglePetType(pet.petTypeName)}
@@ -197,8 +198,9 @@ export default function BookingPage() {
                         "flex items-center gap-3 border-2 border-primary px-4 py-3 rounded-lg cursor-pointer transition-colors font-lato focus:outline-none focus:ring-2 focus:ring-primary",
                         selectedPetTypes.includes(pet.petTypeName)
                           ? "bg-primary text-white"
-                          : "bg-white text-primary hover:bg-primary-50"
-                      )}>
+                          : "bg-white text-primary hover:bg-primary-50",
+                      )}
+                    >
                       <Icon
                         sprite="/sprites/sprite-animals.svg"
                         id={petTypeIcons[pet.petTypeName] || "icon-other"}
@@ -225,8 +227,9 @@ export default function BookingPage() {
 
                 <select
                   value={selectedIssue}
-                  onChange={e => setSelectedIssue(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato">
+                  onChange={(e) => setSelectedIssue(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:border-primary transition-colors font-lato"
+                >
                   <option value="Що турбує тварину?" hidden>
                     Що турбує тварину?
                   </option>
@@ -249,20 +252,22 @@ export default function BookingPage() {
                 className="w-full border border-gray-300 rounded-lg p-3 text-primary-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows={4}
                 value={additionalInfo}
-                onChange={e => setAdditionalInfo(e.target.value)}
+                onChange={(e) => setAdditionalInfo(e.target.value)}
               />
             </div>
             <button
               onClick={handleSubmit}
               disabled={timeLeft.minutes === 0 && timeLeft.seconds === 0}
-              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium">
+              className="w-full bg-primary text-white py-4 px-6 rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-lato font-medium"
+            >
               Перейти до оплати
             </button>
           </div>
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <div
               className="border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-2"
-              style={{ backgroundColor: "#F5F9FE" }}>
+              style={{ backgroundColor: "#F5F9FE" }}
+            >
               <p className="text-xl font-bold text-gray-800">
                 {timeLeft.minutes} хв :{" "}
                 {timeLeft.seconds.toString().padStart(2, "0")} сек
@@ -292,7 +297,7 @@ export default function BookingPage() {
                     {formatDoctorName(
                       appointmentData.vet.surname,
                       appointmentData.vet.name,
-                      appointmentData.vet.patronymic
+                      appointmentData.vet.patronymic,
                     )}
                   </div>
 
@@ -319,7 +324,8 @@ export default function BookingPage() {
 
             <button
               onClick={() => setShowModalCancel(true)}
-              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50">
+              className="w-full border border-gray-300 text-red-500 py-2 px-4 rounded-lg hover:bg-gray-50"
+            >
               Скасувати бронювання
             </button>
           </div>
