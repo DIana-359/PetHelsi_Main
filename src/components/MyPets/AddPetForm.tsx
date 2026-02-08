@@ -3,9 +3,9 @@
 import { Pet } from "@/types/pet";
 import { optionsAnimals } from "@/Constants";
 import { Input, Select, SelectItem } from "@heroui/react";
-import PetBirthDateFiled from "./PetBirthDateField";
-import { SterilizedLabel } from "@/components/MyPets/SterilizedLabel";
+import PetBirthDateField from "./PetBirthDateField";
 import { Dispatch, SetStateAction } from "react";
+import { SterilizedLabel } from "./SterilizedLabel";
 
 export interface AddPetFormProps {
   newPet: Partial<Pet>;
@@ -205,7 +205,7 @@ export default function AddPetForm({
           </span>
         )}
       </div>
-      <PetBirthDateFiled
+      <PetBirthDateField
         newPet={newPet}
         setNewPet={setNewPet}
         selected={selected}
@@ -263,72 +263,63 @@ export default function AddPetForm({
             Дозволені лише цифри та кома (наприклад: 4,6)
           </small>
         </div>
-        {newPet.genderTypeName && (
-          <div className="mt-4">
-            <label className="text-[12px] block mb-2 font-medium text-gray-700">
-              Стерилізація*
-            </label>
 
-            <div
-              className={`flex pl-1 gap-6 p-2 rounded-lg ${
-                getError("sterilized") ? "border border-red-500" : ""
-              }`}
-            >
-              <label className="inline-flex text-gray-900 text-[14px] items-center cursor-pointer gap-2">
-                <input
-                  type="radio"
-                  name="sterilized"
-                  value="yes"
-                  checked={newPet.sterilized === true}
-                  onChange={() => {
-                    setNewPet({
-                      ...newPet,
-                      sterilized: true,
-                    });
-                    clearError("sterilized");
-                  }}
-                />
-                <span>
-                  <SterilizedLabel
-                    sterilized={true}
-                    gender={newPet.genderTypeName}
-                  />
-                </span>
-              </label>
-              <label className="inline-flex items-center text-gray-900 text-[14px] cursor-pointer gap-2">
-                <input
-                  type="radio"
-                  checked={newPet.sterilized === false}
-                  onChange={() => {
-                    setNewPet({
-                      ...newPet,
-                      sterilized: false,
-                    });
-                    clearError("sterilized");
-                  }}
-                />
-                <span>
-                  <SterilizedLabel
-                    sterilized={false}
-                    gender={newPet.genderTypeName}
-                  />
-                </span>
-              </label>
-            </div>
-            {getError("sterilized") && (
-              <span className="text-red-500 text-[12px] mt-1">
-                {getError("sterilized")}
+        <div>
+          <label className="text-[12px] block mb-2 font-medium text-gray-700">
+            Стерилізований/-а*
+          </label>
+
+          <div
+            className={`flex pl-1 gap-6 p-2 rounded-lg ${
+              getError("sterilized") ? "border border-red-500" : ""
+            }`}
+          >
+            <label className="inline-flex text-gray-900 text-[14px]  cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="sterilized"
+                value="yes"
+                checked={newPet.sterilized === true}
+                onChange={() => {
+                  setNewPet({
+                    ...newPet,
+                    sterilized: true,
+                  });
+                  clearError("sterilized");
+                }}
+              />
+              <span>
+                <SterilizedLabel sterilized={true} />
               </span>
-            )}
+            </label>
+            <label className="inline-flex  text-gray-900 text-[14px] cursor-pointer gap-2">
+              <input
+                type="radio"
+                checked={newPet.sterilized === false}
+                onChange={() => {
+                  setNewPet({
+                    ...newPet,
+                    sterilized: false,
+                  });
+                  clearError("sterilized");
+                }}
+              />
+              <SterilizedLabel sterilized={false} />
+            </label>
           </div>
-        )}
+          {getError("sterilized") && (
+            <span className="text-red-500 text-[12px] mt-1">
+              {getError("sterilized")}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="w-full md:w-[304px]">
         <label
           id="label-petSex"
           htmlFor="petSex"
-          className="text-[12px] block  font-medium text-gray-700"
+          className="text-[12px] block mb-2 font-medium text-gray-700"
         >
           Алергічні реакції
         </label>

@@ -7,10 +7,11 @@ import {
   ModalBody,
   Button,
 } from "@heroui/react";
-import Icon from "../Icon";
 import AvatarPet from "./AvatarPet";
 import { useState } from "react";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
+import useMedia from "@/utils/media";
+import ModalCloseButton from "../ModalCloseButton";
 
 type ActiveButton = "save" | "change";
 
@@ -45,21 +46,14 @@ export default function PhotoUploadPetModal({
   const firstLetter = firstName?.charAt(0).toUpperCase();
   const [isActive, setIsActive] = useState<ActiveButton>("save");
 
+  const isMobile = useMedia();
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} placement="center" hideCloseButton>
       <ModalContent className=" flex flex-col  md:items-center px-0 py-8 md:px-8 md:py-14  rounded-[16px] max-w-full md:max-w-[560px]">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 border-none bg-transparent cursor-pointer outline-none opacity-70 hover:opacity-100 transition"
-        >
-          <Icon
-            sprite="/sprites/sprite-sistem.svg"
-            id="icon-close"
-            width="24px"
-            height="24px"
-            className="stroke-gray-600 md:w-[40px] md:h-[40px] hover:stroke-gray-800"
-          />
-        </button>
+        <div className="text-[#1e88e5]">
+          <ModalCloseButton onClose={onClose} />
+        </div>
         <ModalHeader className="p-0 text-[24px] flex justify-center text-gray-900 mb-2 font-semibold">
           {mode === "edit" ? "Зміна фото тварини" : "Додавання фото тварини"}
         </ModalHeader>
@@ -67,15 +61,15 @@ export default function PhotoUploadPetModal({
         <ModalBody>
           <p className="md:p-0 text-[14px] md:text-[16px] text-gray-800 text-center mb-4 md:mb-8">
             Зображення не повинне перевищувати
-            <span className="md:inline text-center block"> 5 MB</span>
+            <span className="md:inline text-center"> 5 MB</span>
           </p>
-          <div className="flex justify-center block md:hidden">
+          <div className="flex justify-center">
             {displayAvatar ? (
-              <div className=" w-22 h-22 rounded-full overflow-hidden mb-4">
+              <div className="rounded-full mb-4 md:mb-8">
                 <AvatarPet
                   avatar={displayAvatar}
                   firstName={firstName}
-                  size={88}
+                  size={isMobile ? 88 : 128}
                 />
               </div>
             ) : (
@@ -124,7 +118,7 @@ export default function PhotoUploadPetModal({
               <Button
                 className={`${getButtonClasses(
                   "primary",
-                  isActive === "save"
+                  isActive === "save",
                 )}`}
                 onClick={() => {
                   setIsActive("save");

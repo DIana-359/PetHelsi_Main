@@ -10,11 +10,7 @@ interface Props {
 export default function AvatarPet({ avatar, firstName, size = 32 }: Props) {
   const initial = firstName ? firstName.trim().charAt(0).toUpperCase() : "";
 
-  const src = avatar
-    ? avatar.startsWith("blob:") || avatar.startsWith("http")
-      ? avatar
-      : `${process.env.API_URL}${avatar}`
-    : null;
+  const src = avatar ?? null;
 
   return (
     <div

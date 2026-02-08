@@ -12,8 +12,8 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPet } from "@/services/pets/addPet";
-import { getPets } from "@/services/pets/getPets";
+import { useAddPet } from "@/hooks/pets/useAddPet";
+import { useGetPets } from "@/hooks/pets/useGetPets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
 import { getVet } from "@/services/vets/getVet";
 
@@ -22,7 +22,6 @@ export default function BookingPage() {
   const vetId = params?.id as string;
   const issueVizit = useSearchParams();
   const issueTypeFromUrl = issueVizit.get("issueTypeName");
-  const [pets, setPets] = useState<Pet[]>([]);
   const [selectedIssue, setSelectedIssue] = useState(
     issueTypeFromUrl || "Що турбує тварину?",
   );
@@ -38,6 +37,9 @@ export default function BookingPage() {
   const [showModalTimeLeft, setShowModalTimeLeft] = useState(false);
   const [selectedPetTypes, setSelectedPetTypes] = useState<string[]>([]);
   const [selectedPetIds] = useState<string[]>([]);
+
+  const { data: pets = [] } = useGetPets();
+  const { mutate: addPetMutate } = useAddPet();
 
   const togglePetType = (petType: string) => {
     setSelectedPetTypes((prev) =>
@@ -62,14 +64,10 @@ export default function BookingPage() {
           available: true,
         };
 
-        const userPets: Pet[] = await getPets();
-
-        setPets(userPets);
-
         setAppointmentData({
           vet: vetData,
           slot: slotData,
-          animalType: userPets.map((p) => p.petTypeName).join(", "),
+          animalType: pets.map((p) => p.petTypeName).join(", "),
           reason: "",
           price: vetData.rate,
         });
@@ -82,7 +80,7 @@ export default function BookingPage() {
     };
 
     fetchData();
-  }, [vetId]);
+  }, [vetId, pets]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -106,17 +104,15 @@ export default function BookingPage() {
     }
   }, [timeLeft]);
 
-  const handleAddPet = async (pet: Pet) => {
-    const { data, error } = await addPet(pet);
-
-    if (error) {
-      alert(`Не вдалося зберегти тварину: ${error}`);
-      return;
-    }
-
-    if (data) {
-      setPets((prevPets) => [...prevPets, data]);
-    }
+  const handleAddPet = (pet: Pet) => {
+    addPetMutate(pet, {
+      onSuccess: () => {
+        setShowModal(false);
+      },
+      onError: (error) => {
+        alert(error.message || "Не вдалося зберегти тварину");
+      },
+    });
   };
 
   const handleSubmit = async () => {
@@ -173,7 +169,6 @@ export default function BookingPage() {
       </div>
       <div className="text-gray-500 pt-5 md:pt-8">
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
-          {/* Левая колонка - форма */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">
               Бронювання запису

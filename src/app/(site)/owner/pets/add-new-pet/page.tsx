@@ -6,8 +6,9 @@ import GoBackPets from "@/components/MyPets/GobackPets";
 import PetCreatedModal from "@/components/MyPets/PetCreatedModal";
 import AddPetForm from "@/components/MyPets/AddPetForm";
 import AddPetFormBtn from "@/components/MyPets/AddPetFormBtn";
-import UsePetAvatar from "@/components/MyPets/UsePetAvatar";
-import { usePetValidation } from "@/hooks/PetFieldError/usePetValidation";
+import PetAvatarUploader from "@/components/MyPets/PetAvatarUploader";
+import { usePetValidation } from "@/hooks/petFieldError/usePetValidation";
+import { GlobalMessage } from "@/components/MyPets/GlobalMessage";
 
 export default function AddNewPet() {
   const [newPet, setNewPet] = useState<Partial<Pet>>({});
@@ -21,6 +22,7 @@ export default function AddNewPet() {
   const [birthYear, setBirthYear] = useState<string | undefined>();
   const [isCreatedModalOpen, setIsCreatedModalOpen] = useState(false);
   const [createdPet, setCreatedPet] = useState<Pet | null>(null);
+  const [showAvatarSuccess, setShowAvatarSuccess] = useState(false);
 
   const { validate, getError, clearError } = usePetValidation({
     newPet,
@@ -39,24 +41,32 @@ export default function AddNewPet() {
 
   return (
     <>
-      <div className="w-full min-h-screen flex justify-center bg-background overflow-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent">
-        <div className="flex flex-col w-full rounded-[18px] outline-none">
-          <div className="flex justify-start px-4 sm:px-6 md:px-8 lg:px-10 pt-4 sm:pt-6 pb-2">
+      <div className="w-full  flex justify-center bg-background ">
+        <div className="flex flex-col w-full max-w-[1048px] px-4 md:px-8">
+          <GlobalMessage
+            visible={showAvatarSuccess}
+            onClose={() => setShowAvatarSuccess(false)}
+            message="Фото тварини успішно завантажене"
+          />
+          <div className=" pb-6">
             <GoBackPets />
           </div>
-          <h1 className="lg:text-18px sm:text-2xl font-medium  px-4 sm:px-6 md:px-8 lg:px-12 pt-0 pb-6 sm:pb-10 text-gray-900">
+          <h1 className="md:text-[18px] font-[600] pb-6  text-gray-900">
             <div className="aa">Додання нової тварини</div>
           </h1>
 
-          <section className="pt-0 pb-6 sm:pb-10 px-6 sm:px-10 md:px-15 gap-4 ">
-            <div className="w-full flex flex-col items-center justify-center gap-6 md:flex-row md:items-start md:justify-start">
+          <section className="pt-0 pb-6">
+            <div className="w-full flex flex-col  gap-10 md:flex-row md:items-start md:justify-start">
               <div className="flex-shrink-0  flex justify-center md:justify-start">
                 <fieldset className="flex flex-col gap-[24px] items-center md:items-start md:flex-row md:gap-[40px]">
                   <div>
-                    <UsePetAvatar
+                    <PetAvatarUploader
                       avatar={newPet.avatar}
                       firstName={newPet.name}
-                      onChange={setImage}
+                      onChange={(img) => {
+                        setImage(img);
+                        setShowAvatarSuccess(true);
+                      }}
                     />
                   </div>
                 </fieldset>

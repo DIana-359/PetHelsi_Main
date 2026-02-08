@@ -11,9 +11,9 @@ import AvatarPet from "./AvatarPet";
 import { Pet } from "@/types/pet";
 import useMedia from "@/utils/media";
 import { useState } from "react";
-import Icon from "../Icon";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import { useRouter } from "next/navigation";
+import ModalCloseButton from "../ModalCloseButton";
 
 type ActiveButton = "save" | "change";
 
@@ -40,7 +40,7 @@ export default function PetCreatedModal({
 
   const goToMyPets = () => {
     setIsActive("change");
-    router.push("/owner/pets");
+    router.push("/owner/pets?created=1");
   };
 
   return (
@@ -52,18 +52,9 @@ export default function PetCreatedModal({
       className="rounded-[18px] w-full md:max-w-[560px] pt-13 md:pt-20 pb-8 md:pb-14"
     >
       <ModalContent className="flex flex-col w-full gap-6 outline-none">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 border-none bg-transparent cursor-pointer outline-none opacity-70 hover:opacity-100 transition"
-        >
-          <Icon
-            sprite="/sprites/sprite-sistem.svg"
-            id="icon-close"
-            width="24px"
-            height="24px"
-            className="stroke-gray-600 md:w-[40px] md:h-[40px] hover:stroke-gray-800"
-          />
-        </button>
+        <div className="text-[#1e88e5]">
+          <ModalCloseButton onClose={onClose} />
+        </div>
         <ModalHeader className="text-[20px] md:text-[24px] justify-center font-semibold gap-4 text-gray-900 text-center">
           Профіль {pet.name} створено
         </ModalHeader>

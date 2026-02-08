@@ -6,21 +6,21 @@ import Icon from "../Icon";
 import PhotoUploadPetModal from "./PhotoUploadPetModal";
 import PetPhotoSavedModal from "./PetPhotoSavedModal";
 
-interface UsePetAvatarProps {
+interface PetAvatarUploaderProps {
   avatar?: string;
   firstName?: string;
   onChange?: (image: { preview: string; file: File } | null) => void;
   mode?: "add" | "edit";
 }
 
-export default function UsePetAvatar({
+export default function PetAvatarUploader({
   avatar,
   firstName,
   onChange,
   mode = "add",
-}: UsePetAvatarProps) {
+}: PetAvatarUploaderProps) {
   const [image, setImage] = useState<{ preview: string; file: File } | null>(
-    null
+    null,
   );
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isPhotoSavedOpen, setIsPhotoSavedOpen] = useState(false);

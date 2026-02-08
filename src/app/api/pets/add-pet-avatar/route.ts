@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     if (!petId) {
       return NextResponse.json(
         { message: "petId query parameter is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
-      }
+      },
     );
 
     const data = await res.json();
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     console.error("Add pet avatar error:", err);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

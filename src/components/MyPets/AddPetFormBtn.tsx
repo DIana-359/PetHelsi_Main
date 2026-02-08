@@ -2,9 +2,10 @@
 
 import { Button } from "@heroui/react";
 import { Pet } from "@/types/pet";
-import { addPet } from "@/services/pets/addPet";
-import { addPetAvatar } from "@/services/pets/addPetAvatar";
+import { useAddPet } from "@/hooks/pets/useAddPet";
+import { useAddPetAvatar } from "@/hooks/pets/useAddPetAvatar";
 import { useRouter } from "next/navigation";
+import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
 
 interface AddPetFormBtnProps {
   newPet: Partial<Pet>;
@@ -22,55 +23,59 @@ export default function AddPetFormBtn({
   image,
   setCreatedPet,
   setIsCreatedModalOpen,
-  // isBirthDateUnknown,
   birthMonth,
   birthYear,
   validate,
 }: AddPetFormBtnProps) {
   const router = useRouter();
 
+  const { mutate: addPetMutate } = useAddPet();
+  const { mutateAsync: addPetAvatarMutate } = useAddPetAvatar();
+
   const handleAddForm = async () => {
     if (!validate()) return;
+
+    const birthDate = petBirthDate({
+      birthDate: newPet.birthDate,
+      birthYear,
+      birthMonth,
+    });
 
     const pet: Pet = {
       name: newPet.name!,
       petTypeName: newPet.petTypeName!,
       breed: newPet.breed!,
       genderTypeName: newPet.genderTypeName!,
-      color: newPet.color,
+
       weight: newPet.weight!,
-      birthDate: newPet.birthDate
-        ? newPet.birthDate
-        : birthMonth
-          ? `${birthYear}-${birthMonth.padStart(2, "0")}-01`
-          : `${birthYear}-01-01`,
+      birthDate,
       avatar: newPet.avatar,
       sterilized: newPet.sterilized!,
       allergies: newPet.allergies || [],
       checked: true,
     };
 
-    try {
-      const created = await addPet(pet);
+    addPetMutate(pet, {
+      onSuccess: async (createdPet) => {
+        if (image?.file && createdPet.id) {
+          await addPetAvatarMutate({
+            petId: createdPet.id.toString(),
+            file: image.file,
+          });
+        }
 
-      if (!created.data) {
-        alert("Не вдалося додати тварину");
-        return;
-      }
+        setCreatedPet({
+          ...pet,
+          avatar: image?.preview ?? pet.avatar,
+          id: createdPet.id,
+        });
 
-      if (image?.file && created.data.id) {
-        await addPetAvatar(created.data.id.toString(), image.file);
-      }
-
-      setCreatedPet({
-        ...pet,
-        avatar: image?.preview ?? pet.avatar,
-      });
-
-      setIsCreatedModalOpen(true);
-    } catch {
-      alert("Помилка додавання тварини");
-    }
+        setIsCreatedModalOpen(true);
+      },
+      onError: (error) => {
+        alert(error.message || "Помилка додавання тварини");
+      },
+    });
   };
 
   return (

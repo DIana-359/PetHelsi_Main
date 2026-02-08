@@ -5,8 +5,10 @@ import MyPetsAddBtn from "./MyPetsAddBtn";
 import AvatarPet from "./AvatarPet";
 import useMedia from "@/utils/media";
 import UpdateProfilePetLink from "./UpdateProfilePetLink";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SterilizedLabel } from "./SterilizedLabel";
+import { GlobalMessage } from "./GlobalMessage";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const formatBirthDateUA = (dateString?: string) => {
   if (!dateString) return "Не вказано";
@@ -50,8 +52,23 @@ interface PetProfileProps {
 export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
   const isMobile = useMedia();
   const [activePetId, setActivePetId] = useState<number | null>(null);
+  const [showPetCreated, setShowPetCreated] = useState(false);
 
-  if (pets.length === 0) return <MyPetsAddBtn handleAddPet={handleAddPet} />;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get("created") === "1") {
+      setShowPetCreated(true);
+      router.replace("/owner/pets");
+    }
+  }, [searchParams, router]);
+
+  const handleAddNewPet = async (pet: Partial<Pet>, imageFile?: File) => {
+    await handleAddPet(pet, imageFile);
+  };
+
+  if (pets.length === 0) return <MyPetsAddBtn handleAddPet={handleAddNewPet} />;
 
   const sortedPets = [...pets].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 
@@ -60,44 +77,45 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
     sortedPets[sortedPets.length - 1];
 
   const petData = [
-    { label: "Ім’я", value: activePet.name || "Не вказано" },
-    { label: "Вид", value: activePet.petTypeName || "Не вказано" },
-    { label: "Порода", value: activePet.breed || "Не вказано" },
-    { label: "Стать", value: activePet.genderTypeName || "Не вказано" },
+    { label: "Ім’я", value: activePet.name },
+    { label: "Вид", value: activePet.petTypeName },
+    ...(activePet.breed ? [{ label: "Порода", value: activePet.breed }] : []),
+    {
+      label: "Стать",
+      value: activePet.genderTypeName === "Хлопчик" ? "Самець" : "Самка",
+    },
 
     { label: "Дата народження", value: formatBirthDateUA(activePet.birthDate) },
     {
       label: "Вага",
-      value:
-        activePet.weight !== undefined
-          ? `${activePet.weight} кг`
-          : "Не вказано",
+      value: `${activePet.weight} кг`,
     },
 
     {
-      label: "Стерилізація",
-      value: (
-        <SterilizedLabel
-          sterilized={activePet.sterilized}
-          gender={activePet.genderTypeName}
-        />
-      ),
+      label: "Стерилізований/-а",
+      value: <SterilizedLabel sterilized={activePet.sterilized} />,
     },
 
-    {
-      label: "Алергічні реакції",
-      value:
-        activePet.allergies && activePet.allergies.length > 0
-          ? activePet.allergies.join(", ")
-          : "Не вказано",
-    },
+    ...(activePet.allergies && activePet.allergies.length > 0
+      ? [
+          {
+            label: "Алергічні реакції",
+            value: activePet.allergies.join(", "),
+          },
+        ]
+      : []),
   ];
 
   return (
     <div className="py-[8px] md:py-0">
-      <div className="flex items-center  md:flex-wrap">
+      <GlobalMessage
+        visible={showPetCreated}
+        onClose={() => setShowPetCreated(false)}
+        message="Профіль тварини успішно створено"
+      />
+      <div className="flex items-center gap-6 md:flex-wrap">
         <MyPetsAddBtn
-          handleAddPet={handleAddPet}
+          handleAddPet={handleAddNewPet}
           className="text-[14px] w-[165px] flex items-center justify-center h-[38px] gap-2 rounded-[6px] bg-primary text-white border border-primary hover:bg-primary-50 hover:text-primary "
         />
 
@@ -106,11 +124,11 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
             key={pet.id}
             onClick={() => setActivePetId(pet.id!)}
             className={`
-      font-semibold text-[14px] text-gray-900 pb-[10px] px-4
+      font-semibold text-[14px] text-gray-900 pb-[10px] px-3 -mx-3
       ${
         activePetId === pet.id
-          ? "border-b-2 border-primary "
-          : "border-b-2 border-transparent "
+          ? "border-b-2 border-primary"
+          : "border-b-2 border-transparent"
       }
     `}
           >
@@ -124,7 +142,9 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
             Профіль тварини
           </h3>
           <div className="text-primary hidden md:block">
-            <UpdateProfilePetLink />
+            {activePet.id !== undefined && (
+              <UpdateProfilePetLink petId={activePet.id} />
+            )}
           </div>
         </div>
         <div className="flex flex-col md:flex-row gap-10">
@@ -135,7 +155,9 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
               size={isMobile ? 88 : 128}
             />
             <div className="text-primary md:hidden ">
-              <UpdateProfilePetLink />
+              {activePet.id !== undefined && (
+                <UpdateProfilePetLink petId={activePet.id} />
+              )}
             </div>
           </div>
           <ul className="flex flex-col flex-wrap md:flex-row  gap-y-[16px] pt-8 md:pt-1  border-t border-gray-100 md:border-t-0 ">

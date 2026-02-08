@@ -20,9 +20,10 @@ export function usePetValidation({
     if (!newPet.name) newErrors.name = "Заповніть поле";
     if (!newPet.petTypeName) newErrors.petTypeName = "Заповніть поле";
     if (!newPet.genderTypeName) newErrors.genderTypeName = "Заповніть поле";
-    if (!newPet.weight || newPet.weight <= 0) {
-      newErrors.weight = "Вага повинна бути більше 0 кг";
+    if (newPet.weight === undefined || newPet.weight === null) {
       newErrors.weight = "Заповніть поле";
+    } else if (newPet.weight <= 0) {
+      newErrors.weight = "Вага повинна бути більше 0 кг";
     }
     if (newPet.sterilized === undefined)
       newErrors.sterilized = "Заповніть поле";

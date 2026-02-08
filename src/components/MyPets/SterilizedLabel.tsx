@@ -1,19 +1,10 @@
 interface SterilizedLabelProps {
   sterilized?: boolean;
-  gender?: string;
 }
 
-export function SterilizedLabel({ sterilized, gender }: SterilizedLabelProps) {
+export function SterilizedLabel({ sterilized }: SterilizedLabelProps) {
   const label =
-    sterilized === undefined
-      ? "Не вказано"
-      : sterilized
-      ? gender === "Дівчинка"
-        ? "Стерилізована"
-        : "Стерилізований"
-      : gender === "Дівчинка"
-      ? "Не стерилізована"
-      : "Не стерилізований";
+    sterilized === undefined ? "Не вказано" : sterilized ? "Так" : "Ні";
 
   return <span>{label}</span>;
 }

@@ -1,13 +1,8 @@
-export async function deletePet(id: string, bearerToken?: string) {
+export async function deletePet(id: string) {
   try {
-    const base = process.env.NEXT_PUBLIC_BASE_URL || "";
-    const res = await fetch(`${base}/v1/owners/pets/${id}`, {
+    const res = await fetch(`/api/pets/${id}`, {
       method: "DELETE",
-      headers: bearerToken
-        ? {
-            Authorization: `Bearer ${bearerToken}`,
-          }
-        : undefined,
+
       credentials: "include",
     });
 

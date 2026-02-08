@@ -43,7 +43,7 @@ interface PetBirthDateFiledProps {
   clearError: (field: string) => void;
 }
 
-export default function PetBirthDateFiled({
+export default function PetBirthDateField({
   newPet,
   setNewPet,
   selected,

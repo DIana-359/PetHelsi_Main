@@ -1,8 +1,12 @@
 import Link from "next/link";
 import Icon from "../Icon";
 
-export default function UpdateProfilePetLink() {
-  const petId = "123";
+interface UpdateProfilePetLinkProps {
+  petId: number;
+}
+export default function UpdateProfilePetLink({
+  petId,
+}: UpdateProfilePetLinkProps) {
   return (
     <div className="py-[10px] px-[16px] flex items-center gap-[8px] group">
       <Icon
