@@ -1,6 +1,6 @@
 export async function getPets() {
   try {
-    const res = await fetch(`/api/ownerProfile/get-pets`, {
+    const res = await fetch(`/api/pets/get-pets`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
