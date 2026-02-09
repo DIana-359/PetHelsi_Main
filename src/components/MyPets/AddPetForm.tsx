@@ -350,7 +350,6 @@ export default function AddPetForm({
           </span>
         </div>
       </div>
-      <div></div>
     </>
   );
 }
