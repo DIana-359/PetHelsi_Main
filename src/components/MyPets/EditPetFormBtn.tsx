@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useUpdatePet } from "@/hooks/pets/useUpdatePet";
-import { useUpdatePetAvatar } from "@/hooks/pets/useUpdatePetAvatar";
+// import { useUpdatePetAvatar } from "@/hooks/pets/useUpdatePetAvatar";
 import { useDeletePet } from "@/hooks/pets/useDeletePet";
 import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
 
-interface EditPetFormBtnsProps {
+interface EditPetFormBtnProps {
   pet: Partial<Pet>;
   setPet: React.Dispatch<React.SetStateAction<Partial<Pet>>>;
   image: { preview: string; file: File } | null;
@@ -19,7 +19,7 @@ interface EditPetFormBtnsProps {
   validate: () => boolean;
 }
 
-export default function EditPetFormBtns({
+export default function EditPetFormBtn({
   pet,
   setPet,
   image,
@@ -27,11 +27,11 @@ export default function EditPetFormBtns({
   birthYear,
   onCancel,
   validate,
-}: EditPetFormBtnsProps) {
+}: EditPetFormBtnProps) {
   const router = useRouter();
 
   const { mutate: updatePetMutate, isPending: isUpdating } = useUpdatePet();
-  const { mutateAsync: updateAvatar } = useUpdatePetAvatar();
+  // const { mutateAsync: updateAvatar } = useUpdatePetAvatar();
   const { mutate: deletePetMutate, isPending } = useDeletePet();
 
   const birthDate = petBirthDate({
@@ -62,11 +62,11 @@ export default function EditPetFormBtns({
       {
         onSuccess: async () => {
           if (image?.file) {
-            const publicUrl = await updateAvatar({
-              petId: pet.id!.toString(),
-              file: image.file,
-            });
-            setPet((prev) => ({ ...prev, avatar: publicUrl, birthDate }));
+            // const publicUrl = await updateAvatar({
+            //   petId: pet.id!.toString(),
+            //   file: image.file,
+            // });
+            // setPet((prev) => ({ ...prev, avatar: publicUrl, birthDate }));
           } else {
             setPet((prev) => ({ ...prev, birthDate }));
           }
