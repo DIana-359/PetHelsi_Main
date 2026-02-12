@@ -20,6 +20,7 @@ export default function UserLogout() {
 
       closeModal();
       router.replace("/signin");
+      router.refresh();
     } catch (e) {
       console.error(e);
     }
