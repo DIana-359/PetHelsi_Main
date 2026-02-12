@@ -10,7 +10,6 @@ import AboutTab from "./AboutTab";
 import WorkTab from "./WorkTab";
 import EducationTab from "./EducationTab";
 import SlotUnavailableModal from "@/components/SlotUnavailableModal"
-// import Link from "next/link";
 import clsx from "clsx";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
@@ -27,13 +26,13 @@ import { useBookingFlow } from "@/hooks/booking/useBookingFlow";
 import { Pulse } from "@/components/Pulse";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
 import EmptyCalendar from "@/components/EmptyCalendar";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 type Props = {
   veterinarian: Veterinarian;
-  token?: boolean;
 };
 
-export default function DoctorPage({ veterinarian, token }: Props) {
+export default function DoctorPage({ veterinarian }: Props) {
   const [selected, setSelected] = useState("profile");
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const {selectedDate, setSelectedDate, setSelectedTime, setPrice, setSlotId} = useBooking()
@@ -41,10 +40,11 @@ export default function DoctorPage({ veterinarian, token }: Props) {
   const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSlotConflictOpen, setIsSlotConflictOpen] = useState(false);
+  const { data } = useProfile();
   const isMobile = useMedia();
   const bookingFlow = useBookingFlow({
     vetId: veterinarian.id,
-    openSignUp: !token ? () => setIsSignUpOpen(true) : undefined,
+    openSignUp: !data ? () => setIsSignUpOpen(true) : undefined,
     onSlotConflict: () => setIsSlotConflictOpen(true),
   });
 

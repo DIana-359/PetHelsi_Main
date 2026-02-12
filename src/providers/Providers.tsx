@@ -14,11 +14,11 @@ export function Providers({ children }: Props) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SistemProvider>
-        <BookingProvider>
-          {children}
-        </BookingProvider>
-      </SistemProvider>
+        <SistemProvider>
+          <BookingProvider>
+            {children}
+          </BookingProvider>
+        </SistemProvider>
     </QueryClientProvider>
   );
 }

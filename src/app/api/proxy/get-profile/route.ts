@@ -5,7 +5,7 @@ export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
   if (!token) {
-    return NextResponse.json({ error: "No auth token" }, { status: 401 });
+    return NextResponse.json(null, { status: 200 });
   }
 
   const res = await fetch(
