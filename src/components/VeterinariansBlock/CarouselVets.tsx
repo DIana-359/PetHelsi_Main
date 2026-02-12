@@ -4,15 +4,11 @@ import { useRef, useEffect, useState } from "react";
 import VeterinariansList from "./VeterinariansList";
 import { Button } from "@heroui/react";
 import { useVetsByCriteria } from "@/hooks/vets/useVets";
-import { Pulse } from "../Pulse";
-import Icon from "../Icon";
+import { Pulse } from "@/components/Pulse";
+import Icon from "@/components/Icon";
 
-interface ICarouselVetsProps {
-  token?: true;
-}
-
-export default function CarouselVets({ token }: ICarouselVetsProps) {
-  const { data = [], isLoading } = useVetsByCriteria({ page: 0, size: 8 });
+export default function CarouselVets() {
+  const { data, isLoading } = useVetsByCriteria({ page: 0, size: 8 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
@@ -53,7 +49,7 @@ export default function CarouselVets({ token }: ICarouselVetsProps) {
       container.removeEventListener("scroll", updateScrollButtons);
       window.removeEventListener("resize", updateScrollButtons);
     };
-  }, [data.length]);
+  }, [data?.content.length]);
 
   if (isLoading)
     return (
@@ -70,7 +66,7 @@ export default function CarouselVets({ token }: ICarouselVetsProps) {
       <div
         ref={containerRef}
         className="flex-1 overflow-x-auto scroll-smooth scrollbar-hide mb-6 -mr-4 md:-mr-8 xl:-mr-16">
-        <VeterinariansList token={token} />
+        <VeterinariansList />
       </div>
 
       <div className="hidden md:flex gap-[15px]  mt-auto self-end">

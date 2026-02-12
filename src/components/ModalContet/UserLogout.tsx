@@ -2,11 +2,12 @@ import { HiOutlineUserCircle } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { useSistem } from "@/contextSistem/contextSistem";
-import { fetchSignoutCookieProxy } from "@/app/api/auth-proxy";
+import { useSignOut } from "@/hooks/auth/useSignOut";
 
 export default function UserLogout() {
   const router = useRouter();
   const { setIsModalOpen, setModalContent } = useSistem();
+  const { mutateAsync: logout, isPending } = useSignOut();
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -15,13 +16,15 @@ export default function UserLogout() {
 
   async function exit() {
     try {
-      await fetchSignoutCookieProxy();
+      await logout();
+
       closeModal();
-      router.push("/signin");
-    } catch (error) {
-      console.error("Logout error:", error);
+      router.replace("/signin");
+    } catch (e) {
+      console.error(e);
     }
   }
+
 
   return (
     <div className="flex flex-col items-center md:w-[304px]">
@@ -46,10 +49,9 @@ export default function UserLogout() {
 
       <Button
         variant="ghost"
+        isDisabled={isPending}
         className="flex items-center text-primary-700 bg-background hover:bg-primary-300 border-[1px] border-primary-700 cursor-pointer w-full"
-        onPress={() => {
-          exit();
-        }}>
+        onPress={exit}>
         Так, вийти
       </Button>
     </div>

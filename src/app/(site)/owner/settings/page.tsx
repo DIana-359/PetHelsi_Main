@@ -1,17 +1,14 @@
-import { jwtDecode } from "jwt-decode";
+"use client";
 import ChangePassword from "@/components/ChangePassword/ChangePassword";
 import { DeleteAccountButton } from "@/components/ProfileOwner/DeleteAccountButton";
-import { checkToken } from "@/app/api/checkToken";
+import { useProfile } from "@/hooks/owners/useProfile";
 
-export default async function OwnerSettings() {
-  const token = await checkToken();
+export default function OwnerSettings() {
+  const { data } = useProfile();
 
-  if (!token) {
+  if (!data) {
     return <div>Помилка: email не знайдено</div>;
   }
-
-  const decoded = jwtDecode<unknown>(token);
-  const email = (decoded as Record<string, unknown>)?.sub as string | undefined;
 
   return (
     <div>
@@ -24,7 +21,7 @@ export default async function OwnerSettings() {
           Ваш E-mail
         </p>
         <p className="text-[14px] md:text-[16px] font-[400] leading-[1.4] text-gray-900 mb-5">
-          {email}
+          {data.email}
         </p>
       </div>
 

@@ -15,18 +15,10 @@ export async function POST() {
       throw new Error('Backend logout failed')
     }
 
-    const data = await backendResponse.json()
-    
-    const response = NextResponse.json(data)
-    
-    const backendCookies = backendResponse.headers.getSetCookie()
-    backendCookies.forEach(cookie => {
-      const cleanedCookie = cookie
-        .replace(/; Domain=[^;]+/i, '')
-        .replace(/; Secure/gi, '')
-        .replace(/^([^=]+)=[^;]+/, '$1=; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
-      response.headers.append('Set-Cookie', cleanedCookie)
-    })
+    const response = NextResponse.json({ success: true });
+
+    response.cookies.delete("auth-token");
+    response.cookies.delete("refresh-token");
 
     return response
 

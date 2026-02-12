@@ -12,8 +12,8 @@ import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
-import { addPet } from "@/services/addPet";
-import { getPets } from "@/services/getPets";
+import { addPet } from "@/services/owners/addPet";
+import { getPets } from "@/services/owners/getPets";
 import { petTypeIcons } from "@/utils/types/petTypeIcons";
 import { getVet } from "@/services/vets/getVet";
 

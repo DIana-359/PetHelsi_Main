@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import Icon from "./Icon";
-import { getNewPassword } from "@/services/forgot-password";
+import { getNewPassword } from "@/services/forgotPassword";
 interface ForgotPasswordProps {
   isOpenModalChangePassword: boolean;
   setOpenModalChangePassword: (value: boolean) => void;

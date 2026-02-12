@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button } from "@heroui/react";
 // import ChangePasswordSucsess from "@/components/ModalContet/ChangePasswordSucsess";
-import changePassword from "@/app/api/ownerProfile/change-password";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import ForgotPassword from "@/components/ForgotPassword";
+import { useChangePassword } from "@/hooks/owners/useChangePassword";
 
 interface IDataPassword {
   oldPassword: string | "";
@@ -24,6 +24,7 @@ export default function ChangePassword() {
   const [isOpenModalChangePassword, setOpenModalChangePassword] =
     useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const { mutate: changePasswordMutate } = useChangePassword();
 
   useEffect(() => {
     const { oldPassword, newPassword, repeatNewPassword } = formValues;
@@ -43,39 +44,33 @@ export default function ChangePassword() {
     }
   }, [formValues]);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const oldPassword = formData.get("oldPassword")?.toString().trim();
-    const newPassword = formData.get("newPassword")?.toString().trim();
-    const repeatNewPassword = formData
-      .get("repeatNewPassword")
-      ?.toString()
-      .trim();
 
-    if (newPassword !== repeatNewPassword) {
+    if (formValues.newPassword !== formValues.repeatNewPassword) {
       setPasswordError(true);
       return;
     }
 
-    try {
-      const response = await changePassword({
-        oldPassword,
-        newPassword,
-        repeatNewPassword,
-      });
-      if (response.ok) {
-        setFormValues({
-          oldPassword: "",
-          newPassword: "",
-          repeatNewPassword: "",
-        });
+    changePasswordMutate(
+      {
+        oldPassword: formValues.oldPassword.trim(),
+        newPassword: formValues.newPassword.trim(),
+        repeatNewPassword: formValues.repeatNewPassword.trim(),
+      },
+      {
+        onSuccess: async () => {
+          setFormValues({
+            oldPassword: "",
+            newPassword: "",
+            repeatNewPassword: "",
+          });
+        },
+        onError: err => {
+          console.error("Помилка зміни паролю:", err);
+        },
       }
-
-      console.log("Success:", response);
-    } catch (error) {
-      console.error("Помилка зміни паролю:", error);
-    }
+    );
   }
 
   const togglePassword = () => {

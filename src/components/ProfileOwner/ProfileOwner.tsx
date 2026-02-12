@@ -1,26 +1,26 @@
 "use client";
-
 import AvatarUser from "./AvatarUser";
-import { useAuth } from "@/contextAuth/authContext";
 import { Pulse } from "../Pulse";
 import useMedia from "@/utils/media";
 import EditProfileLink from "./EditProfileLink";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 export default function ProfileOwner() {
-  const { userData } = useAuth();
   const isMobile = useMedia();
+  const { data } = useProfile();
+  
 
   const ownerData = [
     // { label: "avatar", value: data?.avatar ?? "" },
-    { label: "Ім’я", value: userData?.firstName ?? "Не вказано" },
-    { label: "Прізвище", value: userData?.lastName ?? "Не вказано" },
-    { label: "По-батькові", value: userData?.middleName ?? "Не вказано" },
-    { label: "Телефон", value: userData?.phone ?? "Не вказано" },
-    { label: "E-mail", value: userData?.email ?? "Не вказано" },
-    { label: "Дата  народження", value: userData?.birthday ?? "Не вказано" },
-    { label: "Місце проживання", value: userData?.city ?? "Не вказано" },
+    { label: "Ім’я", value: data?.firstName ?? "Не вказано" },
+    { label: "Прізвище", value: data?.lastName ?? "Не вказано" },
+    { label: "По-батькові", value: data?.middleName ?? "Не вказано" },
+    { label: "Телефон", value: data?.phone ?? "Не вказано" },
+    { label: "E-mail", value: data?.email ?? "Не вказано" },
+    { label: "Дата  народження", value: data?.birthday ?? "Не вказано" },
+    { label: "Місце проживання", value: data?.city ?? "Не вказано" },
   ];
-  if (!userData) return <Pulse />;
+  if (!data) return <Pulse />;
 
   return (
     <div className="py-[8px] md:py-0">
@@ -36,9 +36,9 @@ export default function ProfileOwner() {
       <div className="flex flex-col items-start gap-[16px] md:flex-row md:gap-[40px]">
         <div className="w-full md:max-w-[104px] flex items-center justify-between gap-[16px]">
           <AvatarUser
-            avatar={userData?.avatar}
-            firstName={userData?.firstName}
-            email={userData?.email}
+            avatar={data?.avatar}
+            firstName={data?.firstName}
+            email={data?.email}
             size={isMobile ? 88 : 104}
           />
 

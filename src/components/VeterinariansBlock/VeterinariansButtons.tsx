@@ -4,20 +4,20 @@ import Link from "next/link";
 import { useState } from "react";
 import SignUpModal from "../ModalSignUp";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useProfile } from "@/hooks/owners/useProfile";
 interface IVeterinariansButtonsProps {
-  token?: true;
   id: number;
   size?: "small" | "large" | "base";
 }
 
 export default function VeterinariansButtons({
-  token,
   id,
   size = "base",
 }: IVeterinariansButtonsProps) {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
+  const { data } = useProfile();
   const issueTypeFromForm = params.get("issueTypeName");
   const isHomePage = pathname == "/";
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function VeterinariansButtons({
   };
 
   const handleClick = () => {
-    if (!token) {
+    if (!data) {
       setIsSignUpOpen(true);
       return;
     }

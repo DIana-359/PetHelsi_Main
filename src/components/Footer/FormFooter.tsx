@@ -1,7 +1,12 @@
 "use client";
 import { Button, Input, Form } from "@heroui/react";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 export const FormFooter = () => {
+  const { data } = useProfile();
+
+  if (data) return null;
+
   return (
     <div>
       <h3 className="text-[16px] lg:text-[14px] uppercase pb-4">

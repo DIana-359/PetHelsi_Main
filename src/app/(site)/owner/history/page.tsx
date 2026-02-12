@@ -5,6 +5,7 @@ import { Pulse } from "@/components/Pulse";
 import HistoryEmptyNotice from "@/components/History/HistoryEmptyNotice";
 import HistoryCard from "@/components/History/HistoryCard";
 import { IHistoryResponse } from "../../../../types/historyTypes";
+import { apiFetch } from "@/lib/apiFetch.client";
 
 export default function History() {
   const [historyAllList, setHistoryAllList] = useState<IHistoryResponse | null>(
@@ -13,7 +14,7 @@ export default function History() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/proxy/getHistoryAllItems")
+    apiFetch("/api/proxy/getHistoryAllItems")
       .then(res => res.json().then(data => ({ ok: res.ok, data })))
       .then(({ ok, data }) => {
         if (!ok) throw new Error(data.error || "Помилка завантаження");
