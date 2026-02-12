@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { signUp } from "@/services/auth/signUp";
 import GoBack from "@/components/GoBack";
-import { handleGoogleLogin } from "../AuthFunction";
+import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
@@ -22,7 +22,9 @@ type SignUpFormProps = {
 
 export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(hideRoleTabs ? "CLIENT" : null);
+  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(
+    hideRoleTabs ? "CLIENT" : null
+  );
   const [tabError, setTabError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -209,7 +211,7 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
             return;
           }
           document.cookie = `role=${selectedRole}; path=/; max-age=300`;
-          handleGoogleLogin();
+          handleGoogleLogin(selectedRole);
         }}
         className="w-full mx-auto py-2 text-[16px] font-[400] leading-[1.4] text-primary-700 bg-background border-[1px] rounded-[8px] border-primary-700 hover:cursor-pointer">
         <Icon
