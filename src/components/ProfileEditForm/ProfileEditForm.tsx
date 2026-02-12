@@ -1,6 +1,5 @@
 "use client";
 import { Form, Input, Button } from "@heroui/react";
-import updateProfile from "@/app/api/ownerProfile/updateProfile";
 import GoBack from "@/components/GoBack";
 import Icon from "@/components/Icon";
 import { isValidPhoneNumber } from "libphonenumber-js";
@@ -11,47 +10,47 @@ import AvatarUser from "../ProfileOwner/AvatarUser";
 import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { Image } from "@heroui/react";
-import { useAuth } from "@/contextAuth/authContext";
 import { Pulse } from "../Pulse";
-import { getProfileClient } from "@/app/api/getProfile";
+import { useUpdateProfile } from "@/hooks/owners/useUpdateProfile";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 export default function ProfileEditForm() {
   const router = useRouter();
-  const { userData, setUserData } = useAuth();
+  const { data } = useProfile();
+  const { mutateAsync, isPending } = useUpdateProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<string | null>(userData?.avatar || "");
+  const [image, setImage] = useState<string | null>(data?.avatar || "");
   const [selected, setSelected] = useState<Date>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [phone, setPhone] = useState<string | null>(userData?.phone || "");
-  // const [email] = useState<string | null>(userData?.email || "");
+  const [phone, setPhone] = useState<string | null>(data?.phone || "");
   const [lastName, setLastName] = useState<string | null>(
-    userData?.lastName || ""
+    data?.lastName || ""
   );
   const [firstName, setFirstName] = useState<string | null>(
-    userData?.firstName || ""
+    data?.firstName || ""
   );
   const [middleName, setMiddleName] = useState<string | null>(
-    userData?.middleName || ""
+    data?.middleName || ""
   );
   const [birthday, setBirthday] = useState<string | null>(
-    userData?.birthday || ""
+    data?.birthday || ""
   );
-  const [city, setCity] = useState<string | null>(userData?.city || "");
+  const [city, setCity] = useState<string | null>(data?.city || "");
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
   const { setIsModalOpen, setModalContent } = useSistem();
 
   useEffect(() => {
-    if (userData) {
-      setLastName(userData.lastName || "");
-      setFirstName(userData.firstName || "");
-      setMiddleName(userData.middleName || "");
-      setPhone(userData.phone || "");
-      setBirthday(userData.birthday || "");
-      setCity(userData.city || "");
-      setImage(userData.avatar || "");
-      if (userData.birthday) setSelected(new Date(userData.birthday));
+    if (data) {
+      setLastName(data.lastName || "");
+      setFirstName(data.firstName || "");
+      setMiddleName(data.middleName || "");
+      setPhone(data.phone || "");
+      setBirthday(data.birthday || "");
+      setCity(data.city || "");
+      setImage(data.avatar || "");
+      if (data.birthday) setSelected(new Date(data.birthday));
     }
-  }, [userData]);
+  }, [data]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -75,6 +74,7 @@ export default function ProfileEditForm() {
 
   async function handleUpdateForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     const cleanPhone = phone ? phone.replace(/\s+/g, "") : "";
 
     const formData = {
@@ -84,17 +84,11 @@ export default function ProfileEditForm() {
       phone: cleanPhone,
       birthday: selected ? selected.toISOString().slice(0, 10) : birthday,
       city,
-      // email,
-      // image,
     };
 
     try {
-      await updateProfile(formData);
+      await mutateAsync(formData);
 
-      const updatedProfile = await getProfileClient();
-      if (updatedProfile) {
-        setUserData(updatedProfile);
-      }
       setModalContent(
         <>
           <p className="text-[14px] md:text-[16px] font-[400] leading-[1.4] text-gray-900 mb-1">
@@ -109,6 +103,7 @@ export default function ProfileEditForm() {
           </Button>
         </>
       );
+
       setIsModalOpen(true);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -131,7 +126,8 @@ export default function ProfileEditForm() {
       }
     }
   }
-  if (!userData) return <Pulse />;
+
+  if (!data) return <Pulse />;
   function handleCancelUpdateProfile() {
     router.push("/owner/profile");
   }
@@ -165,8 +161,8 @@ export default function ProfileEditForm() {
           ) : (
             <AvatarUser
               avatar={image}
-              firstName={userData?.firstName}
-              email={userData?.email}
+              firstName={data?.firstName}
+              email={data?.email}
               size={128}
             />
           )}
@@ -363,7 +359,7 @@ export default function ProfileEditForm() {
               name="email"
               placeholder="Введіть E-mail"
               type="email"
-              value={userData?.email ?? ""}
+              value={data?.email ?? ""}
               classNames={{
                 inputWrapper:
                   "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
@@ -400,6 +396,7 @@ export default function ProfileEditForm() {
           <div className="flex items-center gap-[16px] mt-[16px]">
             <Button
               type="submit"
+              isDisabled={isPending}
               className="w-full text-background bg-primary-700">
               Зберегти зміни
             </Button>

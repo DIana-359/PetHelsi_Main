@@ -9,10 +9,9 @@ import { Vet } from "@/utils/types/vet";
 
 interface Props {
   veterinarian: Vet;
-  token?: true;
 }
 
-export default function VetCardHomePage({ veterinarian, token }: Props) {
+export default function VetCardHomePage({ veterinarian }: Props) {
   const isMobile = useMediaQuery("(max-width: 1023px)");
 
   return (
@@ -31,14 +30,12 @@ export default function VetCardHomePage({ veterinarian, token }: Props) {
               veterinarian={veterinarian}
               hasAvatar={false}
               size={"small"}
-              token={token}
             />
           ) : (
             <VeterinarianCard
               veterinarian={veterinarian}
               hasAvatar={false}
               size={"large"}
-              token={token}
             />
           )}
         </div>

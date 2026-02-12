@@ -1,6 +1,6 @@
 "use client";
 import AvatarUser from "../ProfileOwner/AvatarUser";
-import type { Chat, VetDialog } from "@/app/types/chatsTypes";
+import type { Chat, VetDialog } from "@/types/chatsTypes";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import useMedia from "@/utils/useMedia";
@@ -41,7 +41,7 @@ export default function ChatsSidebar({
             "w-full py-[16px] px-[12px] cursor-pointer flex justify-between group transition-colors duration-300",
             activeChat === String(chat.chat_id)
               ? "bg-primary-700"
-              : "bg-background hover:bg-primary-700"
+              : "bg-background hover:bg-primary-100"
           )}>
           <div className="flex flex-1 items-center">
             <div className="mr-[16px]">
@@ -59,7 +59,7 @@ export default function ChatsSidebar({
                   "text-[16px] font-[500] leading-[1] mb-[4px]",
                   activeChat === String(chat.chat_id)
                     ? "text-background"
-                    : "text-gray-900 group-hover:text-background"
+                    : "text-gray-900 group-hover:text-gray-700"
                 )}>
                 {chat.vet_full_name}
               </p>
@@ -84,7 +84,7 @@ export default function ChatsSidebar({
                       "text-[14px] font-[400] leading-[1.1]",
                       activeChat === String(chat.chat_id)
                         ? "text-background"
-                        : "text-gray-700 group-hover:text-background"
+                        : "text-gray-700 group-hover:text-gray-700"
                     )}>
                     {lastMsg.message.length > 68
                       ? lastMsg.message.slice(0, 68) + "..."
@@ -101,7 +101,7 @@ export default function ChatsSidebar({
                 "text-[12px] font-[500] leading-[1] mb-[8px]",
                 activeChat === String(chat.chat_id)
                   ? "text-background"
-                  : "text-gray-700 group-hover:text-background"
+                  : "text-gray-700 group-hover:text-gray-700"
               )}>
               {chat.last_login_date.slice(5)}
             </p>

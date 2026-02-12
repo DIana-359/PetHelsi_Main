@@ -4,15 +4,15 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { fetchSignup } from "@/app/api/signUp";
 import { useSistem } from "@/contextSistem/contextSistem";
-import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
+import { signUp } from "@/services/auth/signUp";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 import clsx from "clsx";
+import { useSignIn } from "@/hooks/auth/useSignIn";
 
 type RoleType = "CLIENT" | "VET";
 type RoleTypeWithEmpty = RoleType | null;
@@ -32,6 +32,7 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const { setIsVetBackground } = useSistem();
+  const { mutateAsync: login } = useSignIn();
 
   const togglePassword = () => setPasswordVisible(!isPasswordVisible);
 
@@ -63,9 +64,9 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
     };
 
     try {
-      const resultAction = await fetchSignup(dataToSend);
+      const resultAction = await signUp(dataToSend);
       if (resultAction?.email) {
-        await fetchSigninCookieProxy(dataToLogin);
+        await login(dataToLogin)
         router.push("/owner/profile");
         router.refresh();
       } else {

@@ -4,11 +4,9 @@ import { Vet } from "@/utils/types/vet";
 export default function VeterinariansListPage({
   veterinarians,
   owner = false,
-  token,
 }: {
   veterinarians: Vet[];
   owner?: boolean;
-  token?: true;
 }) {
   return (
     <div
@@ -23,7 +21,6 @@ export default function VeterinariansListPage({
             veterinarian={veterinarian}
             hasAvatar={true}
             size="large"
-            token={token}
           />
         </div>
       ))}

@@ -1,12 +1,10 @@
 import DoctorPage from "@/components/DoctorPage/DoctorPage";
-import { checkToken } from "@/app/api/checkToken";
 
 type Params = { id: string };
 type PageProps = { params: Promise<Params> };
 
 export default async function VeterinarianDetailsPage(props: PageProps) {
   const params = await props.params;
-  const token = await checkToken();
   const { id } = params;
 
   const res = await fetch(`${process.env.API_URL}/v1/vets/${id}`, {
@@ -23,5 +21,5 @@ export default async function VeterinarianDetailsPage(props: PageProps) {
 
   const veterinarian = await res.json();
 
-  return <DoctorPage veterinarian={veterinarian} token={token ? true : undefined} />;
+  return <DoctorPage veterinarian={veterinarian} />;
 }

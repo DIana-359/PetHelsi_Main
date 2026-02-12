@@ -11,7 +11,7 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json();
 
-    const res = await fetch(
+    const backendRes = await fetch(
       `${process.env.API_URL}/v1/owners/change-password`,
       {
         method: "PUT",
@@ -24,8 +24,33 @@ export async function PUT(req: NextRequest) {
       }
     );
 
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+    const data = await backendRes.json().catch(() => ({}));
+
+    const response = NextResponse.json(data, {
+      status: backendRes.status,
+    });
+
+    if (backendRes.ok) {
+      if (data.accessToken) {
+        response.cookies.set("auth-token", data.accessToken, {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          // secure: true, // Set `secure: true` when deploying over HTTPS.
+        });
+      }
+
+      if (data.refreshToken) {
+        response.cookies.set("refresh-token", data.refreshToken, {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          // secure: true, // Set `secure: true` when deploying over HTTPS.
+        });
+      }
+    }
+
+    return response;
   } catch (error) {
     console.error("Change password error:", error);
     return NextResponse.json(

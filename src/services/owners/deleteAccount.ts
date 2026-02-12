@@ -1,11 +1,11 @@
+import { apiFetch } from "@/lib/apiFetch.client";
 export async function deleteAccount() {
   try {
-    const res = await fetch("/api/ownerProfile/delete-account", {
+    const res = await apiFetch("/api/ownerProfile/delete-account", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-      },
-      credentials: "include",
+      }
     });
 
     if (!res.ok) {

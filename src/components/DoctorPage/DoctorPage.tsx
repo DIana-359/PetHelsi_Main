@@ -10,7 +10,6 @@ import AboutTab from "./AboutTab";
 import WorkTab from "./WorkTab";
 import EducationTab from "./EducationTab";
 import SlotUnavailableModal from "@/components/SlotUnavailableModal"
-// import Link from "next/link";
 import clsx from "clsx";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
@@ -26,13 +25,14 @@ import dayjs from "dayjs";
 import { useBookingFlow } from "@/hooks/booking/useBookingFlow";
 import { Pulse } from "@/components/Pulse";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
+import EmptyCalendar from "@/components/EmptyCalendar";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 type Props = {
   veterinarian: Veterinarian;
-  token?: boolean;
 };
 
-export default function DoctorPage({ veterinarian, token }: Props) {
+export default function DoctorPage({ veterinarian }: Props) {
   const [selected, setSelected] = useState("profile");
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const {selectedDate, setSelectedDate, setSelectedTime, setPrice, setSlotId} = useBooking()
@@ -40,10 +40,11 @@ export default function DoctorPage({ veterinarian, token }: Props) {
   const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSlotConflictOpen, setIsSlotConflictOpen] = useState(false);
+  const { data } = useProfile();
   const isMobile = useMedia();
   const bookingFlow = useBookingFlow({
     vetId: veterinarian.id,
-    openSignUp: !token ? () => setIsSignUpOpen(true) : undefined,
+    openSignUp: !data ? () => setIsSignUpOpen(true) : undefined,
     onSlotConflict: () => setIsSlotConflictOpen(true),
   });
 
@@ -76,6 +77,7 @@ export default function DoctorPage({ veterinarian, token }: Props) {
   ];
 
   const fullName = `${veterinarian.surname} ${veterinarian.name} ${veterinarian.patronymic}`;
+  const hasFreeSlots = freeScheduleSlots.length > 0;
 
   return (
     <div className="relative">
@@ -102,23 +104,27 @@ export default function DoctorPage({ veterinarian, token }: Props) {
           <DocProfile veterinarian={veterinarian} />
 
           {isMobile && !isLoading && (
-            <>
-              <FreeVetScheduleSlots freeScheduleSlots={freeScheduleSlots} />
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="text-gray w-full text-base flex gap-1 items-center"
-              >
-                Більше вільних годин
-                <Icon
-                  sprite="/sprites/sprite-sistem.svg"
-                  id="arrow-rigth"
-                  width="24px"
-                  height="24px"
-                  className="stroke-gray"
-                />
-              </button>
-            </>
+            hasFreeSlots ? (
+              <>
+                <FreeVetScheduleSlots freeScheduleSlots={freeScheduleSlots} />
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-gray w-full text-base flex gap-1 items-center"
+                >
+                  Більше вільних годин
+                  <Icon
+                    sprite="/sprites/sprite-sistem.svg"
+                    id="arrow-rigth"
+                    width="24px"
+                    height="24px"
+                    className="stroke-gray"
+                  />
+                </button>
+              </>
+            ) : (
+              <EmptyCalendar />
+            )
           )}
 
           <div className="flex w-full flex-col">
@@ -164,21 +170,25 @@ export default function DoctorPage({ veterinarian, token }: Props) {
 
         {!isMobile && !isLoading && (
           <div className="lg:col-start-2 lg:row-span-full">
+            {hasFreeSlots ? (
               <BookingCalendar
                 vetId={veterinarian.id}
                 onBook={bookingFlow.handleBooking}
                 error={bookingFlow.error}
                 setError={bookingFlow.setError}
               />
+            ) : (
+              <EmptyCalendar />
+            )}
           </div>
         )}
 
-        {isMobile && timeSlots.length !== 0 && 
+        {isMobile && hasFreeSlots && timeSlots.length !== 0 && (
           <BookingSummaryMobile
             onBook={bookingFlow.handleBooking}
             error={bookingFlow.error}
           />
-        }
+        )}
         <SignUpModal
           isOpen={isSignUpOpen}
           onClose={() => setIsSignUpOpen(false)}

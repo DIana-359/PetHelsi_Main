@@ -1,7 +1,7 @@
 import ChatsNotFound from "@/components/Chats/ChatsNotFound";
 import ChatsSidebar from "@/components/Chats/ChatsSidebar";
 import chatsListJson from "@/utils/chats.json";
-import type { ChatsResponse } from "@/app/types/chatsTypes";
+import type { ChatsResponse } from "@/types/chatsTypes";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import ChatsMessage from "@/components/Chats/ChatsMessage";
 import MessageInput from "@/components/Chats/MessageInput";

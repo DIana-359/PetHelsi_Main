@@ -1,13 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import Icon from "../Icon";
-import CarouselVets from "./CarouselVets";
+import Icon from "@/components/Icon";
+import CarouselVets from "@/components/VeterinariansBlock/CarouselVets";
 
-interface IVeterinariansProps {
-  token?: true;
-}
-
-export default function Veterinarians({ token }: IVeterinariansProps) {
+export default function Veterinarians() {
   return (
     <div
       id="veterinarians"
@@ -35,8 +31,8 @@ export default function Veterinarians({ token }: IVeterinariansProps) {
           />
         </Link>
       </div>
-      <div className="lg:col-span-7">
-        <CarouselVets token={token} />
+      <div className="lg:col-span-7 flex flex-col">
+        <CarouselVets />
       </div>
     </div>
   );

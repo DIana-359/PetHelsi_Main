@@ -9,13 +9,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uk" suppressHydrationWarning>
+    <html lang="uk">
       <body id="root" className="font-lato">
         <Providers>
-          <ModalWindow />
-          {children}
+            <ModalWindow />
+            {children}
         </Providers>
       </body>
     </html>
