@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { Pet } from "@/app/types/pet";
+import { Pet } from "@/types/pet";
 
 export async function POST(req: NextRequest) {
   try {

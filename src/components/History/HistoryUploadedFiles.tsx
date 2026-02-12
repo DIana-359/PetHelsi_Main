@@ -1,5 +1,5 @@
 "use client";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 import { useEffect, useRef, useState } from "react";
 import Icon from "../Icon";
 import HistoryModalForImage from "./HistoryModalForImage";

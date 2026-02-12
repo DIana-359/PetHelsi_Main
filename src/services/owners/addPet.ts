@@ -1,4 +1,5 @@
-import { Pet } from "@/app/types/pet";
+import { Pet } from "@/types/pet";
+import { apiFetch } from "@/lib/apiFetch.client";
 
 interface AddPetResult {
   data: Pet | null;
@@ -7,11 +8,10 @@ interface AddPetResult {
 
 export async function addPet(pet: Pet): Promise<AddPetResult> {
   try {
-    const res = await fetch(`/api/ownerProfile/add-pet`, {
+    const res = await apiFetch(`/api/ownerProfile/add-pet`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(pet),
-      credentials: "include",
+      body: JSON.stringify(pet)
     });
 
     const text = await res.text().catch(() => "<no response body>");

@@ -1,5 +1,5 @@
 import { NavItem } from "./NavItem";
-import { NAV_ITEMS_OWNER } from "@/app/Constants";
+import { NAV_ITEMS_OWNER } from "@/Constants";
 import ButtonLogout from "@/components/ButtonLogout";
 
 export enum Category {

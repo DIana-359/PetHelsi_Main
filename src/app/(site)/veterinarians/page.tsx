@@ -1,13 +1,12 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { VeterinarianSearchForm } from "@/components/Hero/VeterinarianSearchForm";
+import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 import VeterinariansPagination from "@/components/VeterinariansBlock/VeterinariansPagination";
 import { Vet } from "@/utils/types/vet";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";
-import { cookies } from "next/headers";
 import Footer from "@/components/Footer/Footer";
-import { getVetsByCriteriaServer } from "@/app/services/vets/getVetsByCriteriaServer";
+import { getVetsByCriteriaServer } from "@/services/vets/getVetsByCriteriaServer";
 export interface VetPageProps {
   searchParams: Promise<Record<string, string | string[]>>;
 }
@@ -18,10 +17,6 @@ export default async function VeterinariansPage({
   const params = (await searchParams) as Record<string, string>;
   const page = parseInt(params?.page || "1");
   const sort = (await params?.sort) || "rating,desc";
-  const cookieStore = await cookies();
-  const token: true | undefined = cookieStore.get("auth-token")
-    ? true
-    : undefined;
 
   const petType =
     typeof params?.petTypeName === "string" ? params.petTypeName : "";
@@ -64,7 +59,6 @@ export default async function VeterinariansPage({
 
           <VeterinariansListPage
             veterinarians={data.content as Vet[]}
-            token={token}
           />
 
           {data.content.length > 0 && (
@@ -78,7 +72,7 @@ export default async function VeterinariansPage({
           )}
         </div>
         <div className="-mx-4 md:mx-0">
-          <Footer token={token ? true : undefined} />
+          <Footer />
         </div>
       </div>
     );

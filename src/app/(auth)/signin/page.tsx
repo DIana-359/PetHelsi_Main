@@ -4,21 +4,24 @@ import { IoEyeOutline } from "react-icons/io5";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { fetchSigninCookieProxy } from "@/app/api/auth-proxy";
 import Icon from "@/components/Icon";
-// import ForgotPassword from "@/components/ForgotPassword";
+import ForgotPassword from "@/components/ForgotPassword";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "../AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
+import { useSignIn } from "@/hooks/auth/useSignIn";
 
-export default function SignInFormCooky() {
+export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isCheckedRemember, setIsCheckedRemember] = useState<boolean>(false);
+  const [isOpenModalChangePassword, setOpenModalChangePassword] =
+    useState<boolean>(false);
+  const { mutateAsync: login } = useSignIn();
 
   useEffect(() => {
     const savedEmail = Cookies.get("rememberedEmail");
@@ -58,7 +61,7 @@ export default function SignInFormCooky() {
     }
 
     try {
-      await fetchSigninCookieProxy({ email, password });
+      await login({ email, password });
       router.push("/owner/profile");
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -142,6 +145,12 @@ export default function SignInFormCooky() {
             Запам&apos;ятати мене
           </label>
         </div>
+        <button
+          type="button"
+          onClick={() => setOpenModalChangePassword(true)}
+          className="text-[12px] font-[400] leading-[1.4] text-primary-700 hover:text-primary-800 underline transition-colors hover:cursor-pointer">
+          Забули пароль?
+        </button>
       </div>
 
       <div className="w-full">
@@ -178,6 +187,10 @@ export default function SignInFormCooky() {
           Зареєструйтесь
         </Link>
       </p>
+      <ForgotPassword
+        isOpenModalChangePassword={isOpenModalChangePassword}
+        setOpenModalChangePassword={setOpenModalChangePassword}
+      />
     </form>
   );
 }

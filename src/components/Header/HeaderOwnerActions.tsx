@@ -5,12 +5,12 @@ import { useState } from "react";
 import { useSistem } from "@/contextSistem/contextSistem";
 import useMedia from "@/utils/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
-import { useAuth } from "@/contextAuth/authContext";
+import { useProfile } from "@/hooks/owners/useProfile";
 
 export default function HeaderOwnerActions() {
   const isMobile = useMedia();
   const router = useRouter();
-  const { userData } = useAuth();
+  const { data } = useProfile();
 
   const [showNotification, setShowNotification] = useState(false);
   const { isOpenModalDashboard, setIsOpenModalDashboard } = useSistem();
@@ -42,9 +42,9 @@ export default function HeaderOwnerActions() {
           onClick={handleOpenDashboard}
           className="flex items-center justify-center hover:stroke-primary">
           <AvatarUser
-            avatar={userData?.avatar}
-            firstName={userData?.firstName}
-            email={userData?.email}
+            avatar={data?.avatar}
+            firstName={data?.firstName}
+            email={data?.email}
             size={32}
           />
         </button>

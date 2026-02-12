@@ -2,7 +2,7 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Icon from "../Icon";
 import HistoryModal from "./HistoryModal";
-import { IHistoryItem } from "@/app/types/historyTypes";
+import { IHistoryItem } from "@/types/historyTypes";
 interface HistoryDetailsConsultationProps {
   historyItem: IHistoryItem;
   id: string;

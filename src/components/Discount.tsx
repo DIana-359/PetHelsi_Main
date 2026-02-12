@@ -1,11 +1,17 @@
+"use client";
 import Link from 'next/link';
 import Image from 'next/image';
 import vector from '../assets/Images/vector.png';
 import vectorArrowHeart from '../assets/Images/vector-arrow-heart.png';
 import bunny from '../assets/Images/bunny.gif';
 import { Button } from '@heroui/react';
+import { useProfile } from '@/hooks/owners/useProfile';
 
 export default function Discount() {
+  const { data } = useProfile();
+
+  if (data) return null;
+
   return (
     <div className="pt-[84px] pb-[88px]lg:pt-[64px] lg:pb-[129px]">
       <div className="w-full bg-primary rounded-3xl px-[36px] pt-[40px] pb-[24px] lg:pt-[60px] lg:pb-[48px] lg:pl-[111px] lg:pr-[45px]">

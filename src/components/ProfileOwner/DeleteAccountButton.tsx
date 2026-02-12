@@ -1,19 +1,17 @@
 "use client";
-
-import { fetchSignoutCookieProxy } from "@/app/api/auth-proxy";
-import { deleteAccount } from "@/app/services/deleteAccount";
 import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
+import { useDeleteAccount } from "@/hooks/owners/useDeleteAccount";
 
 export function DeleteAccountButton() {
   const router = useRouter();
+  const { mutateAsync: deleteAcc } = useDeleteAccount();
   const handleDelete = async () => {
     if (!confirm("Ви впевнені, що хочете видалити акаунт?")) return;
 
     try {
-      await deleteAccount();
-      await fetchSignoutCookieProxy();
-      router.push("/signin");
+      await deleteAcc();
+      router.replace("/signup");
     } catch (err) {
       console.error("Delete error:", err);
       alert("Не вдалося видалити акаунт");

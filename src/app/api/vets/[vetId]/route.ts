@@ -6,9 +6,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ vetI
   try {
     const res = await fetch(
       `${process.env.API_URL}/v1/vets/${vetId}`,
-      {
-        credentials: "include",
-      }
     );
 
     const text = await res.text().catch(() => "<empty>");

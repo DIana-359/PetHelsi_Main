@@ -15,11 +15,16 @@ interface BookingContextType {
 
 const ContextBooking = createContext<BookingContextType | undefined>(undefined);
 
-export const BookingProvider = ({ children }: { children: React.ReactNode }) => {
+export const BookingProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [price, setPrice] = useState<number | null>(null);
   const [slotId, setSlotId] = useState<number | null>(null);
+
   const value: BookingContextType = {
     selectedDate,
     setSelectedDate,
@@ -28,13 +33,11 @@ export const BookingProvider = ({ children }: { children: React.ReactNode }) => 
     price,
     setPrice,
     slotId,
-    setSlotId
+    setSlotId,
   };
 
   return (
-    <ContextBooking.Provider value={value}>
-      {children}
-    </ContextBooking.Provider>
+    <ContextBooking.Provider value={value}>{children}</ContextBooking.Provider>
   );
 };
 

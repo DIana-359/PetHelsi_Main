@@ -1,25 +1,17 @@
-'use client';
+"use client";
 
-import { Accordion, AccordionItem } from '@heroui/react';
-import faqGirlDog1x from '../../public/Images/faq-girl-dog-desktop@1x.png';
-import faqGirlDog2x from '../../public/Images/faq-girl-dog-desktop@2x.png';
-import Image from 'next/image';
-import Icon from './Icon';
+import { Accordion, AccordionItem } from "@heroui/react";
+import faqGirlDog2x from "../../public/Images/faq-girl-dog-desktop@2x.png";
+import Image from "next/image";
+import Icon from "./Icon";
 
 export default function Faq() {
   return (
     <div
       id="faq"
-      className="w-full scroll-mt-24 flex flex-col lg:flex-row gap-3 justify-between items-center lg:items-start py-22 lg:pt-[24px] lg:pb-[148px]"
-    >
+      className="w-full scroll-mt-24 flex flex-col lg:flex-row gap-3 justify-between items-center lg:items-start py-22 lg:pt-[24px] lg:pb-[148px]">
       <div className="hidden lg:block">
-        <picture className="">
-          <source
-            media="(min-width: 1440px)"
-            srcSet={`${faqGirlDog1x} 1x, ${faqGirlDog2x} 2x`}
-          />
-          <Image src={faqGirlDog1x} alt="girl with dog" className="" />
-        </picture>
+        <Image src={faqGirlDog2x} alt="girl with dog" className="" />
       </div>
 
       <div className="w-full lg:w-[730px]">
@@ -36,41 +28,40 @@ export default function Faq() {
           className="!px-0
           [&>hr]:bg-[#C9E2F8] [&>hr]:h-px [&>hr]:border-none
           [&_[data-slot='trigger']]:py-10 
-          [&_[data-slot='trigger']]:px-6"
-        >
+          [&_[data-slot='trigger']]:px-6">
           {[
             {
-              key: '1',
-              title: 'Як проходить онлайн-консультація?',
+              key: "1",
+              title: "Як проходить онлайн-консультація?",
               content: [
-                '1. Заповніть форму з питаннями, оберіть дату прийому',
-                '2. Із запропонованого списку оберіть ветеринара та бажаний час прийому',
-                '3. Оплатіть консультацію та очікуйте на підтвердження ветеринаром',
-                '4. Після підтвердження на вказаний вами E-mail прийде посилання на консультацію',
+                "1. Заповніть форму з питаннями, оберіть дату прийому",
+                "2. Із запропонованого списку оберіть ветеринара та бажаний час прийому",
+                "3. Оплатіть консультацію та очікуйте на підтвердження ветеринаром",
+                "4. Після підтвердження на вказаний вами E-mail прийде посилання на консультацію",
               ],
             },
             {
-              key: '2',
-              title: 'Коли буде корисна онлайн-консультація?',
+              key: "2",
+              title: "Коли буде корисна онлайн-консультація?",
               content: [
-                '1. Немає можливості звернутися до клініки, а стан здоров’я улюбленця викликає занепокоєння',
-                '2. Потрібні уточнення по догляду або щодо профілактичних обробок вашого улюбленця',
-                '3. Ви перебуваєте за кордоном, але через мовний бар`єр важко порозумітися з місцевим ветеринаром',
-                '4. Консультація за кордоном є дорожчою',
+                "1. Немає можливості звернутися до клініки, а стан здоров’я улюбленця викликає занепокоєння",
+                "2. Потрібні уточнення по догляду або щодо профілактичних обробок вашого улюбленця",
+                "3. Ви перебуваєте за кордоном, але через мовний бар`єр важко порозумітися з місцевим ветеринаром",
+                "4. Консультація за кордоном є дорожчою",
               ],
             },
             {
-              key: '3',
-              title: 'Як проходить оплата?',
+              key: "3",
+              title: "Як проходить оплата?",
               content: [
-                'Після обрання ветеринара і часу прийому вкажіть своє ім’я та email. Здійсніть оплату зручним для вас способом (Mastercard, Visa, ApplePay). Ваша оплата зберігається на рахунку сервісу та буде переведена ветеринару після завершення консультації',
+                "Після обрання ветеринара і часу прийому вкажіть своє ім’я та email. Здійсніть оплату зручним для вас способом (Mastercard, Visa, ApplePay). Ваша оплата зберігається на рахунку сервісу та буде переведена ветеринару після завершення консультації",
               ],
             },
             {
-              key: '4',
-              title: 'Якщо я хочу скасувати консультацію?',
+              key: "4",
+              title: "Якщо я хочу скасувати консультацію?",
               content: [
-                'Ви можете скасувати консультацію не пізніше ніж за 1 годину перед її початком. Кошти повернуться на банківську картку згідного з умовами обслуговування вашого банку. Якщо ви скасовуєте консультацію пізніше ніж за 1 годину, кошти не повертаються',
+                "Ви можете скасувати консультацію не пізніше ніж за 1 годину перед її початком. Кошти повернуться на банківську картку згідного з умовами обслуговування вашого банку. Якщо ви скасовуєте консультацію пізніше ніж за 1 годину, кошти не повертаються",
               ],
             },
           ].map(({ key, title, content }) => (
@@ -85,19 +76,17 @@ export default function Faq() {
               indicator={({ isOpen }) => (
                 <Icon
                   sprite="/sprites/sprite-sistem.svg"
-                  id={isOpen ? 'icon-minus' : 'icon-plus'}
+                  id={isOpen ? "icon-minus" : "icon-plus"}
                   width="24px"
                   height="24px"
                   className="fill-primary !rotate-90"
                 />
-              )}
-            >
+              )}>
               <ol className="lg:pb-10 lg:px-6">
                 {content.map((item, index) => (
                   <li
                     key={index}
-                    className="mb-3 font-lato font-normal lg:text-[16px] text-[14px] text-gray-600 leading-[140%]"
-                  >
+                    className="mb-3 font-lato font-normal lg:text-[16px] text-[14px] text-gray-600 leading-[140%]">
                     {item}
                   </li>
                 ))}

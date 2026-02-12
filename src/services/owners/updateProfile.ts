@@ -1,4 +1,5 @@
 "use client";
+import { apiFetch } from "@/lib/apiFetch.client";
 
 export default async function updateProfile(formData: {
   lastName: string | null;
@@ -8,7 +9,7 @@ export default async function updateProfile(formData: {
   birthday: string | null;
   city: string | null;
 }) {
-  const res = await fetch("/api/ownerProfile/update", {
+  const res = await apiFetch("/api/ownerProfile/update", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

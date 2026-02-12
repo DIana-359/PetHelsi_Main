@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardBody, Avatar } from "@heroui/react";
 import vet from "../../../public/Images/VeterinarianCard-img-eg.jpg";
 import Icon from "../Icon";
@@ -11,14 +13,12 @@ type Props = {
   veterinarian: Vet;
   hasAvatar?: boolean;
   size?: "small" | "large" | "base";
-  token?: true;
 };
 
 export default function VeterinarianCard({
   veterinarian,
   hasAvatar = true,
   size = "base",
-  token,
 }: Props) {
   const paddingsBody = {
     small: "p-4",
@@ -89,7 +89,7 @@ export default function VeterinarianCard({
         <div>
           <VeterinarianPrice price={veterinarian.rate} />
         </div>
-        <VeterinariansButtons id={veterinarian.id} size={size} token={token} />
+        <VeterinariansButtons id={veterinarian.id} size={size} />
       </CardBody>
     </Card>
   );

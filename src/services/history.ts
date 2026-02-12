@@ -1,11 +1,11 @@
+import { apiFetch } from "@/lib/apiFetch.client";
 export async function updateComplaint(id: string, complaint: string) {
   try {
-    const res = await fetch(`/api/proxy/updateComplaint?id=${id}`, {
+    const res = await apiFetch(`/api/proxy/updateComplaint?id=${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify({ complaint }),
     });
 

@@ -3,20 +3,22 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import { useState } from "react";
 import SignUpModal from "../ModalSignUp";
-import { usePathname } from "next/navigation";
-
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useProfile } from "@/hooks/owners/useProfile";
 interface IVeterinariansButtonsProps {
-  token?: true;
   id: number;
   size?: "small" | "large" | "base";
 }
 
 export default function VeterinariansButtons({
-  token,
   id,
   size = "base",
 }: IVeterinariansButtonsProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const params = useSearchParams();
+  const { data } = useProfile();
+  const issueTypeFromForm = params.get("issueTypeName");
   const isHomePage = pathname == "/";
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const buttonMoreStyles = {
@@ -32,12 +34,20 @@ export default function VeterinariansButtons({
   };
 
   const handleClick = () => {
-    if (token) {
-      window.location.href = `/veterinarians/${id}/booking`;
-    } else {
+    if (!data) {
       setIsSignUpOpen(true);
+      return;
     }
+
+    const url = new URL(`/veterinarians/${id}/booking`, window.location.origin);
+
+    if (issueTypeFromForm) {
+      url.searchParams.set("issueTypeName", issueTypeFromForm);
+    }
+
+    router.push(url.pathname + url.search);
   };
+
   return (
     <>
       <Button

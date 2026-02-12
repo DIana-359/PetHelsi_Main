@@ -1,4 +1,4 @@
-import { Chat } from "@/app/types/chatsTypes";
+import { Chat } from "@/types/chatsTypes";
 import AvatarUser from "../ProfileOwner/AvatarUser";
 interface ChatsProps {
   openChat: Chat;

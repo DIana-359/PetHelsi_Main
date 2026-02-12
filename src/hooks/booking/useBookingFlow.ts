@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { holdSlot } from "@/app/services/vets/holdSlot";
+import { holdSlot } from "@/services/vets/holdSlot";
 import { useBooking } from "@/contextBooking/contextBooking";
 
 type Params = {

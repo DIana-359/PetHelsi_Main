@@ -6,5 +6,19 @@ export type Vet = {
   experience: number;
   rating: number;
   rate: number;
-  price: number;
+  active: boolean;
+  status: boolean;
+  email: string;
+};
+
+export type PageInfo = {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
+};
+
+export type VetsResponse = {
+  content: Vet[];
+  page: PageInfo;
 };

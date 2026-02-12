@@ -1,5 +1,5 @@
 "use client";
-import { Category, CategoryValue } from "@/app/types/ownerTypes";
+import { Category, CategoryValue } from "@/types/ownerTypes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "../Icon";
