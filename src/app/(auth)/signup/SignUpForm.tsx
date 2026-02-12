@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSistem } from "@/contextSistem/contextSistem";
 import { signUp } from "@/services/auth/signUp";
 import GoBack from "@/components/GoBack";
-import { handleGoogleLogin } from "../AuthFunction";
+import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";

@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Pulse } from "@/components/Pulse";
+import { apiFetch } from "@/lib/apiFetch.client";
 
 export default function OAuthCallback() {
   const router = useRouter();
@@ -21,9 +22,8 @@ export default function OAuthCallback() {
 
     if (!code) return;
 
-    fetch("api/proxy/exchange", {
+    apiFetch("/api/proxy/exchange", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code, role }),
     })
