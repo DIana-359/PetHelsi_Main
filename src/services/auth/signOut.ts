@@ -9,7 +9,6 @@ export const signOut = async (): Promise<{
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
       }
     );
 

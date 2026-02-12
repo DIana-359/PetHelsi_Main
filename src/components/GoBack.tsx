@@ -9,6 +9,7 @@ const GoBack = () => {
   return (
     <button
       onClick={() => router.back()}
+      type="button"
       className="flex items-center gap-1 group">
       <Icon
         sprite="/sprites/sprite-sistem.svg"
