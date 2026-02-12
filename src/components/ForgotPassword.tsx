@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
-import Icon from "./Icon";
-import { getNewPassword } from "@/services/forgotPassword";
+import Icon from "@/components/Icon";
+import { useForgotPassword } from "@/hooks/useForgotPassword";
 interface ForgotPasswordProps {
   isOpenModalChangePassword: boolean;
   setOpenModalChangePassword: (value: boolean) => void;
@@ -14,7 +14,22 @@ export default function ForgotPassword({
 }: ForgotPasswordProps) {
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [success, setSucces] = useState<boolean>(false);
+  const {
+    mutate,
+    isPending,
+    isSuccess,
+    error: mutationError,
+    reset
+  } = useForgotPassword();
+
+  const serverErrorMessage =
+    mutationError instanceof Error
+      ? {
+          INVALID_EMAIL: "Невірно введено E-mail",
+          EMAIL_SERVICE_UNAVAILABLE:
+            "Сервіс електронної пошти тимчасово недоступний",
+        }[mutationError.message] ?? "Не вдалося надіслати лист"
+      : "";
 
   const validateEmail = (value: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,7 +46,7 @@ export default function ForgotPassword({
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!email) {
       setError("Email обов'язковий");
       return;
@@ -42,34 +57,21 @@ export default function ForgotPassword({
       return;
     }
 
-    try {
-      const status = await getNewPassword(email);
-      console.log(status);
-      if (status === 200) {
-        setSucces(true);
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        switch (err.message) {
-          case "INVALID_EMAIL":
-            setError("Невірно введено E-mail");
-            break;
-          case "EMAIL_SERVICE_UNAVAILABLE":
-            setError("Сервіс електронної пошти тимчасово недоступний");
-            break;
-          default:
-            setError("Не вдалося надіслати лист");
-        }
-      }
-    }
+    setError("");
+
+    mutate(email);
   };
 
   return (
     <Modal
       isOpen={isOpenModalChangePassword}
-      onOpenChange={() =>
-        setOpenModalChangePassword(!isOpenModalChangePassword)
-      }
+      onOpenChange={() => {
+        setOpenModalChangePassword(!isOpenModalChangePassword);
+        reset();
+        setEmail("");
+        setError("");
+      }}
+
       className="p-[16px] xs:px-[32px] xs:pt-[32px] xs:pb-[56px] bg-background min-w-[200px]"
       classNames={{
         wrapper: "items-center",
@@ -89,7 +91,7 @@ export default function ForgotPassword({
             className="fill-primary-700 stroke-primary-700 hover:stroke-primary-800 hover:fill-primary-800 cursor-pointer"
           />
         </button>
-        {success ? (
+        {isSuccess ? (
           <p className="py-[10px] text-[16px] font-[400] leading-[1.4] text-gray-900 text-center">
             Лист із кодом підтвердження
             <br /> надіслано на ваш E-mail
@@ -116,9 +118,9 @@ export default function ForgotPassword({
                     onChange={e => setEmail(e.target.value)}
                     onBlur={handleBlur}
                   />
-                  {error && (
+                  {(error || serverErrorMessage) && (
                     <p className="text-red-500 text-[12px] absolute left-0 bottom-[-18px]">
-                      {error}
+                      {error || serverErrorMessage}
                     </p>
                   )}
                 </label>
@@ -127,7 +129,8 @@ export default function ForgotPassword({
                   onPress={handleSubmit}
                   color="primary"
                   type="button"
-                  isDisabled={success}
+                  isLoading={isPending}
+                  isDisabled={isPending || isSuccess}
                   className="w-full max-w-[304px] h-[54px] cursor-pointer">
                   Отримати код
                 </Button>
