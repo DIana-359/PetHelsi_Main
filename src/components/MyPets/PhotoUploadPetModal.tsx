@@ -104,9 +104,9 @@ export default function PhotoUploadPetModal({
               </Button>
             ) : (
               <Button
-                className={getButtonClasses("primary", isActive === "change")}
+                className={getButtonClasses("primary", isActive === "save")}
                 onClick={() => {
-                  setIsActive("change");
+                  setIsActive("save");
                   onSave?.();
                 }}
               >
@@ -116,12 +116,9 @@ export default function PhotoUploadPetModal({
 
             {hasImage && (
               <Button
-                className={`${getButtonClasses(
-                  "primary",
-                  isActive === "save",
-                )}`}
+                className={`${getButtonClasses("secondary", isActive === "change")}`}
                 onClick={() => {
-                  setIsActive("save");
+                  setIsActive("change");
                   onChangePhoto?.();
                 }}
               >

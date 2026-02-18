@@ -3,11 +3,19 @@ import React from "react";
 import Icon from "../Icon";
 import { useRouter } from "next/navigation";
 
-const GoBackPets = () => {
+interface GoBackPetsProps {
+  onClick?: () => void;
+}
+
+const GoBackPets = ({ onClick }: GoBackPetsProps) => {
   const router = useRouter();
 
   const backToPets = () => {
-    router.push("/owner/pets");
+    if (onClick) {
+      onClick();
+    } else {
+      router.push("/owner/pets");
+    }
   };
 
   return (

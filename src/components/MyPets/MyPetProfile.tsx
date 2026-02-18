@@ -5,10 +5,8 @@ import MyPetsAddBtn from "./MyPetsAddBtn";
 import AvatarPet from "./AvatarPet";
 import useMedia from "@/utils/media";
 import UpdateProfilePetLink from "./UpdateProfilePetLink";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SterilizedLabel } from "./SterilizedLabel";
-import { GlobalMessage } from "./GlobalMessage";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const formatBirthDateUA = (dateString?: string) => {
   if (!dateString) return "Не вказано";
@@ -52,17 +50,6 @@ interface PetProfileProps {
 export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
   const isMobile = useMedia();
   const [activePetId, setActivePetId] = useState<number | null>(null);
-  const [showPetCreated, setShowPetCreated] = useState(false);
-
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (searchParams.get("created") === "1") {
-      setShowPetCreated(true);
-      router.replace("/owner/pets");
-    }
-  }, [searchParams, router]);
 
   const handleAddNewPet = async (pet: Partial<Pet>, imageFile?: File) => {
     await handleAddPet(pet, imageFile);
@@ -108,11 +95,6 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
 
   return (
     <div className="py-[8px] md:py-0">
-      <GlobalMessage
-        visible={showPetCreated}
-        onClose={() => setShowPetCreated(false)}
-        message="Профіль тварини успішно створено"
-      />
       <div className="flex items-center gap-6 md:flex-wrap">
         <MyPetsAddBtn
           handleAddPet={handleAddNewPet}

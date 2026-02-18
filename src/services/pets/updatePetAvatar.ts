@@ -1,9 +1,16 @@
-export const updatePetAvatar = async (id: string, file: File) => {
+export async function updatePetAvatar(id: string, file: File) {
   const formData = new FormData();
-  formData.append("avatar", file);
+  formData.append("file", file);
 
-  return fetch(`/api/pets/${id}/avatar`, {
-    method: "PUT",
+  const res = await fetch(`/api/pets/${id}/avatar`, {
+    method: "POST",
     body: formData,
+    credentials: "include",
   });
-};
+
+  if (!res.ok) {
+    throw new Error("Failed to update pet avatar");
+  }
+  const data = await res.json();
+  return data.publicUrl;
+}
