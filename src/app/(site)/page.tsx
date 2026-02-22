@@ -7,10 +7,8 @@ import Discount from "@/components/Discount";
 import Faq from "@/components/Faq";
 import Veterinarians from "@/components/VeterinariansBlock/Veterinarians";
 import Footer from "@/components/Footer/Footer";
-import { checkToken } from "../api/checkToken";
 
 export default async function Home() {
-  const token = await checkToken();
 
   return (
     <div>
@@ -35,12 +33,12 @@ export default async function Home() {
         <HeroImage />
         <Features />
         <Appointment />
-        <Veterinarians token={token ? true : undefined} />
-        {!token && <Discount />}
+        <Veterinarians />
+        <Discount />
         <Faq />
       </div>
       <div className="-mx-4 md:mx-0">
-        <Footer token={token ? true : undefined} />
+        <Footer />
       </div>
     </div>
   );

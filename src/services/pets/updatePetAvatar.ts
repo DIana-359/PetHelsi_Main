@@ -1,8 +1,10 @@
+import { apiFetch } from "@/lib/apiFetch.client";
+
 export async function updatePetAvatar(id: string, file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`/api/pets/${id}/avatar`, {
+  const res = await apiFetch(`/api/pets/${id}/update-avatar`, {
     method: "POST",
     body: formData,
     credentials: "include",

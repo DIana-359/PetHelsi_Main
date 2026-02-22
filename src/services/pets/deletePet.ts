@@ -1,6 +1,8 @@
+import { apiFetch } from "@/lib/apiFetch.client";
+
 export async function deletePet(id: string) {
   try {
-    const res = await fetch(`/api/pets/${id}`, {
+    const res = await apiFetch(`/api/pets/${id}/delete-pet`, {
       method: "DELETE",
 
       credentials: "include",

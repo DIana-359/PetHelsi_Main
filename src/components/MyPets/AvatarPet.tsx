@@ -1,3 +1,4 @@
+import { getPublicAvatarUrl } from "@/utils/getPublicAvatarUrl";
 import Image from "next/image";
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 export default function AvatarPet({ avatar, firstName, size = 32 }: Props) {
   const initial = firstName ? firstName.trim().charAt(0).toUpperCase() : "";
 
-  const src = avatar ?? null;
+  const src = getPublicAvatarUrl(avatar);
 
   return (
     <div

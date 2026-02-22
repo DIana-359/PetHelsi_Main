@@ -1,3 +1,5 @@
+import { apiFetch } from "@/lib/apiFetch.client";
+
 export interface AddPetAvatarResult {
   publicUrl?: string | null;
   error?: string;
@@ -11,7 +13,7 @@ export async function addPetAvatar(
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(`/api/pets/add-pet-avatar?petId=${petId}`, {
+    const res = await apiFetch(`/api/pets/add-pet-avatar?petId=${petId}`, {
       method: "POST",
       body: formData,
       credentials: "include",

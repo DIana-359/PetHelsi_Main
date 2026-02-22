@@ -9,6 +9,7 @@ import { useUpdatePet } from "@/hooks/pets/useUpdatePet";
 import { useUpdatePetAvatar } from "@/hooks/pets/useUpdatePetAvatar";
 import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
 import { useUnsavedChanges } from "@/hooks/pets/useUnsavedChanges";
+import { normalizeAvatar } from "@/utils/getPublicAvatarUrl";
 
 export function useEditPetPage() {
   const { id } = useParams<{ id: string }>();
@@ -75,7 +76,7 @@ export function useEditPetPage() {
       genderTypeName: pet.genderTypeName!,
       weight: pet.weight!,
       birthDate,
-      avatar: pet.avatar,
+      avatar: normalizeAvatar(pet.avatar),
       sterilized: pet.sterilized!,
       allergies: pet.allergies || [],
       checked: true,

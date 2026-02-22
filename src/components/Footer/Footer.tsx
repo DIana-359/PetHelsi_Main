@@ -4,11 +4,7 @@ import { LogoFooter } from "./LogoFooter";
 import { ForuserFooter } from "./ForuserFooter";
 import { ImgFooter } from "./ImgFooter";
 
-interface IProps {
-  token: true | undefined;
-}
-
-export default function Footer({ token }: IProps) {
+export default function Footer() {
   return (
     <div className="w-full max-w-[1440px] mx-auto">
       <div className="flex flex-col items-center relative w-full bg-primary-800 px-4 pt-10 md:px-10  rounded-tl-3xl rounded-tr-3xl ">
@@ -21,7 +17,7 @@ export default function Footer({ token }: IProps) {
             <ForuserFooter />
           </div>
           <div className="w-full md:w-[224px] lg:w-[352px] order-3 lg:order-3">
-            {!token && <FormFooter />}
+            <FormFooter />
           </div>
         </div>
         <CopyrightFooter />

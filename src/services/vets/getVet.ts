@@ -1,7 +1,5 @@
 export async function getVet(vetId: string) {
-  const res = await fetch(`/api/vets/${vetId}`, {
-    credentials: "include",
-  });
+  const res = await fetch(`/api/vets/${vetId}`);
 
   if (!res.ok) {
     throw new Error("Не вдалося отримати лікаря");

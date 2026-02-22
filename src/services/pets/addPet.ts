@@ -1,7 +1,8 @@
 import { Pet } from "@/types/pet";
+import { apiFetch } from "@/lib/apiFetch.client";
 
 export async function addPet(pet: Pet): Promise<Pet> {
-  const res = await fetch(`/api/pets/add-pet`, {
+  const res = await apiFetch(`/api/pets/add-pet`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(pet),

@@ -8,12 +8,9 @@ import {
   Button,
 } from "@heroui/react";
 import AvatarPet from "./AvatarPet";
-import { useState } from "react";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import useMedia from "@/utils/media";
 import ModalCloseButton from "../ModalCloseButton";
-
-type ActiveButton = "save" | "change";
 
 interface PhotoUploadPetModalProps {
   isOpen: boolean;
@@ -44,7 +41,6 @@ export default function PhotoUploadPetModal({
 }: PhotoUploadPetModalProps) {
   const displayAvatar = preview ?? avatar;
   const firstLetter = firstName?.charAt(0).toUpperCase();
-  const [isActive, setIsActive] = useState<ActiveButton>("save");
 
   const isMobile = useMedia();
 
@@ -93,37 +89,27 @@ export default function PhotoUploadPetModal({
           <div className="w-full md:w-auto flex flex-col gap-2 md:gap-3 transition-colors">
             {!hasImage ? (
               <Button
-                color="primary"
-                className="w-full md:w-auto rounded-[8px]"
-                onClick={() => {
-                  setIsActive("change");
-                  onPick?.();
-                }}
+                className={getButtonClasses("primary", true)}
+                onClick={onPick}
               >
                 {mode === "edit" ? "Обрати інше фото" : "Обрати фото"}
               </Button>
             ) : (
-              <Button
-                className={getButtonClasses("primary", isActive === "save")}
-                onClick={() => {
-                  setIsActive("save");
-                  onSave?.();
-                }}
-              >
-                Зберегти
-              </Button>
-            )}
+              <>
+                <Button
+                  className={getButtonClasses("primary", true)}
+                  onClick={onSave}
+                >
+                  Зберегти
+                </Button>
 
-            {hasImage && (
-              <Button
-                className={`${getButtonClasses("secondary", isActive === "change")}`}
-                onClick={() => {
-                  setIsActive("change");
-                  onChangePhoto?.();
-                }}
-              >
-                Обрати інше фото
-              </Button>
+                <Button
+                  className={getButtonClasses("secondary", false)}
+                  onClick={onChangePhoto}
+                >
+                  Обрати інше фото
+                </Button>
+              </>
             )}
           </div>
         </ModalBody>

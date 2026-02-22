@@ -1,11 +1,11 @@
+import { apiFetch } from "@/lib/apiFetch.client";
 export async function getPets() {
   try {
-    const res = await fetch(`/api/pets/get-pets`, {
+    const res = await apiFetch(`/api/pets/get-pets`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     });
 
     if (!res.ok) {

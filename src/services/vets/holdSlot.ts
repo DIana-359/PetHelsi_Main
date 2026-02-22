@@ -1,10 +1,10 @@
+import { apiFetch } from "@/lib/apiFetch.client";
 type HoldSlotError = Error & { status: number };
 
 export const holdSlot = async (vetId: string, slotId: number) => {
   try {
-    const res = await fetch(`/api/vets/hold-slot?vetId=${vetId}&slotId=${slotId}`, {
-      method: "POST",
-      credentials: "include",
+    const res = await apiFetch(`/api/vets/hold-slot?vetId=${vetId}&slotId=${slotId}`, {
+      method: "POST"
     });
 
     if (!res.ok) {
