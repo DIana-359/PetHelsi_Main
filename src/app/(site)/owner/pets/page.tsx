@@ -1,6 +1,7 @@
 "use client";
 
 import MyPetsEmpty from "@/components/MyPet/MyPetsEmpty";
+import { PetProfile } from "@/components/MyPet/PetProfile";
 import { useGetPets } from "@/hooks/pets/useGetPets";
 import { useRouter } from "next/navigation";
 
@@ -13,9 +14,13 @@ export default function OwnerPets() {
 
   return (
     <div className="p-4">
-      <MyPetsEmpty
-        handleAddPet={async () => router.push("/owner/pets/add-new-pet")}
-      />
+      {pets.length === 0 ? (
+        <MyPetsEmpty
+          handleAddPet={async () => router.push("/owner/pets/add-new-pet")}
+        />
+      ) : (
+        <PetProfile />
+      )}
     </div>
   );
 }
