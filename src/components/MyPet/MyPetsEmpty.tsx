@@ -1,11 +1,12 @@
-import React from "react";
+"use client";
+
 import PetEmptyIcon from "./PetEmptyIcon";
 import PetsEmptyTitle from "./PetsEmptyTitle";
-import MypetsAddBtn from "./MypetsAddBtn";
+import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
 import { Pet } from "@/types/pet";
 
 interface MyPetsEmptyProps {
-  handleAddPet: (pet: Partial<Pet>) => Promise<void>;
+  handleAddPet: (pet: Partial<Pet>) => void;
 }
 
 export default function MyPetsEmpty({ handleAddPet }: MyPetsEmptyProps) {
@@ -18,7 +19,7 @@ export default function MyPetsEmpty({ handleAddPet }: MyPetsEmptyProps) {
         <PetEmptyIcon />
         <div className="flex flex-col w-full max-w-[441px] mx-auto">
           <PetsEmptyTitle />
-          <MypetsAddBtn handleAddPet={handleAddPet} />
+          <MyPetsAddBtn handleAddPet={handleAddPet} />
         </div>
       </div>
     </>
