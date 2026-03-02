@@ -2,15 +2,15 @@
 
 import { Pet } from "@/types/pet";
 import { useRouter } from "next/navigation";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 
 interface MyPetsAddBtnProps {
-  handleAddPet: (pet: Partial<Pet>, imageFile?: File) => Promise<void>;
+  handleAddPet: (pet: Partial<Pet>, imageFile?: File) => void;
   className?: string;
   onClick?: () => void;
 }
 
-export default function MypetsAddBtn({ className }: MyPetsAddBtnProps) {
+export default function MyPetsAddBtn({ className }: MyPetsAddBtnProps) {
   const router = useRouter();
 
   const handleButtonClick = () => {
