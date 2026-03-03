@@ -1,5 +1,5 @@
 import { Pet } from "@/types/pet";
-import MypetsAddBtn from "./MyPetsAddBtn";
+import MypetsAddBtn from "./MypetsAddBtn";
 import AvatarPet from "./AvatarPet";
 import useMedia from "@/utils/media";
 import UpdateProfilePetLink from "./UpdateProfilePetLink";
