@@ -2,7 +2,7 @@
 
 import PetEmptyIcon from "./PetEmptyIcon";
 import PetsEmptyTitle from "./PetsEmptyTitle";
-import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
+import MyPetsAddBtn from "@/components/MyPet/MypetsAddBtn";
 import { Pet } from "@/types/pet";
 
 interface MyPetsEmptyProps {
