@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { petSchema, PetFormValues } from "@/utils/schemas/pet.schemas";
 import { Pet } from "@/types/pet";
 import PetForm from "@/components/MyPet/PetForm";
-import AddPetFormBtn from "./AddPetFormBtn";
-import PetAvatarUploader from "./PetAvatarUploader";
+import AddPetFormBtn from "@/components/MyPet/AddPetFormBtn";
+import PetAvatarUploader from "@/components/MyPet/PetAvatarUploader";
 import { GlobalMessage } from "@/components/MyPet/GlobalMessage";
-import PetCreatedModal from "./PetCreatedModal";
-import GoBackPets from "./GoBackPets";
+import PetCreatedModal from "@/components/MyPet/PetCreatedModal";
+import GoBackPets from "@/components/MyPet/GoBackPets";
 
 export default function AddNewPetForm() {
   const methods = useForm<PetFormValues>({
@@ -19,7 +19,7 @@ export default function AddNewPetForm() {
       birthDate: "",
     },
   });
-  const [newPet, setNewPet] = useState<Partial<Pet>>({});
+
   const [image, setImage] = useState<{ preview: string; file: File } | null>(
     null,
   );
@@ -41,7 +41,7 @@ export default function AddNewPetForm() {
         <GoBackPets />
       </div>
       <h1 className="md:text-[18px] font-[600] pb-6 text-gray-900">
-        <div className="aa">Додання нової тварини</div>
+        Додання нової тварини
       </h1>
       <section className="pt-0 pb-6">
         <div className="w-full flex flex-col gap-10 md:flex-row md:items-start md:justify-start">
@@ -49,7 +49,7 @@ export default function AddNewPetForm() {
             <fieldset className="flex flex-col gap-[24px] items-center md:items-start md:flex-row md:gap-[40px]">
               <div>
                 <PetAvatarUploader
-                  avatar={newPet.avatar}
+                  avatar={image?.preview}
                   firstName={petName}
                   onChange={(img) => {
                     setImage(img);
@@ -61,13 +61,7 @@ export default function AddNewPetForm() {
           </div>
 
           <div className="w-full grid grid-cols-1 md:max-w-[304px]">
-            <PetForm
-              methods={methods}
-              onSubmit={(data) => {
-                console.log("Validated data:", data);
-                setNewPet(data);
-              }}
-            />
+            <PetForm methods={methods} />
             <AddPetFormBtn
               methods={methods}
               image={image}

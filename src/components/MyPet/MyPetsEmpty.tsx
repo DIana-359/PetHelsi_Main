@@ -1,12 +1,9 @@
-"use client";
-
-import PetEmptyIcon from "./PetEmptyIcon";
-import PetsEmptyTitle from "./PetsEmptyTitle";
-import MyPetsAddBtn from "@/components/MyPet/MypetsAddBtn";
-import { Pet } from "@/types/pet";
+import PetEmptyIcon from "@/components/MyPet/PetEmptyIcon";
+import PetsEmptyTitle from "@/components/MyPet/PetsEmptyTitle";
+import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
 
 interface MyPetsEmptyProps {
-  handleAddPet: (pet: Partial<Pet>) => void;
+  handleAddPet: () => void;
 }
 
 export default function MyPetsEmpty({ handleAddPet }: MyPetsEmptyProps) {
@@ -19,7 +16,7 @@ export default function MyPetsEmpty({ handleAddPet }: MyPetsEmptyProps) {
         <PetEmptyIcon />
         <div className="flex flex-col w-full max-w-[441px] mx-auto">
           <PetsEmptyTitle />
-          <MyPetsAddBtn handleAddPet={handleAddPet} />
+          <MyPetsAddBtn onClick={handleAddPet} />
         </div>
       </div>
     </>

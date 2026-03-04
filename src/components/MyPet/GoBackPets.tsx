@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import Icon from "../Icon";
+
+import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
 
 interface GoBackPetsProps {

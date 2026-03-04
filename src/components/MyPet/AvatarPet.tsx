@@ -10,21 +10,18 @@ interface Props {
 export default function AvatarPet({ avatar, firstName, size = 32 }: Props) {
   const initial = firstName ? firstName.trim().charAt(0).toUpperCase() : "";
 
-  const src = avatar;
-
   return (
     <div
       className="relative rounded-full overflow-hidden flex-shrink-0"
       style={{ width: size, height: size }}
     >
-      {src ? (
+      {avatar ? (
         <Image
-          src={src}
+          src={avatar}
           alt="Pet photo"
           fill
           className="object-cover"
           unoptimized
-          priority
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-gray-300 text-background">

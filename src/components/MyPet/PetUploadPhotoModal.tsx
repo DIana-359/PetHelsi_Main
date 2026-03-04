@@ -7,10 +7,10 @@ import {
   ModalBody,
   Button,
 } from "@heroui/react";
-import AvatarPet from "./AvatarPet";
+import AvatarPet from "@/components/MyPet/AvatarPet";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import useMedia from "@/utils/media";
-import ModalCloseButton from "../ModalCloseButton";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface PetUploadPhotoModalProps {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 "use client";
 
-import Icon from "./Icon";
+import Icon from "@/components/Icon";
 
 interface ModalCloseButtonProps {
   onClose: () => void;

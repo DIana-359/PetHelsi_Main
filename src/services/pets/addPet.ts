@@ -6,7 +6,6 @@ export async function addPet(pet: Pet): Promise<Pet> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(pet),
-    credentials: "include",
   });
 
   const text = await res.text();

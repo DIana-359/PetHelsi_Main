@@ -1,6 +1,6 @@
 "use client";
-import Icon from "../Icon";
-import ModalCloseButton from "../ModalCloseButton";
+import Icon from "@/components/Icon";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface GlobalMessageProps {
   visible: boolean;

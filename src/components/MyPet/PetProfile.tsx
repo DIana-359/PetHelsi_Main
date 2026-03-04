@@ -1,10 +1,11 @@
 import { Pet } from "@/types/pet";
-import MypetsAddBtn from "./MypetsAddBtn";
-import AvatarPet from "./AvatarPet";
+import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
+import AvatarPet from "@/components/MyPet/AvatarPet";
 import useMedia from "@/utils/media";
-import UpdateProfilePetLink from "./UpdateProfilePetLink";
+import UpdateProfilePetLink from "@/components/MyPet/UpdateProfilePetLink";
 import { useState } from "react";
-import { SterilizedLabel } from "./SterilizedLabel";
+import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
+// import { useRouter } from "next/navigation";
 
 const formatBirthDateUA = (dateString?: string) => {
   if (!dateString) return "Не вказано";
@@ -42,18 +43,21 @@ const formatBirthDateUA = (dateString?: string) => {
 
 interface PetProfileProps {
   pets: Pet[];
-  handleAddPet: (pet: Partial<Pet>, imageFile?: File) => void;
+  handleAddPet: () => void;
+  // handleAddPet: (pet: Partial<Pet>, imageFile?: File) => void;
 }
 
-export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
+export default function PetProfile({ handleAddPet, pets }: PetProfileProps) {
   const isMobile = useMedia();
   const [activePetId, setActivePetId] = useState<number | null>(null);
+  // const router = useRouter();
 
-  const handleAddNewPet = async (pet: Partial<Pet>, imageFile?: File) => {
-    await handleAddPet(pet, imageFile);
-  };
+  // <MyPetsAddBtn onClick={() => router.push("/owner/pets/add-new-pet")} />;
+  // const handleAddNewPet = async (pet: Partial<Pet>, imageFile?: File) => {
+  //   await handleAddPet(pet, imageFile);
+  // };
 
-  if (pets.length === 0) return <MypetsAddBtn handleAddPet={handleAddNewPet} />;
+  if (pets.length === 0) return <MyPetsAddBtn />;
 
   const sortedPets = [...pets].sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 
@@ -94,8 +98,8 @@ export default function PetProfile({ pets, handleAddPet }: PetProfileProps) {
   return (
     <div className="py-[8px] md:py-0">
       <div className="flex items-center gap-6 md:flex-wrap">
-        <MypetsAddBtn
-          handleAddPet={handleAddNewPet}
+        <MyPetsAddBtn
+          onClick={handleAddPet}
           className="text-[14px] w-[165px] flex items-center justify-center h-[38px] gap-2 rounded-[6px] bg-primary text-white border border-primary hover:bg-primary-50 hover:text-primary "
         />
 

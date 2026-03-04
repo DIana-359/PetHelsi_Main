@@ -1,26 +1,20 @@
 "use client";
 
-import { Pet } from "@/types/pet";
-import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 
 interface MyPetsAddBtnProps {
-  handleAddPet: (pet: Partial<Pet>, imageFile?: File) => void;
   className?: string;
   onClick?: () => void;
 }
 
-export default function MyPetsAddBtn({ className }: MyPetsAddBtnProps) {
-  const router = useRouter();
-
-  const handleButtonClick = () => {
-    router.push("/owner/pets/add-new-pet");
-  };
-
+export default function MyPetsAddBtn({
+  onClick,
+  className,
+}: MyPetsAddBtnProps) {
   return (
     <div className="flex flex-col items-center mb-4">
       <button
-        onClick={handleButtonClick}
+        onClick={onClick}
         className={
           className ??
           "flex w-full items-center justify-center lg:w-[216px] text-[14px] text-primary  gap-2 border-2 border-primary  rounded-[6px] px-6 py-2 bg-white  hover:bg-primary-50 hover:text-primary transition-colors font-[400]"

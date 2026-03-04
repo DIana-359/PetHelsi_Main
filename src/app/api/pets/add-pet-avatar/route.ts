@@ -31,10 +31,6 @@ export async function POST(req: NextRequest) {
 
     const data = await res.json();
 
-    if (data?.publicUrl && !data.publicUrl.startsWith("http")) {
-      data.publicUrl = `${process.env.API_URL}${data.publicUrl}`;
-    }
-
     return NextResponse.json(data, { status: res.status });
   } catch (err) {
     console.error("Add pet avatar error:", err);

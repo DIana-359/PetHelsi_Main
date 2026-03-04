@@ -8,7 +8,7 @@ import {
   Button,
 } from "@heroui/react";
 
-import ModalCloseButton from "../ModalCloseButton";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface Props {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export default function PetPhotoSavedModal({ isOpen, onClose }: Props) {
         <div className="text-[#1e88e5]">
           <ModalCloseButton onClose={onClose} />
         </div>
-        <ModalHeader className="p-0 flex justify-center text-[20px] md:text-[24px] text-gray-900 mb-8 font-femily">
+        <ModalHeader className="p-0 flex justify-center text-[20px] md:text-[24px] text-gray-900 mb-8 font-family">
           Фото тварини завантажено
         </ModalHeader>
 
