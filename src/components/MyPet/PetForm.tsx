@@ -2,30 +2,28 @@
 
 import { optionsAnimals } from "@/Constants";
 import { Input, Select, SelectItem } from "@heroui/react";
-import PetBirthDateField from "./PetBirthDateField";
-import { SterilizedLabel } from "./SterilizedLabel";
+import PetBirthDateField from "@/components/MyPet/PetBirthDateField";
+import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
 import { Controller } from "react-hook-form";
 
 import { PetFormValues } from "@/utils/schemas/pet.schemas";
 import { UseFormReturn } from "react-hook-form";
 
 interface PetFormProps {
-  onSubmit: (data: PetFormValues) => void;
   methods: UseFormReturn<PetFormValues>;
 }
 
-export default function PetForm({ onSubmit, methods }: PetFormProps) {
+export default function PetForm({ methods }: PetFormProps) {
   const {
     control,
     register,
-    handleSubmit,
     watch,
     clearErrors,
     formState: { errors },
   } = methods;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <div className="w-full md:w-[304px]">
         <label
           id="label-petName"

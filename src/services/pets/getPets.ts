@@ -1,24 +1,25 @@
 import { apiFetch } from "@/lib/apiFetch.client";
-export async function getPets() {
-  try {
-    const res = await apiFetch(`/api/pets/get-pets`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+import { Pet } from "@/types/pet";
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to get pet");
-    }
-    if (res.status === 204) {
-      return { message: "Pets received" };
-    }
+export async function getPets(): Promise<Pet[]> {
+  const res = await apiFetch(`/api/pets/get-pets`, {
+    method: "GET",
+  });
 
-    return await res.json();
-  } catch (err) {
-    console.error("getPet error:", err);
-    throw err;
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText || "Failed to get pets");
   }
+
+  if (res.status === 204) {
+    return [];
+  }
+
+  const data = await res.json();
+
+  if (!Array.isArray(data)) {
+    throw new Error("Invalid pets response format");
+  }
+
+  return data;
 }

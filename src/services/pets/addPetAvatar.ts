@@ -16,7 +16,6 @@ export async function addPetAvatar(
     const res = await apiFetch(`/api/pets/add-pet-avatar?petId=${petId}`, {
       method: "POST",
       body: formData,
-      credentials: "include",
     });
 
     const text = await res.text().catch(() => "<no response body>");

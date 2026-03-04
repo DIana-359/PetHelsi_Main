@@ -7,13 +7,13 @@ import {
   ModalBody,
   Button,
 } from "@heroui/react";
-import AvatarPet from "./AvatarPet";
+import AvatarPet from "@/components/MyPet/AvatarPet";
 import { Pet } from "@/types/pet";
 import useMedia from "@/utils/media";
 import { useState } from "react";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import { useRouter } from "next/navigation";
-import ModalCloseButton from "../ModalCloseButton";
+import ModalCloseButton from "@/components/ModalCloseButton";
 
 type ActiveButton = "save" | "change";
 

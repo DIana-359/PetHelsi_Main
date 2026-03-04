@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import AvatarPet from "./AvatarPet";
-import Icon from "../Icon";
-import PetUploadPhotoModal from "./PetUploadPhotoModal";
-import PetPhotoSavedModal from "./PetPhotoSavedModal";
+import AvatarPet from "@/components/MyPet/AvatarPet";
+import Icon from "@/components/Icon";
+import PetUploadPhotoModal from "@/components/MyPet/PetUploadPhotoModal";
+import PetPhotoSavedModal from "@/components/MyPet/PetPhotoSavedModal";
 
 interface PetAvatarUploaderProps {
   avatar?: string;
