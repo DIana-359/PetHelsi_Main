@@ -10,25 +10,30 @@ async function refreshToken() {
     });
   }
 
-  const res = await refreshPromise;
-  if (!res.ok) {
-    window.location.href = "/signin";
-    throw new Error("Session expired");
-  }
-  return res;
+  return refreshPromise;
 }
 
-export async function apiFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
-  let res = await fetch(input, { ...init, credentials: "include" });
+export async function apiFetch(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<Response> {
+  let res = await fetch(input, {
+    ...init,
+    credentials: "include",
+  });
 
-  if (res.status !== 401) return res;
-
-  await refreshToken();
-
-  res = await fetch(input, { ...init, credentials: "include" });
   if (res.status === 401) {
-    window.location.href = "/signin";
-    throw new Error("Session expired after refresh");
+    const refreshRes = await refreshToken();
+
+    if (!refreshRes.ok) {
+      window.location.href = "/signin";
+      throw new Error("Session expired");
+    }
+
+    res = await fetch(input, {
+      ...init,
+      credentials: "include",
+    });
   }
 
   return res;

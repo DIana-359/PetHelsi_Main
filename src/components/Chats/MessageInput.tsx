@@ -1,56 +1,67 @@
 "use client";
 import { Chat } from "@/types/chatsTypes";
-import Icon from "../Icon";
-import { useState, useRef, useEffect } from "react";
+import Icon from "@/components/Icon";
+import { useState, useRef, useEffect, forwardRef } from "react";
 
-interface ChatsProps {
+interface MessageInputProps {
   openChat: Chat;
+  onSend: (content: string) => boolean;
+  onTyping: () => void;
 }
 
-export default function MessageInput({ openChat }: ChatsProps) {
-  const { chat_id } = openChat;
+const MessageInput = forwardRef<HTMLDivElement, MessageInputProps>(
+  ({ openChat, onSend, onTyping }, ref) => {
+  const chatId = openChat.chatId;
 
   const draftsRef = useRef<{
     [chatId: string]: { text: string; height: number };
   }>({});
   const [textMessage, setTextMessage] = useState(
-    draftsRef.current[chat_id]?.text || ""
+    draftsRef.current[chatId]?.text || ""
   );
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    const savedDraft = draftsRef.current[chat_id];
+    const savedDraft = draftsRef.current[chatId];
     setTextMessage(savedDraft?.text || "");
     if (textareaRef.current) {
       textareaRef.current.style.height = savedDraft?.height
         ? `${savedDraft.height}px`
         : "auto";
     }
-  }, [chat_id]);
+  }, [chatId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setTextMessage(value);
+    onTyping();
 
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       const newHeight = Math.min(textareaRef.current.scrollHeight, 146);
       textareaRef.current.style.height = `${newHeight}px`;
 
-      draftsRef.current[chat_id] = { text: value, height: newHeight };
+      draftsRef.current[chatId] = { text: value, height: newHeight };
     }
   };
 
   const handleSend = () => {
     if (!textMessage.trim()) return;
 
-    draftsRef.current[chat_id] = { text: "", height: 32 };
+    const success = onSend(textMessage);
+
+    if (!success) return;
+
+    draftsRef.current[chatId] = { text: "", height: 32 };
     setTextMessage("");
-    if (textareaRef.current) textareaRef.current.style.height = "32px";
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "32px";
+    }
   };
 
   return (
-    <div className="md:py-[12px] md:pl-[32px] pr-0 w-full border-t-[1px] border-gray-100 flex items-end bg-background align-bottom min-h-[56px] max-h-[146px]">
+    <div ref={ref} className="md:py-[12px] md:pl-[32px] pr-0 w-full border-t-[1px] border-gray-100 flex items-end bg-background align-bottom min-h-[56px] max-h-[146px]">
       <button className="mr-[16px]">
         <Icon
           sprite="/sprites/sprite-sistem.svg"
@@ -82,4 +93,8 @@ export default function MessageInput({ openChat }: ChatsProps) {
       </button>
     </div>
   );
-}
+})
+
+MessageInput.displayName = "MessageInput";
+
+export default MessageInput;
