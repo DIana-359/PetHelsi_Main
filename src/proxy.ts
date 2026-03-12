@@ -29,13 +29,17 @@ export async function proxy(req: NextRequest) {
 
       const data = await apiRes.json();
 
-      const res = NextResponse.next();
+      const newHeaders = new Headers(req.headers);
+      newHeaders.set("x-auth-token", data.accessToken);
+
+      const res = NextResponse.next({
+        request: { headers: newHeaders },
+      });
       res.cookies.set("auth-token", data.accessToken, {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
       });
-
       return res;
     } catch {
       const res = NextResponse.next();

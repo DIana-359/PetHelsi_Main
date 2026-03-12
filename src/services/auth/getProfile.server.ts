@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 export async function getProfileSSR() {
   const cookieStore = await cookies();
 
-  const res = await fetch(`${process.env.API_URL}/v1/owners/profile`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/proxy/get-profile`, {
     headers: {
       Cookie: cookieStore.toString(),
     },
