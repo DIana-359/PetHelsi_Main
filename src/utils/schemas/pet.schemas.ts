@@ -3,10 +3,17 @@ import { z } from "zod";
 const birthDateSchema = z.string().refine(
   (val) => {
     if (!val) return false;
+
     const fullDate = /^\d{4}-\d{2}-\d{2}$/;
     const monthYear = /^\d{4}-\d{2}$/;
     const yearOnly = /^\d{4}$/;
-    return fullDate.test(val) || monthYear.test(val) || yearOnly.test(val);
+
+    if (fullDate.test(val)) {
+      const date = new Date(val);
+      return !isNaN(date.getTime());
+    }
+
+    return monthYear.test(val) || yearOnly.test(val);
   },
   {
     message: "Заповніть поле",

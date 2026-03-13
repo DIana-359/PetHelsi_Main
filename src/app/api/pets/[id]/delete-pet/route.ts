@@ -20,7 +20,7 @@ export async function DELETE(
     });
 
     if (res.status === 204) {
-      return new NextResponse(null, { status: 204 });
+      return NextResponse.json(null, { status: res.status });
     }
 
     const data = await res.json();

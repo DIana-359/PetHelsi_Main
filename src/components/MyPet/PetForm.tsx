@@ -4,10 +4,16 @@ import { optionsAnimals } from "@/Constants";
 import { Input, Select, SelectItem } from "@heroui/react";
 import PetBirthDateField from "@/components/MyPet/PetBirthDateField";
 import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
-import { Controller } from "react-hook-form";
-
+import { Controller, UseFormReturn, useWatch } from "react-hook-form";
 import { PetFormValues } from "@/utils/schemas/pet.schemas";
-import { UseFormReturn } from "react-hook-form";
+import clsx from "clsx";
+
+function parseAllergies(value: string): string[] {
+  return value
+    .split(",")
+    .map((i) => i.trim())
+    .filter(Boolean);
+}
 
 interface PetFormProps {
   methods: UseFormReturn<PetFormValues>;
@@ -17,13 +23,15 @@ export default function PetForm({ methods }: PetFormProps) {
   const {
     control,
     register,
-    watch,
     clearErrors,
     formState: { errors },
   } = methods;
 
+  const weight = useWatch({ control, name: "weight" });
+  const allergies = useWatch({ control, name: "allergies" }) || [];
+
   return (
-    <form>
+    <>
       <div className="w-full md:w-[304px]">
         <label
           id="label-petName"
@@ -41,9 +49,10 @@ export default function PetForm({ methods }: PetFormProps) {
           radius="sm"
           classNames={{
             input: "text-left  text-gray-900 placeholder:text-gray-350",
-            inputWrapper: `border-primary-300 w-full ${
-              errors.name ? "border-red-500" : "border-primary-300"
-            } hover:!border-primary focus:!border-primary`,
+            inputWrapper: clsx(
+              "border-primary-300 w-full hover:!border-primary focus:!border-primary",
+              { "border-red-500": errors.name },
+            ),
           }}
         />
 
@@ -76,12 +85,18 @@ export default function PetForm({ methods }: PetFormProps) {
                 clearErrors("petTypeName");
               }}
               classNames={{
-                trigger: `text-left w-full border ${
-                  errors.petTypeName ? "border-red-500" : "border-primary-300"
-                } hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary`,
-                value: field.value
-                  ? "!text-gray-900 text-[14px]"
-                  : "!text-gray-350 text-[14px]",
+                trigger: clsx(
+                  "text-left w-full border hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary",
+                  {
+                    "border-red-500": errors.petTypeName,
+                    "border-primary-300": !errors.petTypeName,
+                  },
+                ),
+                value: clsx(
+                  field.value
+                    ? "!text-gray-900 text-[14px]"
+                    : "!text-gray-350 text-[14px]",
+                ),
                 selectorIcon: "text-[#1E88E5] w-6 h-6",
                 popoverContent: "rounded-lg",
               }}
@@ -125,9 +140,9 @@ export default function PetForm({ methods }: PetFormProps) {
         </label>
 
         <div
-          className={`flex pl-1 gap-6 p-2 rounded-[8px] ${
-            errors.genderTypeName ? "border border-red-500" : ""
-          }`}
+          className={clsx("flex pl-1 gap-6 p-2 rounded-[8px]", {
+            "border border-red-500": errors.genderTypeName,
+          })}
         >
           {(["Хлопчик", "Дівчинка"] as const).map((value) => (
             <label
@@ -176,12 +191,20 @@ export default function PetForm({ methods }: PetFormProps) {
           placeholder="Вкажіть вагу"
           {...register("weight", { valueAsNumber: true })}
           classNames={{
-            input: `text-left focus:outline-none ${
-              watch("weight") ? "text-gray-900" : "text-gray-350"
-            } placeholder:text-gray-350`,
-            inputWrapper: `border w-full ${
-              errors.weight ? "border-red-500" : "border-primary-300"
-            } hover:!border-primary focus:!border-primary shadow-none`,
+            input: clsx(
+              "text-left focus:outline-none placeholder:text-gray-350",
+              {
+                "text-gray-900": weight,
+                "text-gray-350": !weight,
+              },
+            ),
+            inputWrapper: clsx(
+              "border w-full hover:!border-primary focus:!border-primary shadow-none",
+              {
+                "border-red-500": errors.weight,
+                "border-primary-300": !errors.weight,
+              },
+            ),
           }}
         />
 
@@ -202,9 +225,9 @@ export default function PetForm({ methods }: PetFormProps) {
           control={control}
           render={({ field }) => (
             <div
-              className={`flex pl-1 gap-6 p-2 rounded-lg ${
-                errors.sterilized ? "border border-red-500" : ""
-              }`}
+              className={clsx("flex pl-1 gap-6 p-2 rounded-lg", {
+                "border border-red-500": errors.sterilized,
+              })}
             >
               {[true, false].map((value) => (
                 <label
@@ -242,18 +265,15 @@ export default function PetForm({ methods }: PetFormProps) {
               <textarea
                 rows={4}
                 maxLength={250}
-                className={`w-full border border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none ${
-                  watch("allergies")?.length ? "text-gray-900" : "text-gray-350"
-                } placeholder:text-gray-350`}
+                className={clsx(
+                  "w-full border border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none placeholder:text-gray-350",
+                  {
+                    "text-gray-900": allergies.length,
+                    "text-gray-350": !allergies.length,
+                  },
+                )}
                 value={field.value?.join(", ") || ""}
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value
-                      .split(",")
-                      .map((i) => i.trim())
-                      .filter(Boolean),
-                  )
-                }
+                onChange={(e) => field.onChange(parseAllergies(e.target.value))}
               />
 
               <div className="flex mb-6 justify-between">
@@ -261,13 +281,13 @@ export default function PetForm({ methods }: PetFormProps) {
                   Максимум 250 символів
                 </small>
                 <span className="text-gray-400 text-[12px]">
-                  {(watch("allergies")?.join(", ") || "").length}/250
+                  {allergies.join(", ").length}/250
                 </span>
               </div>
             </>
           )}
         />
       </div>
-    </form>
+    </>
   );
 }

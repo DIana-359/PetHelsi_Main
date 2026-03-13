@@ -1,4 +1,5 @@
 import Image from "next/image";
+import clsx from "clsx";
 
 interface Props {
   avatar?: string;
@@ -7,12 +8,20 @@ interface Props {
   className?: string;
 }
 
-export default function AvatarPet({ avatar, firstName, size = 32 }: Props) {
+export default function AvatarPet({
+  avatar,
+  firstName,
+  size = 32,
+  className,
+}: Props) {
   const initial = firstName ? firstName.trim().charAt(0).toUpperCase() : "";
 
   return (
     <div
-      className="relative rounded-full overflow-hidden flex-shrink-0"
+      className={clsx(
+        "relative rounded-full overflow-hidden flex-shrink-0",
+        className,
+      )}
       style={{ width: size, height: size }}
     >
       {avatar ? (

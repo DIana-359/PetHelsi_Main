@@ -5,13 +5,14 @@ export const getButtonClasses = (variant: ButtonVariant, isActive: boolean) => {
     case "primary":
       return `w-full rounded-[8px] transition-colors ${
         isActive
-          ? "bg-primary-700 text-white"
-          : "bg-white text-primary-700 border border-primary-700 hover:bg-primary-50"
+          ? "bg-primary-800 text-white"
+          : "bg-primary-700 text-white hover:bg-primary-800"
       }`;
+
     case "secondary":
       return `w-full rounded-[8px] transition-colors ${
         isActive
-          ? "bg-primary-700 text-white"
+          ? "bg-primary-50 text-primary-700 border border-primary-700"
           : "bg-white text-primary-700 border border-primary-700 hover:bg-primary-50"
       }`;
 

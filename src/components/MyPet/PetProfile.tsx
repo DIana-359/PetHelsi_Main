@@ -1,3 +1,5 @@
+"use client";
+
 import { Pet } from "@/types/pet";
 import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
 import AvatarPet from "@/components/MyPet/AvatarPet";
@@ -5,57 +7,17 @@ import useMedia from "@/utils/media";
 import UpdateProfilePetLink from "@/components/MyPet/UpdateProfilePetLink";
 import { useState } from "react";
 import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
-// import { useRouter } from "next/navigation";
-
-const formatBirthDateUA = (dateString?: string) => {
-  if (!dateString) return "Не вказано";
-
-  const [year, month, day] = dateString.split("-");
-
-  if (month === "01" && day === "01") {
-    return year;
-  }
-
-  if (day === "01") {
-    const date = new Date(Number(year), Number(month) - 1);
-    return new Intl.DateTimeFormat("uk-UA", {
-      month: "long",
-      year: "numeric",
-    })
-      .format(date)
-      .replace(/^./, (c) => c.toUpperCase())
-      .replace(/\s?р\.?$/, "");
-  }
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return "Не вказано";
-
-  const formatted = new Intl.DateTimeFormat("uk-UA", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  })
-    .format(date)
-    .replace(/\s?р\.?$/, "")
-    .replace(".", "");
-
-  return formatted.replace(/(\s\p{L})/u, (match) => match.toUpperCase());
-};
+import clsx from "clsx";
+import { formatBirthDateUA } from "@/utils/petDate/petDate";
 
 interface PetProfileProps {
   pets: Pet[];
   handleAddPet: () => void;
-  // handleAddPet: (pet: Partial<Pet>, imageFile?: File) => void;
 }
 
 export default function PetProfile({ handleAddPet, pets }: PetProfileProps) {
   const isMobile = useMedia();
   const [activePetId, setActivePetId] = useState<number | null>(null);
-  // const router = useRouter();
-
-  // <MyPetsAddBtn onClick={() => router.push("/owner/pets/add-new-pet")} />;
-  // const handleAddNewPet = async (pet: Partial<Pet>, imageFile?: File) => {
-  //   await handleAddPet(pet, imageFile);
-  // };
 
   if (pets.length === 0) return <MyPetsAddBtn />;
 
@@ -107,14 +69,10 @@ export default function PetProfile({ handleAddPet, pets }: PetProfileProps) {
           <button
             key={pet.id}
             onClick={() => setActivePetId(pet.id!)}
-            className={`
-      font-semibold text-[14px] text-gray-900 pb-[10px] px-3 -mx-3
-      ${
-        activePetId === pet.id
-          ? "border-b-2 border-primary"
-          : "border-b-2 border-transparent"
-      }
-    `}
+            className={clsx(
+              "font-semibold text-[14px] text-gray-900 pb-[10px] px-3 -mx-3 border-b-2",
+              activePetId === pet.id ? "border-primary" : "border-transparent",
+            )}
           >
             {pet.name}
           </button>

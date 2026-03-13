@@ -5,11 +5,12 @@ import AvatarPet from "@/components/MyPet/AvatarPet";
 import Icon from "@/components/Icon";
 import PetUploadPhotoModal from "@/components/MyPet/PetUploadPhotoModal";
 import PetPhotoSavedModal from "@/components/MyPet/PetPhotoSavedModal";
+import { PetAvatar } from "@/types/petAvatar";
 
 interface PetAvatarUploaderProps {
   avatar?: string;
   firstName?: string;
-  onChange?: (image: { preview: string; file: File } | null) => void;
+  onChange?: (image: PetAvatar | null) => void;
   mode?: "add" | "edit";
 }
 
@@ -19,9 +20,7 @@ export default function PetAvatarUploader({
   onChange,
   mode = "add",
 }: PetAvatarUploaderProps) {
-  const [image, setImage] = useState<{ preview: string; file: File } | null>(
-    null,
-  );
+  const [image, setImage] = useState<PetAvatar | null>(null);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [isPhotoSavedOpen, setIsPhotoSavedOpen] = useState(false);
   const [photoError, setPhotoError] = useState<string | null>(null);
@@ -102,9 +101,8 @@ export default function PetAvatarUploader({
       <PetUploadPhotoModal
         isOpen={isPhotoModalOpen}
         onClose={() => setIsPhotoModalOpen(false)}
-        onPick={openFilePicker}
+        onSelectPhoto={openFilePicker}
         onSave={handleSavePhoto}
-        onChangePhoto={openFilePicker}
         hasImage={!!image}
         preview={image?.preview}
         avatar={avatar}

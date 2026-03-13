@@ -35,7 +35,7 @@ export function GlobalMessage({
   return (
     <div
       className={`
-      relative w-full min-h-[40px] flex items-center justify-center px-6 mb-4 md:mb-6 gap-[10px] bg-[#f1fbf1] border-b border-[#73d172] rounded-t-[6px] text-[14px] text-[#333f5d]  ${current.bg}`}
+      relative w-full min-h-[40px] flex items-center justify-center px-6 mb-4 md:mb-6 gap-[10px]  border-b  rounded-t-[6px] text-[14px] text-[#333f5d]  ${current.bg}`}
     >
       <Icon
         sprite="/sprites/sprite-sistem.svg"
@@ -45,9 +45,11 @@ export function GlobalMessage({
         className={current.iconColor}
       />
       <span>{message}</span>
-      <div className="absolute text-[#333f5d] -right-4 -top-2 scale-[1] md:-top-1 z-10 md:right-4 md:scale-[0.65]">
-        <ModalCloseButton onClose={onClose} />
-      </div>
+
+      <ModalCloseButton
+        onClose={onClose}
+        className="text-[#333f5d] -right-4 -top-2 scale-[1] md:-top-1 z-10 md:right-4 md:scale-[0.65]"
+      />
     </div>
   );
 }

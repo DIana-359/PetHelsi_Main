@@ -8,10 +8,11 @@ import { useRouter } from "next/navigation";
 import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
 import { UseFormReturn } from "react-hook-form";
 import { PetFormValues } from "@/utils/schemas/pet.schemas";
+import { PetAvatar } from "@/types/petAvatar";
 
 interface AddPetFormBtnProps {
   methods: UseFormReturn<PetFormValues>;
-  image: { preview: string; file: File } | null;
+  image: PetAvatar | null;
   setCreatedPet: (pet: Pet) => void;
   setIsCreatedModalOpen: (v: boolean) => void;
 }
@@ -25,42 +26,43 @@ export default function AddPetFormBtn({
   const router = useRouter();
   const { handleSubmit } = methods;
 
-  const { mutate: addPetMutate } = useAddPet();
+  const { mutateAsync: addPetMutateAsync } = useAddPet();
   const { mutateAsync: addPetAvatarMutate } = useAddPetAvatar();
 
-  const onValid = (data: PetFormValues) => {
-    const birthDate = petBirthDate({
-      birthDate: data.birthDate,
-    });
+  const handleCreatePet = async (data: PetFormValues) => {
+    try {
+      const birthDate = petBirthDate({
+        birthDate: data.birthDate,
+      });
 
-    const pet: Pet = {
-      ...data,
-      birthDate,
-      avatar: image?.preview,
-      allergies: data.allergies || [],
-      checked: true,
-    };
+      const pet: Pet = {
+        ...data,
+        birthDate,
+        avatar: image?.preview,
+        allergies: data.allergies || [],
+        checked: true,
+      };
 
-    addPetMutate(pet, {
-      onSuccess: async (createdPet) => {
-        if (image?.file && createdPet.id) {
-          await addPetAvatarMutate({
-            petId: createdPet.id.toString(),
-            file: image.file,
-          });
-        }
+      const createdPet = await addPetMutateAsync(pet);
 
-        setCreatedPet({
-          ...pet,
-          id: createdPet.id,
+      if (image?.file && createdPet.id) {
+        await addPetAvatarMutate({
+          petId: createdPet.id.toString(),
+          file: image.file,
         });
+      }
 
-        setIsCreatedModalOpen(true);
-      },
-      onError: (error) => {
-        alert(error.message || "Помилка додавання тварини");
-      },
-    });
+      setCreatedPet({
+        ...pet,
+        id: createdPet.id,
+      });
+
+      setIsCreatedModalOpen(true);
+    } catch (error: unknown) {
+      alert(
+        error instanceof Error ? error.message : "Помилка додавання тварини",
+      );
+    }
   };
 
   return (
@@ -68,7 +70,7 @@ export default function AddPetFormBtn({
       <Button
         color="primary"
         type="button"
-        onPress={() => handleSubmit(onValid)()}
+        onPress={() => handleSubmit(handleCreatePet)()}
         className="w-full md:w-[304px] rounded-[8px]"
       >
         Додати тварину
