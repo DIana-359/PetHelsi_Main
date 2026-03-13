@@ -28,7 +28,7 @@ export default function AddNewPetForm() {
   const [createdPet, setCreatedPet] = useState<Pet | null>(null);
   const [showAvatarSuccess, setShowAvatarSuccess] = useState(false);
 
-  const petName = methods.watch("name");
+  const petName = methods.watch("name") ?? "";
 
   return (
     <>
@@ -72,13 +72,11 @@ export default function AddNewPetForm() {
         </div>
       </section>
 
-      {createdPet && (
-        <PetCreatedModal
-          pet={createdPet}
-          isOpen={isCreatedModalOpen}
-          onClose={() => setIsCreatedModalOpen(false)}
-        />
-      )}
+      <PetCreatedModal
+        pet={createdPet}
+        isOpen={isCreatedModalOpen}
+        onClose={() => setIsCreatedModalOpen(false)}
+      />
     </>
   );
 }

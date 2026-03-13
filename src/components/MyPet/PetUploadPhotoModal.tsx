@@ -15,9 +15,8 @@ import ModalCloseButton from "@/components/ModalCloseButton";
 interface PetUploadPhotoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPick?: () => void;
+  onSelectPhoto?: () => void;
   onSave?: () => void;
-  onChangePhoto?: () => void;
   hasImage?: boolean;
   avatar?: string;
   firstName?: string;
@@ -29,9 +28,8 @@ interface PetUploadPhotoModalProps {
 export default function PetUploadPhotoModal({
   isOpen,
   onClose,
-  onPick,
+  onSelectPhoto,
   onSave,
-  onChangePhoto,
   hasImage = false,
   avatar,
   firstName,
@@ -90,7 +88,7 @@ export default function PetUploadPhotoModal({
             {!hasImage ? (
               <Button
                 className={getButtonClasses("primary", true)}
-                onClick={onPick}
+                onClick={onSelectPhoto}
               >
                 {mode === "edit" ? "Обрати інше фото" : "Обрати фото"}
               </Button>
@@ -105,7 +103,7 @@ export default function PetUploadPhotoModal({
 
                 <Button
                   className={getButtonClasses("secondary", false)}
-                  onClick={onChangePhoto}
+                  onClick={onSelectPhoto}
                 >
                   Обрати інше фото
                 </Button>

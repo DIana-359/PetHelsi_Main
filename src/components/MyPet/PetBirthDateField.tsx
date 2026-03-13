@@ -4,27 +4,17 @@ import { Input, Select, SelectItem } from "@heroui/react";
 import { DayPicker } from "react-day-picker";
 import { uk } from "react-day-picker/locale";
 import { useState, useMemo } from "react";
+import {
+  formatDateISO,
+  formatDateDisplay,
+} from "@/utils/formatDate.ts/formatDate";
+import { MONTHS } from "@/contactMonths";
 
 interface PetBirthDateFiledProps {
   value?: string;
   onChange: (value: string) => void;
   error?: string;
 }
-
-const months = [
-  { key: "1", label: "Січень" },
-  { key: "2", label: "Лютий" },
-  { key: "3", label: "Березень" },
-  { key: "4", label: "Квітень" },
-  { key: "5", label: "Травень" },
-  { key: "6", label: "Червень" },
-  { key: "7", label: "Липень" },
-  { key: "8", label: "Серпень" },
-  { key: "9", label: "Вересень" },
-  { key: "10", label: "Жовтень" },
-  { key: "11", label: "Листопад" },
-  { key: "12", label: "Грудень" },
-];
 
 const years = Array.from({ length: 30 }, (_, i) => {
   const year = new Date().getFullYear() - i;
@@ -41,17 +31,20 @@ export default function PetBirthDateField({
   const [birthMonth, setBirthMonth] = useState<string>();
   const [birthYear, setBirthYear] = useState<string>();
 
-  const selected = useMemo(
-    () => (value ? new Date(value) : undefined),
-    [value],
-  );
-
-  const formatDateLocal = (date: Date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
+  const toggleCalendar = () => {
+    setIsOpenCalendar((prev) => !prev);
   };
+
+  const selected = useMemo(() => {
+    if (!value) return undefined;
+
+    const [yearStr, monthStr, dayStr] = value.split("-");
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1;
+    const day = Number(dayStr);
+
+    return new Date(year, month, day);
+  }, [value]);
 
   const updateApproxDate = (month?: string, year?: string) => {
     if (!year) return;
@@ -65,7 +58,7 @@ export default function PetBirthDateField({
     if (isBirthDateUnknown) {
       if (birthYear) {
         const monthLabel = birthMonth
-          ? months.find((m) => Number(m.key) === Number(birthMonth))?.label
+          ? MONTHS.find((m) => Number(m.key) === Number(birthMonth))?.label
           : undefined;
         return monthLabel ? `${monthLabel} / ${birthYear}` : birthYear;
       }
@@ -73,9 +66,7 @@ export default function PetBirthDateField({
     }
     if (value) {
       const date = new Date(value);
-      return `${String(date.getDate()).padStart(2, "0")} / ${String(
-        date.getMonth() + 1,
-      ).padStart(2, "0")} / ${date.getFullYear()}`;
+      return formatDateDisplay(date);
     }
     return "";
   }, [value, birthYear, birthMonth, isBirthDateUnknown]);
@@ -92,7 +83,7 @@ export default function PetBirthDateField({
           value={displayValue}
           variant="bordered"
           readOnly
-          onClick={() => setIsOpenCalendar(!isOpenCalendar)}
+          onClick={toggleCalendar}
           classNames={{
             input: `text-left text-[14px] focus:outline-none ${
               displayValue ? "text-gray-900" : "text-gray-350"
@@ -114,7 +105,7 @@ export default function PetBirthDateField({
               selected={selected}
               onSelect={(date) => {
                 if (!date) return;
-                onChange(formatDateLocal(date));
+                onChange(formatDateISO(date));
                 setIsOpenCalendar(false);
               }}
               captionLayout="dropdown"
@@ -169,7 +160,7 @@ export default function PetBirthDateField({
                     placeholder="MM"
                     selectedKeys={birthMonth ? [birthMonth] : []}
                     onSelectionChange={(keys) => {
-                      const month = Array.from(keys)[0]?.toString();
+                      const month = [...keys][0]?.toString();
                       setBirthMonth(month);
                       updateApproxDate(month, birthYear);
                     }}
@@ -180,7 +171,7 @@ export default function PetBirthDateField({
                       selectorIcon: "text-[#1E88E5] w-6 h-6",
                     }}
                   >
-                    {months.map((m) => (
+                    {MONTHS.map((m) => (
                       <SelectItem key={m.key}>{m.label}</SelectItem>
                     ))}
                   </Select>
@@ -191,7 +182,7 @@ export default function PetBirthDateField({
                     placeholder="PPPP"
                     selectedKeys={birthYear ? [birthYear] : []}
                     onSelectionChange={(keys) => {
-                      const year = Array.from(keys)[0]?.toString();
+                      const year = [...keys][0]?.toString();
                       setBirthYear(year);
                       updateApproxDate(birthMonth, year);
                     }}
@@ -219,7 +210,7 @@ export default function PetBirthDateField({
 
         <button
           type="button"
-          onClick={() => setIsOpenCalendar(!isOpenCalendar)}
+          onClick={toggleCalendar}
           className="absolute right-2 top-14 -translate-y-2/1 cursor-pointer"
         >
           <svg

@@ -10,15 +10,12 @@ import {
 import AvatarPet from "@/components/MyPet/AvatarPet";
 import { Pet } from "@/types/pet";
 import useMedia from "@/utils/media";
-import { useState } from "react";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import { useRouter } from "next/navigation";
 import ModalCloseButton from "@/components/ModalCloseButton";
 
-type ActiveButton = "save" | "change";
-
 interface PetCreatedModalProps {
-  pet: Pet;
+  pet: Pet | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -29,19 +26,18 @@ export default function PetCreatedModal({
   onClose,
 }: PetCreatedModalProps) {
   const isMobile = useMedia();
-  const [isActive, setIsActive] = useState<ActiveButton>("save");
 
   const router = useRouter();
 
   const goToConsultation = () => {
-    setIsActive("save");
     router.push("/veterinarians");
   };
 
   const goToMyPets = () => {
-    setIsActive("change");
     router.push("/owner/pets?created=1");
   };
+
+  if (!pet) return null;
 
   return (
     <Modal
@@ -68,13 +64,13 @@ export default function PetCreatedModal({
 
           <div className="w-full md:w-[304px] text-[16px] flex flex-col gap-2 md:gap-3 transition-colors">
             <Button
-              className={getButtonClasses("primary", isActive === "save")}
+              className={getButtonClasses("primary", false)}
               onPress={goToConsultation}
             >
               Запис на консультацію
             </Button>
             <Button
-              className={getButtonClasses("primary", isActive === "change")}
+              className={getButtonClasses("secondary", false)}
               onPress={goToMyPets}
             >
               Мої тварини

@@ -20,6 +20,13 @@ export async function GET(
       },
     });
 
+    if (!res.ok) {
+      return NextResponse.json(
+        { message: "Failed to fetch pet" },
+        { status: res.status },
+      );
+    }
+
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
   } catch (err) {
