@@ -12,8 +12,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log("Fetching AWS free schedule slots:", vetId);
-
     const res = await fetch(`${process.env.API_URL}/v1/vets/${vetId}/free-schedule-slots`);
 
     if (!res.ok) {

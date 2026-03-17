@@ -1,29 +1,32 @@
-export interface VetDialog {
-  id: number;
-  sender_type: "VET";
-  sender_name: string;
-  message: string;
-  datetime: string;
-}
+export type Chat = {
+  chatId: string;
+  senderId: number;
+  recipientId: number;
+  senderName: string;
+  recipientName: string;
+};
 
-export interface ClientDialog {
-  id: number;
-  sender_type: "CLIENT";
-  client_name: string;
-  message: string;
-  datetime: string;
-}
+export type MessageStatus = "SENT" | "DELIVERED" | "READ";
 
-export type Dialog = VetDialog | ClientDialog;
+export type Message = {
+  chatId: string;
+  messageId: string;
+  senderId: number;
+  recipientId: number;
+  senderEmail: string;
+  recipientEmail: string;
+  content: string;
+  timestamp: string;
+  status: "SENT" | "DELIVERED" | "READ";
+  clientMessageId?: string;
+};
 
-export interface Chat {
-  chat_id: number;
-  vet_full_name: string;
-  last_login_date: string;
-  admin_message: string;
-  dialogs: Dialog[];
-}
-
-export interface ChatsResponse {
-  chats: Chat[];
-}
+export type PaginatedMessagesResponse = {
+  content: Message[];
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
+};

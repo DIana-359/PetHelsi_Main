@@ -1,42 +1,60 @@
-import { Chat } from "@/types/chatsTypes";
-import clsx from "clsx";
+import { Fragment, RefObject } from "react";
+import { Message } from "@/types/chatsTypes";
+import MessageItem from "@/components/Chats/MessageItem";
+import { getChatMessageDateLabel } from "@/utils/date/getChatMessageDateLabel";
+import { Pulse } from "@/components/Pulse";
 
-interface ChatsProps {
-  openChat: Chat;
+interface ChatsMessagesProps {
+  messages: Message[];
+  currentUserId: number;
+  loading?: boolean;
+  onMessageVisible: (chatId: string, messageId: string) => void;
+  isPanelVisible: boolean;
+  scrollContainerRef: RefObject<HTMLDivElement | null>;
 }
 
-export default function ChatsMessage({ openChat }: ChatsProps) {
-  const { last_login_date, dialogs } = openChat;
+export default function ChatsMessage({
+  messages,
+  currentUserId,
+  loading,
+  onMessageVisible,
+  isPanelVisible,
+  scrollContainerRef,
+}: ChatsMessagesProps) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-full">
+        <Pulse />
+      </div>
+    );
+  }
 
   return (
-    <div className="py-[16px] md:p-[24px] md:pr-0 mb-[8px] scrollbar-none">
-      <p className="text-center text-[12px] leading-[1] font-[500] text-gray-500 mb-[8px]">
-        {last_login_date.slice(5)}
-      </p>
-      <ul className="flex flex-col">
-        {dialogs.map(elem => (
-          <li
-            key={elem.id}
-            className={clsx(
-              "mb-[8px] min-w-[343px] max-w-[438px]",
-              elem.sender_type === "VET" ? "self-start" : "self-end"
-            )}>
-            <p
-              className={clsx(
-                "p-[12px] rounded-[8px] font-normal text-[14px] leading-[110%] tracking-[0%] text-gray-900 mb-[8px]",
-                elem.sender_type === "VET" ? "bg-gray-450" : "bg-primary-300"
-              )}>
-              {elem.message}
-            </p>
-            <p
-              className={clsx(
-                "text-[12px] leading-[1] font-[500] text-gray-700",
-                elem.sender_type === "VET" ? "text-left" : "text-right"
-              )}>
-              {elem.datetime.slice(11, 16)}
-            </p>
-          </li>
-        ))}
+    <div className="py-[16px] md:p-[24px] md:pr-0 mb-[8px]">
+      <ul className="flex flex-col gap-3">
+        {messages.map((msg, index) => {
+          const currentLabel = getChatMessageDateLabel(msg.timestamp);
+          const prevLabel =
+            index > 0 ? getChatMessageDateLabel(messages[index - 1].timestamp) : null;
+          const showDateDivider = currentLabel !== prevLabel;
+
+          return (
+            <Fragment key={`${msg.chatId}-${msg.messageId}`}>
+              {showDateDivider && (
+                <li className="flex justify-center">
+                  <span className="text-xs text-gray-500 py-2">{currentLabel}</span>
+                </li>
+              )}
+              <MessageItem
+                msg={msg}
+                currentUserId={currentUserId}
+                onMessageVisible={onMessageVisible}
+                isPanelVisible={isPanelVisible}
+                scrollContainerRef={scrollContainerRef}
+              />
+            </Fragment>
+          );
+        })}
       </ul>
     </div>
   );
