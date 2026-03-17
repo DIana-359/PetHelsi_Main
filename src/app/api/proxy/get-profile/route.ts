@@ -3,26 +3,63 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token")?.value;
-  if (!token) {
+  const accessToken = cookieStore.get("auth-token")?.value;
+  const refreshToken = cookieStore.get("refresh-token")?.value;
+
+  if (!accessToken) {
     return NextResponse.json(null, { status: 200 });
   }
 
-  const res = await fetch(
-    `${process.env.API_URL}/v1/owners/profile`,
-    {
+  const doFetch = async (token: string) => {
+    return fetch(`${process.env.API_URL}/v1/owners/profile`, {
       headers: {
+        Authorization: `Bearer ${token}`,
         Accept: "application/json",
-        Cookie: `auth-token=${token}`,
       },
+    });
+  };
+
+  const res = await doFetch(accessToken);
+
+  if (res.status !== 401) {
+    if (!res.ok) {
+      return NextResponse.json(null, { status: res.status });
+    }
+
+    return NextResponse.json(await res.json());
+  }
+
+  if (!refreshToken) {
+    return NextResponse.json(null, { status: 401 });
+  }
+
+  const refreshRes = await fetch(
+    `${process.env.API_URL}/v1/auth/refresh`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
     }
   );
 
-  if (!res.ok) {
-    const error = await res.text();
-    return NextResponse.json({ error }, { status: res.status });
+  if (!refreshRes.ok) {
+    const response = NextResponse.json(null, { status: 401 });
+    response.cookies.delete("auth-token");
+    response.cookies.delete("refresh-token");
+    return response;
   }
 
-  const data = await res.json();
-  return NextResponse.json(data);
+  const data = await refreshRes.json();
+
+  const retry = await doFetch(data.accessToken);
+
+  const finalResponse = NextResponse.json(await retry.json());
+
+  finalResponse.cookies.set("auth-token", data.accessToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return finalResponse;
 }
