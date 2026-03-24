@@ -4,7 +4,7 @@ type SignInPayload = {
 };
 
 export async function signIn(payload: SignInPayload) {
-  const response = await fetch("/api/proxy/login-cookie", {
+  const response = await fetch("/api/proxy/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
