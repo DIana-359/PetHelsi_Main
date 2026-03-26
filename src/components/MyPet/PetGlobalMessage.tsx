@@ -15,6 +15,7 @@ export default function PetGlobalMessage() {
   const [globalMessage, setGlobalMessage] = useState<GlobalMessageType | null>(
     null,
   );
+  const paramsString = searchParams.toString();
 
   useEffect(() => {
     const name = searchParams.get("name");
@@ -32,17 +33,21 @@ export default function PetGlobalMessage() {
       (k) => searchParams.get(k) === "1",
     );
 
+    let message: GlobalMessageType | null = null;
+
     if (key) {
-      setGlobalMessage(messagesMap[key]);
-      router.replace("/owner/pets");
+      message = messagesMap[key];
     } else if (searchParams.get("deleted") === "1" && name) {
-      setGlobalMessage({
+      message = {
         message: `Профіль ${name} успішно видалено`,
         variant: "success",
-      });
+      };
+    }
+    if (message) {
+      setGlobalMessage(message);
       router.replace("/owner/pets");
     }
-  }, [searchParams, router]);
+  }, [paramsString, router]);
 
   if (!globalMessage) return null;
 
