@@ -11,6 +11,7 @@ interface ChatsMessagesProps {
   onMessageVisible: (chatId: string, messageId: string) => void;
   isPanelVisible: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
+  onRetry?: (clientMessageId: string) => void;
 }
 
 export default function ChatsMessage({
@@ -20,6 +21,7 @@ export default function ChatsMessage({
   onMessageVisible,
   isPanelVisible,
   scrollContainerRef,
+  onRetry,
 }: ChatsMessagesProps) {
   if (loading) {
     return (
@@ -51,6 +53,7 @@ export default function ChatsMessage({
                 onMessageVisible={onMessageVisible}
                 isPanelVisible={isPanelVisible}
                 scrollContainerRef={scrollContainerRef}
+                onRetry={onRetry}
               />
             </Fragment>
           );

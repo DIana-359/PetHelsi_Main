@@ -6,7 +6,7 @@ export type Chat = {
   recipientName: string;
 };
 
-export type MessageStatus = "SENT" | "DELIVERED" | "READ";
+export type MessageStatus = "SENT" | "DELIVERED" | "READ" | "FAILED";
 
 export type Message = {
   chatId: string;
@@ -17,7 +17,7 @@ export type Message = {
   recipientEmail: string;
   content: string;
   timestamp: string;
-  status: "SENT" | "DELIVERED" | "READ";
+  status: MessageStatus;
   clientMessageId?: string;
 };
 
