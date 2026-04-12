@@ -5,7 +5,7 @@ import ChatsHeader from "@/components/Chats/ChatsHeader";
 import MessageInput from "@/components/Chats/MessageInput";
 import ChatsMessages from "@/components/Chats/ChatsMessage";
 import { useChatMessagesQuery } from "@/hooks/chats/useChatMessages";
-import { Chat } from "@/types/chatsTypes";
+import { Chat, Message } from "@/types/chatsTypes";
 import { clsx } from "clsx";
 import { Pulse } from "@/components/Pulse";
 
@@ -20,6 +20,8 @@ interface ChatPanelProps {
     clientMessageId: string;
   }) => void;
   markAsRead: (chatId: string, messageId: string) => void;
+  retryMessage: (clientMessageId: string) => void;
+  pendingMessages: Message[];
 }
 
 const MAX_MESSAGE_LENGTH = 255;
@@ -30,6 +32,8 @@ export default function ChatPanel({
   currentUserId,
   sendMessage,
   markAsRead,
+  retryMessage,
+  pendingMessages,
 }: ChatPanelProps) {
   const chatId = String(chat.chatId);
   const [sendError, setSendError] = useState<string | null>(null);
@@ -49,15 +53,18 @@ export default function ChatPanel({
   );
 
   const messages = useMemo(() => {
-    if (!data?.pages) return [];
-    const all = [...data.pages].reverse().flatMap(page => page.content);
+    const serverMsgs = data?.pages
+      ? [...data.pages].reverse().flatMap(page => page.content)
+      : [];
     const seen = new Set<string>();
-    return all.filter(msg => {
+    const deduped = serverMsgs.filter(msg => {
       if (seen.has(msg.messageId)) return false;
       seen.add(msg.messageId);
       return true;
     });
-  }, [data?.pages]);
+    const chatPending = pendingMessages.filter(m => m.chatId === chatId);
+    return [...deduped, ...chatPending];
+  }, [data?.pages, pendingMessages, chatId]);
 
   const isUserNearBottom = () => {
     const container = messagesContainerRef.current;
@@ -166,6 +173,7 @@ export default function ChatPanel({
           onMessageVisible={markAsRead}
           isPanelVisible={isActive}
           scrollContainerRef={messagesContainerRef}
+          onRetry={retryMessage}
         />
       </div>
 

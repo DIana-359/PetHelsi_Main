@@ -1,10 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { Message, PaginatedMessagesResponse } from "@/types/chatsTypes";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
+
+const PENDING_STORAGE_KEY = "chat_pending_messages";
+
+function loadPendingMessages(): Message[] {
+  try {
+    const raw = localStorage.getItem(PENDING_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePendingMessages(messages: Message[]) {
+  try {
+    localStorage.setItem(PENDING_STORAGE_KEY, JSON.stringify(messages));
+  } catch { /* ignore quota errors */ }
+}
 
 interface UseChatSocketParams {
   currentUserId?: number;
@@ -17,6 +34,34 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   const messageToChat = useRef<Map<string, string>>(new Map());
   const pendingQueue = useRef<Array<() => void>>([]);
   const reconnecting = useRef(false);
+  const pendingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const pendingPayloads = useRef<Map<string, { chatId: string; recipientId: number; content: string; clientMessageId: string }>>(new Map());
+
+  const [pendingMessages, setPendingMessagesRaw] = useState<Message[]>(() => {
+    const loaded = loadPendingMessages().map(msg =>
+      msg.status === "SENT" ? { ...msg, status: "FAILED" as const } : msg
+    );
+    for (const msg of loaded) {
+      if (msg.clientMessageId) {
+        pendingPayloads.current.set(msg.clientMessageId, {
+          chatId: msg.chatId,
+          recipientId: msg.recipientId,
+          content: msg.content,
+          clientMessageId: msg.clientMessageId,
+        });
+      }
+    }
+    savePendingMessages(loaded);
+    return loaded;
+  });
+
+  const setPendingMessages = useCallback((updater: Message[] | ((prev: Message[]) => Message[])) => {
+    setPendingMessagesRaw(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      savePendingMessages(next);
+      return next;
+    });
+  }, []);
 
   async function getSocketToken() {
     const res = await fetch("/api/proxy/socket-token", {
@@ -85,6 +130,29 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
           messageToChat.current.set(msg.clientMessageId, msg.chatId);
         }
 
+        const matchId = msg.clientMessageId
+          || (() => {
+            if (msg.senderId !== userId) return undefined;
+            const found = pendingPayloads.current.entries();
+            for (const [cid, p] of found) {
+              if (p.chatId === msg.chatId && p.content === msg.content) return cid;
+            }
+            return undefined;
+          })();
+
+        if (matchId) {
+          const timer = pendingTimers.current.get(matchId);
+          if (timer) {
+            clearTimeout(timer);
+            pendingTimers.current.delete(matchId);
+          }
+          pendingPayloads.current.delete(matchId);
+
+          setPendingMessages(prev =>
+            prev.filter(m => m.clientMessageId !== matchId)
+          );
+        }
+
         if (msg.recipientId === userId && msg.status === "SENT") {
           client.publish({
             destination: "/app/chat.delivered",
@@ -108,7 +176,8 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
                 m =>
                   m.messageId === msg.messageId ||
                   (msg.clientMessageId &&
-                    m.clientMessageId === msg.clientMessageId)
+                    (m.clientMessageId === msg.clientMessageId ||
+                     m.messageId === msg.clientMessageId))
               );
 
               if (idx !== -1) {
@@ -233,9 +302,14 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
     connect(currentUserId);
 
+    const timers = pendingTimers.current;
+    const client = clientRef;
+
     return () => {
-      clientRef.current?.deactivate();
-      clientRef.current = null;
+      timers.forEach(timer => clearTimeout(timer));
+      timers.clear();
+      client.current?.deactivate();
+      client.current = null;
     };
   }, [currentUserId]);
 
@@ -245,19 +319,76 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     content: string;
     clientMessageId: string;
   }) => {
-    messageToChat.current.set(payload.clientMessageId, payload.chatId);
+    if (!currentUserId) return;
 
-    if (clientRef.current?.connected) {
+    messageToChat.current.set(payload.clientMessageId, payload.chatId);
+    pendingPayloads.current.set(payload.clientMessageId, payload);
+
+    const optimisticMsg: Message = {
+      chatId: payload.chatId,
+      messageId: payload.clientMessageId,
+      senderId: currentUserId,
+      recipientId: payload.recipientId,
+      senderEmail: "",
+      recipientEmail: "",
+      content: payload.content,
+      timestamp: new Date().toISOString(),
+      status: "SENT",
+      clientMessageId: payload.clientMessageId,
+    };
+
+    setPendingMessages(prev => [...prev, optimisticMsg]);
+
+    const timer = setTimeout(() => {
+      pendingTimers.current.delete(payload.clientMessageId);
+      setPendingMessages(prev =>
+        prev.map(m =>
+          m.clientMessageId === payload.clientMessageId
+            ? { ...m, status: "FAILED" as const }
+            : m
+        )
+      );
+    }, 5000);
+
+    pendingTimers.current.set(payload.clientMessageId, timer);
+
+    if (clientRef.current?.connected && navigator.onLine) {
       clientRef.current.publish({
         destination: "/app/chat.send",
         body: JSON.stringify(payload),
       });
-    } else {
-      pendingQueue.current.push(() => {
-        clientRef.current!.publish({
-          destination: "/app/chat.send",
-          body: JSON.stringify(payload),
-        });
+    }
+  };
+
+  const retryMessage = (clientMessageId: string) => {
+    const payload = pendingPayloads.current.get(clientMessageId);
+    if (!payload) return;
+
+    setPendingMessages(prev =>
+      prev.map(m =>
+        m.clientMessageId === clientMessageId
+          ? { ...m, status: "SENT" as const }
+          : m
+      )
+    );
+
+    const timer = setTimeout(() => {
+      pendingTimers.current.delete(clientMessageId);
+      setPendingMessages(prev =>
+        prev.map(m =>
+          m.clientMessageId === clientMessageId
+            ? { ...m, status: "FAILED" as const }
+            : m
+        )
+      );
+    }, 5000);
+
+    pendingTimers.current.set(clientMessageId, timer);
+
+    if (clientRef.current?.connected && navigator.onLine) {
+      clientRef.current.publish({
+        destination: "/app/chat.send",
+        body: JSON.stringify(payload),
       });
     }
   };
@@ -290,5 +421,5 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     });
   };
 
-  return { sendMessage, markAsRead };
+  return { sendMessage, markAsRead, retryMessage, pendingMessages };
 }
