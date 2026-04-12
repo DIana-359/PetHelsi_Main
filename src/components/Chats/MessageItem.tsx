@@ -8,6 +8,7 @@ interface MessageItemProps {
   onMessageVisible: (chatId: string, messageId: string) => void;
   isPanelVisible: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
+  onRetry?: (clientMessageId: string) => void;
 }
 
 export default function MessageItem({
@@ -16,6 +17,7 @@ export default function MessageItem({
   onMessageVisible,
   isPanelVisible,
   scrollContainerRef,
+  onRetry,
 }: MessageItemProps) {
   const isMine = msg.senderId === currentUserId;
   const ref = useRef<HTMLLIElement | null>(null);
@@ -72,10 +74,22 @@ export default function MessageItem({
             className="text-blue-500"
           />
         );
+      case "FAILED":
+        return (
+          <Icon
+            sprite="/sprites/sprite-sistem.svg"
+            id="icon-send-failed"
+            width="16px"
+            height="16px"
+            className="text-red-500"
+          />
+        );
       default:
         return null;
     }
   };
+
+  const isFailed = msg.status === "FAILED";
 
   return (
     <li
@@ -84,12 +98,29 @@ export default function MessageItem({
         isMine ? "self-end items-end" : "self-start items-start"
       }`}
     >
-      <div
-        className={`px-4 py-2 rounded-2xl text-gray-900 ${
-          isMine ? "bg-primary-300" : "bg-primary-100"
-        }`}
-      >
-        <p className="whitespace-pre-wrap break-all">{msg.content}</p>
+      <div className={`flex items-center gap-2 ${isMine ? "flex-row" : "flex-row-reverse"}`}>
+        {isFailed && (
+          <button
+            type="button"
+            onClick={() => msg.clientMessageId && onRetry?.(msg.clientMessageId)}
+            className="shrink-0 text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-retry"
+              width="24px"
+              height="24px"
+              className="text-gray-500"
+            />
+          </button>
+        )}
+        <div
+          className={`px-4 py-2 rounded-2xl text-gray-900 ${
+            isFailed ? "bg-red-100" : isMine ? "bg-primary-300" : "bg-primary-100"
+          }`}
+        >
+          <p className="whitespace-pre-wrap break-all">{msg.content}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-1 text-xs mt-1 opacity-70">

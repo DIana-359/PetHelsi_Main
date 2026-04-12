@@ -1,6 +1,7 @@
 "use client";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
-import type { Chat } from "@/types/chatsTypes";
+import type { Chat, Message } from "@/types/chatsTypes";
+import Icon from "@/components/Icon";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import useMedia from "@/utils/useMedia";
@@ -13,6 +14,7 @@ interface ChatsSidebarProps {
   openChat?: string | null;
   onSelectChat: (chatId: string) => void;
   currentUserId: number;
+  pendingMessages: Message[];
 }
 
 function ChatSidebarItem({
@@ -23,6 +25,7 @@ function ChatSidebarItem({
   avatar,
   email,
   onSelectChat,
+  pendingMessages,
 }: {
   chat: Chat;
   isActive: boolean;
@@ -31,12 +34,17 @@ function ChatSidebarItem({
   avatar?: string;
   email?: string;
   onSelectChat: (chatId: string) => void;
+  pendingMessages: Message[];
 }) {
-  const cached = useCachedChatMessages(String(chat.chatId));
+  const chatId = String(chat.chatId);
+  const cached = useCachedChatMessages(chatId);
 
-  const messages = cached?.pages
+  const serverMessages = cached?.pages
     ? [...cached.pages].reverse().flatMap(p => p.content)
     : [];
+
+  const chatPending = pendingMessages.filter(m => m.chatId === chatId);
+  const messages = [...serverMessages, ...chatPending];
 
   const lastMessage = messages[messages.length - 1];
 
@@ -115,6 +123,18 @@ function ChatSidebarItem({
           </p>
         )}
 
+        {lastMessage?.status === "FAILED" && (
+          <div className="w-full flex justify-center">
+            <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-send-failed"
+              width="16px"
+              height="16px"
+              className={isActive ? "text-background" : "text-red-500"}
+            />
+          </div>
+        )}
+
         {unreadCount > 0 && (
           <div className="w-full flex justify-center">
             <p className="rounded-full bg-primary-700 min-w-[24px] h-[24px] px-[4px] flex items-center justify-center text-[12px] font-[500] leading-[1] text-background">
@@ -132,6 +152,7 @@ export default function ChatsSidebar({
   openChat,
   onSelectChat,
   currentUserId,
+  pendingMessages,
 }: ChatsSidebarProps) {
   const searchParams = useSearchParams();
   const activeChat = searchParams.get("chatId");
@@ -153,6 +174,7 @@ export default function ChatsSidebar({
           avatar={profile?.avatar}
           email={profile?.email}
           onSelectChat={onSelectChat}
+          pendingMessages={pendingMessages}
         />
       ))}
     </ul>
