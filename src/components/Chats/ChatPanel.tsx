@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import MessageInput from "@/components/Chats/MessageInput";
 import ChatsMessages from "@/components/Chats/ChatsMessage";
+import ScrollToBottomButton from "@/components/Chats/ScrollToBottomButton";
 import { useChatMessagesQuery } from "@/hooks/chats/useChatMessages";
 import { Chat, Message } from "@/types/chatsTypes";
 import { clsx } from "clsx";
@@ -37,10 +38,16 @@ export default function ChatPanel({
 }: ChatPanelProps) {
   const chatId = String(chat.chatId);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [newMessageCount, setNewMessageCount] = useState(0);
   const inputRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(0);
   const initialScrollDoneRef = useRef(false);
+  const isNearBottomRef = useRef(true);
+  const lastMessageIdRef = useRef<string | null>(null);
+  const seenMessageIdRef = useRef<string | null>(null);
+  const messagesRef = useRef<Message[]>([]);
 
   const [wasActive, setWasActive] = useState(isActive);
 
@@ -66,11 +73,7 @@ export default function ChatPanel({
     return [...deduped, ...chatPending];
   }, [data?.pages, pendingMessages, chatId]);
 
-  const isUserNearBottom = () => {
-    const container = messagesContainerRef.current;
-    if (!container) return false;
-    return container.scrollHeight - container.scrollTop - container.clientHeight < 150;
-  };
+  messagesRef.current = messages;
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     const container = messagesContainerRef.current;
@@ -86,22 +89,38 @@ export default function ChatPanel({
     scrollToBottom("auto");
     initialScrollDoneRef.current = true;
     previousMessageCountRef.current = messages.length;
+    const lastMsg = messages[messages.length - 1];
+    const initId = lastMsg?.messageId ?? lastMsg?.clientMessageId ?? null;
+    lastMessageIdRef.current = initId;
+    seenMessageIdRef.current = initId;
   }, [messages.length]);
 
   useLayoutEffect(() => {
     if (!initialScrollDoneRef.current) return;
-    if (messages.length <= previousMessageCountRef.current) {
-      previousMessageCountRef.current = messages.length;
-      return;
-    }
 
     const lastMessage = messages[messages.length - 1];
-    const isMyMessage = lastMessage?.senderId === currentUserId;
+    const lastId = lastMessage?.messageId ?? lastMessage?.clientMessageId ?? null;
 
-    if (isMyMessage || isUserNearBottom()) {
-      scrollToBottom("smooth");
+    if (lastId && lastId !== lastMessageIdRef.current) {
+      const isMyMessage = lastMessage.senderId === currentUserId;
+
+      if (isMyMessage || isNearBottomRef.current) {
+        seenMessageIdRef.current = lastId;
+        scrollToBottom("smooth");
+      }
     }
 
+    if (!isNearBottomRef.current) {
+      let count = 0;
+      for (let i = messages.length - 1; i >= 0; i--) {
+        const mid = messages[i].messageId ?? messages[i].clientMessageId;
+        if (mid === seenMessageIdRef.current) break;
+        if (messages[i].senderId !== currentUserId && messages[i].status !== "READ") count++;
+      }
+      setNewMessageCount(count);
+    }
+
+    lastMessageIdRef.current = lastId;
     previousMessageCountRef.current = messages.length;
   }, [messages, currentUserId]);
 
@@ -112,6 +131,16 @@ export default function ChatPanel({
     let isHandling = false;
 
     const handleScroll = async () => {
+      const nearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+      isNearBottomRef.current = nearBottom;
+      setShowScrollButton(prev => (prev === !nearBottom ? prev : !nearBottom));
+      if (nearBottom) {
+        setNewMessageCount(0);
+        const msgs = messagesRef.current;
+        const last = msgs[msgs.length - 1];
+        seenMessageIdRef.current = last?.messageId ?? last?.clientMessageId ?? null;
+      }
+
       if (container.scrollTop > 5 || !hasNextPage || isFetchingNextPage || isHandling) return;
 
       isHandling = true;
@@ -131,6 +160,13 @@ export default function ChatPanel({
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const handleScrollToBottom = () => {
+    scrollToBottom("smooth");
+    setNewMessageCount(0);
+    const last = messages[messages.length - 1];
+    seenMessageIdRef.current = last?.messageId ?? last?.clientMessageId ?? null;
+  };
 
   const handleSendMessage = (content: string) => {
     setSendError(null);
@@ -176,6 +212,12 @@ export default function ChatPanel({
           onRetry={retryMessage}
         />
       </div>
+
+      <ScrollToBottomButton
+        visible={showScrollButton}
+        count={newMessageCount}
+        onClick={handleScrollToBottom}
+      />
 
       <MessageInput
         ref={inputRef}
