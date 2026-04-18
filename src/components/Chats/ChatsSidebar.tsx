@@ -135,7 +135,7 @@ function ChatSidebarItem({
           </div>
         )}
 
-        {unreadCount > 0 && (
+        {!isActive && unreadCount > 0 && (
           <div className="w-full flex justify-center">
             <p className="rounded-full bg-primary-700 min-w-[24px] h-[24px] px-[4px] flex items-center justify-center text-[12px] font-[500] leading-[1] text-background">
               {unreadCount > 99 ? "99+" : unreadCount}
