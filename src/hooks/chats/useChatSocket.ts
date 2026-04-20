@@ -7,6 +7,8 @@ import { Message, PaginatedMessagesResponse } from "@/types/chatsTypes";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 
 const PENDING_STORAGE_KEY = "chat_pending_messages";
+const MAX_RECONNECT_ATTEMPTS = 5;
+const SEND_TIMEOUT_MS = 5000;
 
 function loadPendingMessages(): Message[] {
   try {
@@ -31,9 +33,13 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   const clientRef = useRef<Client | null>(null);
   const queryClient = useQueryClient();
 
+  const currentUserIdRef = useRef<number | undefined>(currentUserId);
+  currentUserIdRef.current = currentUserId;
+
   const messageToChat = useRef<Map<string, string>>(new Map());
   const pendingQueue = useRef<Array<() => void>>([]);
   const reconnecting = useRef(false);
+  const reconnectAttempts = useRef(0);
   const pendingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const pendingPayloads = useRef<Map<string, { chatId: string; recipientId: number; content: string; clientMessageId: string }>>(new Map());
 
@@ -64,14 +70,18 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   }, []);
 
   async function getSocketToken() {
-    const res = await fetch("/api/proxy/socket-token", {
-      credentials: "include",
-    });
+    try {
+      const res = await fetch("/api/proxy/socket-token", {
+        credentials: "include",
+      });
 
-    if (!res.ok) return null;
+      if (!res.ok) return null;
 
-    const data = await res.json();
-    return data.token;
+      const data = await res.json();
+      return data.token;
+    } catch {
+      return null;
+    }
   }
 
   const refreshToken = async () => {
@@ -92,7 +102,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     if (!token) return;
 
     if (clientRef.current) {
-      clientRef.current.deactivate();
+      await clientRef.current.deactivate();
       clientRef.current = null;
     }
 
@@ -111,6 +121,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       console.log("WebSocket connected");
 
       reconnecting.current = false;
+      reconnectAttempts.current = 0;
 
       pendingQueue.current.forEach(fn => fn());
       pendingQueue.current = [];
@@ -280,14 +291,24 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       console.log("WebSocket closed");
 
       if (reconnecting.current) return;
-
       reconnecting.current = true;
+
+      if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
+        console.error("Max WebSocket reconnect attempts reached");
+        reconnecting.current = false;
+        return;
+      }
+
+      const delay = Math.min(1000 * 2 ** reconnectAttempts.current, 30000);
+      reconnectAttempts.current++;
+
+      await new Promise(r => setTimeout(r, delay));
 
       const refreshed = await refreshToken();
 
-      if (refreshed && currentUserId) {
-        console.log("Token refreshed, reconnecting socket...");
-        connect(currentUserId);
+      if (refreshed && currentUserIdRef.current) {
+        console.log(`Reconnecting socket (attempt ${reconnectAttempts.current})...`);
+        connect(currentUserIdRef.current);
       } else {
         window.location.href = "/signin";
       }
@@ -313,13 +334,14 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     };
   }, [currentUserId]);
 
-  const sendMessage = (payload: {
+  const sendMessage = useCallback((payload: {
     chatId: string;
     recipientId: number;
     content: string;
     clientMessageId: string;
   }) => {
-    if (!currentUserId) return;
+    const userId = currentUserIdRef.current;
+    if (!userId) return;
 
     messageToChat.current.set(payload.clientMessageId, payload.chatId);
     pendingPayloads.current.set(payload.clientMessageId, payload);
@@ -327,7 +349,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     const optimisticMsg: Message = {
       chatId: payload.chatId,
       messageId: payload.clientMessageId,
-      senderId: currentUserId,
+      senderId: userId,
       recipientId: payload.recipientId,
       senderEmail: "",
       recipientEmail: "",
@@ -348,7 +370,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
             : m
         )
       );
-    }, 5000);
+    }, SEND_TIMEOUT_MS);
 
     pendingTimers.current.set(payload.clientMessageId, timer);
 
@@ -358,9 +380,9 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         body: JSON.stringify(payload),
       });
     }
-  };
+  }, [setPendingMessages]);
 
-  const retryMessage = (clientMessageId: string) => {
+  const retryMessage = useCallback((clientMessageId: string) => {
     const payload = pendingPayloads.current.get(clientMessageId);
     if (!payload) return;
 
@@ -381,7 +403,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
             : m
         )
       );
-    }, 5000);
+    }, SEND_TIMEOUT_MS);
 
     pendingTimers.current.set(clientMessageId, timer);
 
@@ -391,11 +413,9 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         body: JSON.stringify(payload),
       });
     }
-  };
+  }, [setPendingMessages]);
 
-  const markAsRead = (chatId: string, messageId: string) => {
-    if (!clientRef.current?.connected) return;
-
+  const markAsRead = useCallback((chatId: string, messageId: string) => {
     queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
       ["chatMessages", chatId],
       prev => {
@@ -415,11 +435,13 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       }
     );
 
-    clientRef.current.publish({
-      destination: "/app/chat.read",
-      body: JSON.stringify({ chatId, messageId }),
-    });
-  };
+    if (clientRef.current?.connected) {
+      clientRef.current.publish({
+        destination: "/app/chat.read",
+        body: JSON.stringify({ chatId, messageId }),
+      });
+    }
+  }, [queryClient]);
 
   return { sendMessage, markAsRead, retryMessage, pendingMessages };
 }
