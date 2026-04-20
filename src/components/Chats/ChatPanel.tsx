@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import MessageInput from "@/components/Chats/MessageInput";
 import ChatsMessages from "@/components/Chats/ChatsMessage";
+import ScrollToBottomButton from "@/components/Chats/ScrollToBottomButton";
 import { useChatMessagesQuery } from "@/hooks/chats/useChatMessages";
+import { useChatScroll } from "@/hooks/chats/useChatScroll";
 import { Chat, Message } from "@/types/chatsTypes";
 import { clsx } from "clsx";
 import { Pulse } from "@/components/Pulse";
+import { mergeMessages } from "@/utils/chats/mergeMessages";
 
 interface ChatPanelProps {
   chat: Chat;
@@ -38,9 +41,6 @@ export default function ChatPanel({
   const chatId = String(chat.chatId);
   const [sendError, setSendError] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const previousMessageCountRef = useRef(0);
-  const initialScrollDoneRef = useRef(false);
 
   const [wasActive, setWasActive] = useState(isActive);
 
@@ -52,85 +52,23 @@ export default function ChatPanel({
     wasActive ? chatId : undefined
   );
 
-  const messages = useMemo(() => {
-    const serverMsgs = data?.pages
-      ? [...data.pages].reverse().flatMap(page => page.content)
-      : [];
-    const seen = new Set<string>();
-    const deduped = serverMsgs.filter(msg => {
-      if (seen.has(msg.messageId)) return false;
-      seen.add(msg.messageId);
-      return true;
-    });
-    const chatPending = pendingMessages.filter(m => m.chatId === chatId);
-    return [...deduped, ...chatPending];
-  }, [data?.pages, pendingMessages, chatId]);
+  const messages = useMemo(
+    () => mergeMessages(data?.pages, pendingMessages, chatId),
+    [data?.pages, pendingMessages, chatId]
+  );
 
-  const isUserNearBottom = () => {
-    const container = messagesContainerRef.current;
-    if (!container) return false;
-    return container.scrollHeight - container.scrollTop - container.clientHeight < 150;
-  };
-
-  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: container.scrollHeight, behavior });
-  };
-
-  useLayoutEffect(() => {
-    if (!messagesContainerRef.current) return;
-    if (!messages.length) return;
-    if (initialScrollDoneRef.current) return;
-
-    scrollToBottom("auto");
-    initialScrollDoneRef.current = true;
-    previousMessageCountRef.current = messages.length;
-  }, [messages.length]);
-
-  useLayoutEffect(() => {
-    if (!initialScrollDoneRef.current) return;
-    if (messages.length <= previousMessageCountRef.current) {
-      previousMessageCountRef.current = messages.length;
-      return;
-    }
-
-    const lastMessage = messages[messages.length - 1];
-    const isMyMessage = lastMessage?.senderId === currentUserId;
-
-    if (isMyMessage || isUserNearBottom()) {
-      scrollToBottom("smooth");
-    }
-
-    previousMessageCountRef.current = messages.length;
-  }, [messages, currentUserId]);
-
-  useEffect(() => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-
-    let isHandling = false;
-
-    const handleScroll = async () => {
-      if (container.scrollTop > 5 || !hasNextPage || isFetchingNextPage || isHandling) return;
-
-      isHandling = true;
-
-      const prevScrollHeight = container.scrollHeight;
-
-      await fetchNextPage();
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          container.scrollTop = container.scrollHeight - prevScrollHeight;
-          isHandling = false;
-        });
-      });
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  const {
+    messagesContainerRef,
+    showScrollButton,
+    newMessageCount,
+    handleScrollToBottom,
+  } = useChatScroll({
+    messages,
+    currentUserId,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
   const handleSendMessage = (content: string) => {
     setSendError(null);
@@ -176,6 +114,12 @@ export default function ChatPanel({
           onRetry={retryMessage}
         />
       </div>
+
+      <ScrollToBottomButton
+        visible={showScrollButton}
+        count={newMessageCount}
+        onClick={handleScrollToBottom}
+      />
 
       <MessageInput
         ref={inputRef}

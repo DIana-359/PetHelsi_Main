@@ -9,6 +9,7 @@ export function useChatMessagesQuery(chatId?: string) {
       getChatMessages(chatId!, pageParam as number),
     initialPageParam: 0,
     enabled: !!chatId,
+    staleTime: Infinity,
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage.page.number;
       const totalPages = lastPage.page.totalPages;
