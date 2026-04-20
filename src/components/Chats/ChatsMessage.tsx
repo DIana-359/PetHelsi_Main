@@ -31,14 +31,14 @@ export default function ChatsMessage({
     );
   }
 
+  const dateLabels = messages.map(msg => getChatMessageDateLabel(msg.timestamp));
+
   return (
     <div className="py-[16px] md:p-[24px] md:pr-0 mb-[8px]">
       <ul className="flex flex-col gap-3">
         {messages.map((msg, index) => {
-          const currentLabel = getChatMessageDateLabel(msg.timestamp);
-          const prevLabel =
-            index > 0 ? getChatMessageDateLabel(messages[index - 1].timestamp) : null;
-          const showDateDivider = currentLabel !== prevLabel;
+          const currentLabel = dateLabels[index];
+          const showDateDivider = index === 0 || currentLabel !== dateLabels[index - 1];
 
           return (
             <Fragment key={`${msg.chatId}-${msg.messageId}`}>

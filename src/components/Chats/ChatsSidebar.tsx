@@ -8,6 +8,7 @@ import useMedia from "@/utils/useMedia";
 import { useProfile } from "@/hooks/owners/useProfile";
 import { useCachedChatMessages } from "@/hooks/chats/useCachedChatMessages";
 import { getChatMessageDateLabel } from "@/utils/date/getChatMessageDateLabel";
+import { mergeMessages } from "@/utils/chats/mergeMessages";
 
 interface ChatsSidebarProps {
   chatsList: Chat[];
@@ -39,13 +40,7 @@ function ChatSidebarItem({
   const chatId = String(chat.chatId);
   const cached = useCachedChatMessages(chatId);
 
-  const serverMessages = cached?.pages
-    ? [...cached.pages].reverse().flatMap(p => p.content)
-    : [];
-
-  const chatPending = pendingMessages.filter(m => m.chatId === chatId);
-  const messages = [...serverMessages, ...chatPending];
-
+  const messages = mergeMessages(cached?.pages, pendingMessages, chatId);
   const lastMessage = messages[messages.length - 1];
 
   const unreadCount = messages.filter(
@@ -135,7 +130,7 @@ function ChatSidebarItem({
           </div>
         )}
 
-        {unreadCount > 0 && (
+        {!isActive && unreadCount > 0 && (
           <div className="w-full flex justify-center">
             <p className="rounded-full bg-primary-700 min-w-[24px] h-[24px] px-[4px] flex items-center justify-center text-[12px] font-[500] leading-[1] text-background">
               {unreadCount > 99 ? "99+" : unreadCount}
