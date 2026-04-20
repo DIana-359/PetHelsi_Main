@@ -35,7 +35,7 @@ export default function MessageItem({
           observer.disconnect();
         });
       },
-      { root: container, threshold: 1.0 }
+      { root: container, threshold: 0.5 }
     );
 
     if (ref.current) observer.observe(ref.current);
