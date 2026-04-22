@@ -12,6 +12,7 @@ interface ChatsMessagesProps {
   isPanelVisible: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
   onRetry?: (clientMessageId: string) => void;
+  onCopied?: () => void;
 }
 
 export default function ChatsMessage({
@@ -22,6 +23,7 @@ export default function ChatsMessage({
   isPanelVisible,
   scrollContainerRef,
   onRetry,
+  onCopied,
 }: ChatsMessagesProps) {
   if (loading) {
     return (
@@ -54,6 +56,7 @@ export default function ChatsMessage({
                 isPanelVisible={isPanelVisible}
                 scrollContainerRef={scrollContainerRef}
                 onRetry={onRetry}
+                onCopied={onCopied}
               />
             </Fragment>
           );

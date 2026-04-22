@@ -1,6 +1,8 @@
-import { useEffect, useRef, RefObject } from "react";
+import { useEffect, useRef, useState, RefObject } from "react";
+import { createPortal } from "react-dom";
 import { Message } from "@/types/chatsTypes";
 import Icon from "@/components/Icon";
+import { useLongPress } from "@/hooks/chats/useLongPress";
 
 interface MessageItemProps {
   msg: Message;
@@ -9,7 +11,12 @@ interface MessageItemProps {
   isPanelVisible: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
   onRetry?: (clientMessageId: string) => void;
+  onCopied?: () => void;
 }
+
+const MENU_WIDTH = 220;
+const MENU_OFFSET = 8;
+const VIEWPORT_PADDING = 8;
 
 export default function MessageItem({
   msg,
@@ -18,9 +25,33 @@ export default function MessageItem({
   isPanelVisible,
   scrollContainerRef,
   onRetry,
+  onCopied,
 }: MessageItemProps) {
   const isMine = msg.senderId === currentUserId;
   const ref = useRef<HTMLLIElement | null>(null);
+  const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
+
+  const openMenu = () => {
+    const bubble = bubbleRef.current;
+    if (!bubble) return;
+    const rect = bubble.getBoundingClientRect();
+    const top = rect.bottom + MENU_OFFSET;
+    const preferredLeft = isMine ? rect.right - MENU_WIDTH : rect.left;
+    const maxLeft = window.innerWidth - MENU_WIDTH - VIEWPORT_PADDING;
+    const left = Math.max(VIEWPORT_PADDING, Math.min(preferredLeft, maxLeft));
+    setMenuPos({ top, left });
+    setMenuOpen(true);
+  };
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setMenuPos(null);
+  };
+
+  const longPress = useLongPress(openMenu);
 
   useEffect(() => {
     if (!isPanelVisible || isMine || msg.status === "READ") return;
@@ -41,6 +72,36 @@ export default function MessageItem({
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [isPanelVisible, isMine, msg.status, msg.chatId, msg.messageId, onMessageVisible, scrollContainerRef]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDown = (e: MouseEvent | TouchEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        closeMenu();
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+    const onScrollOrResize = () => closeMenu();
+
+    const attachTimer = setTimeout(() => {
+      document.addEventListener("mousedown", onDown);
+      document.addEventListener("touchstart", onDown);
+    }, 100);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", onScrollOrResize, true);
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      clearTimeout(attachTimer);
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("touchstart", onDown);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", onScrollOrResize, true);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, [menuOpen]);
 
   const renderStatus = (status: Message["status"]) => {
     switch (status) {
@@ -91,6 +152,26 @@ export default function MessageItem({
 
   const isFailed = msg.status === "FAILED";
 
+  const handleCopy = async () => {
+    closeMenu();
+    try {
+      await navigator.clipboard.writeText(msg.content);
+      onCopied?.();
+    } catch {
+      /* no-op */
+    }
+  };
+
+  const openMenuOnContextMenu = (e: React.MouseEvent) => {
+    if (isFailed) return;
+    e.preventDefault();
+    openMenu();
+  };
+
+  const bubbleClassName = `px-4 py-2 rounded-2xl text-gray-900 select-none ${
+    isFailed ? "bg-red-100" : isMine ? "bg-primary-300" : "bg-primary-100"
+  }`;
+
   return (
     <li
       ref={ref}
@@ -115,9 +196,14 @@ export default function MessageItem({
           </button>
         )}
         <div
-          className={`px-4 py-2 rounded-2xl text-gray-900 ${
-            isFailed ? "bg-red-100" : isMine ? "bg-primary-300" : "bg-primary-100"
-          }`}
+          ref={bubbleRef}
+          onContextMenu={openMenuOnContextMenu}
+          onTouchStart={isFailed ? undefined : longPress.onTouchStart}
+          onTouchMove={isFailed ? undefined : longPress.onTouchMove}
+          onTouchEnd={isFailed ? undefined : longPress.onTouchEnd}
+          onTouchCancel={isFailed ? undefined : longPress.onTouchCancel}
+          onClickCapture={longPress.onClickCapture}
+          className={bubbleClassName}
         >
           <p className="whitespace-pre-wrap break-all">{msg.content}</p>
         </div>
@@ -127,6 +213,34 @@ export default function MessageItem({
         <span>{msg.timestamp.slice(11, 16)}</span>
         {isMine && renderStatus(msg.status)}
       </div>
+
+      {menuOpen && menuPos && !isFailed && typeof document !== "undefined" &&
+        createPortal(
+          <div
+            ref={menuRef}
+            role="menu"
+            aria-label="Message actions"
+            style={{ position: "fixed", top: menuPos.top, left: menuPos.left, width: MENU_WIDTH }}
+            className="z-50 bg-white rounded-[12px] shadow-[0_4px_16px_rgba(0,0,0,0.12)] py-2"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={handleCopy}
+              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-left text-gray-900 text-sm"
+            >
+              <Icon
+                sprite="/sprites/sprite-sistem.svg"
+                id="icon-copy"
+                width="20px"
+                height="20px"
+                className="text-gray-700"
+              />
+              Копіювати текст
+            </button>
+          </div>,
+          document.body
+        )}
     </li>
   );
 }
