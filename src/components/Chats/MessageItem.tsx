@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, RefObject } from "react";
 import { createPortal } from "react-dom";
+import { clsx } from "clsx";
 import { Message } from "@/types/chatsTypes";
 import Icon from "@/components/Icon";
 import { useLongPress } from "@/hooks/chats/useLongPress";
@@ -168,9 +169,12 @@ export default function MessageItem({
     openMenu();
   };
 
-  const bubbleClassName = `px-4 py-2 rounded-2xl text-gray-900 select-none ${
-    isFailed ? "bg-red-100" : isMine ? "bg-primary-300" : "bg-primary-100"
-  }`;
+  const bubbleClassName = clsx(
+    "px-4 py-2 rounded-2xl text-gray-900 select-none",
+    isFailed && "bg-red-100",
+    !isFailed && isMine && "bg-primary-300",
+    !isFailed && !isMine && "bg-primary-100",
+  );
 
   return (
     <li
