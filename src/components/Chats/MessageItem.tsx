@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, RefObject } from "react";
 import { createPortal } from "react-dom";
+import Linkify from "linkify-react";
 import { clsx } from "clsx";
 import { Message } from "@/types/chatsTypes";
 import Icon from "@/components/Icon";
@@ -18,6 +19,16 @@ interface MessageItemProps {
 const MENU_WIDTH = 220;
 const MENU_OFFSET = 8;
 const VIEWPORT_PADDING = 8;
+
+const linkifyOptions = {
+  defaultProtocol: "https",
+  target: "_blank",
+  rel: "noopener noreferrer",
+  className: "text-primary-700 underline break-all",
+  attributes: {
+    onClick: (e: React.MouseEvent) => e.stopPropagation(),
+  },
+};
 
 export default function MessageItem({
   msg,
@@ -209,7 +220,11 @@ export default function MessageItem({
           onClickCapture={longPress.onClickCapture}
           className={bubbleClassName}
         >
-          <p className="whitespace-pre-wrap break-all">{msg.content}</p>
+          <p className="whitespace-pre-wrap break-all">
+            <Linkify options={linkifyOptions} as="span">
+              {msg.content}
+            </Linkify>
+          </p>
         </div>
       </div>
 
