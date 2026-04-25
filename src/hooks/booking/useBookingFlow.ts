@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { holdSlot } from "@/services/vets/holdSlot";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 type Params = {
   vetId: string;
@@ -22,7 +22,9 @@ type HoldSlotError = Error & { status: number };
 
 export function useBookingFlow({ vetId, openSignUp, onSlotConflict, }: Params) {
   const router = useRouter();
-  const { selectedDate, selectedTime, slotId } = useBooking();
+  const selectedDate = useBookingStore(s => s.selectedDate);
+  const selectedTime = useBookingStore(s => s.selectedTime);
+  const slotId = useBookingStore(s => s.slotId);
   const [error, setError] = useState<string | null>(null);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
 

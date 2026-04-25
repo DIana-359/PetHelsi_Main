@@ -1,21 +1,14 @@
 "use client";
 import Icon from "@/components/Icon";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useModalStore } from "@/stores/useModalStore";
 import UserLogout from "@/components/ModalContet/UserLogout";
 
 const ButtonLogout = () => {
-  const { setIsModalOpen, setModalContent } = useSistem();
-
-  const confirmLogout = () => {
-    setModalContent(<UserLogout />);
-    setIsModalOpen(true);
-  };
+  const open = useModalStore(s => s.open);
 
   return (
     <button
-      onClick={() => {
-        confirmLogout();
-      }}
+      onClick={() => open(<UserLogout />)}
       className={"flex items-center gap-[8px] cursor-pointer group mb-[32px]"}>
       <Icon
         sprite="/sprites/sprite-sistem.svg"

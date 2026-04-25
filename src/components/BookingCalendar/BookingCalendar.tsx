@@ -6,7 +6,7 @@ import { TimeZoneDisplay } from "./ui/TimeZoneDisplay";
 import TimeSlots from "./ui/TimeSlots";
 import BookingSummary from "@/components/BookingCalendar/ui/BookingSummary";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 import clsx from "clsx";
 import { Pulse } from "@/components/Pulse";
 
@@ -19,7 +19,9 @@ type Props = {
 };
 
 export default function BookingCalendar({ vetId, variant = "desktop", onBook, error, setError }: Props) {
-  const { selectedDate, setSelectedDate, setSelectedTime } = useBooking();
+  const selectedDate = useBookingStore(s => s.selectedDate);
+  const setSelectedDate = useBookingStore(s => s.setSelectedDate);
+  const setSelectedTime = useBookingStore(s => s.setSelectedTime);
   const { data: timeSlots = [], isLoading } = useScheduleSlots(vetId, selectedDate);
 
   const handleSelectDate = (date: Dayjs) => {

@@ -1,18 +1,13 @@
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useModalStore } from "@/stores/useModalStore";
 import { useSignOut } from "@/hooks/auth/useSignOut";
 
 export default function UserLogout() {
   const router = useRouter();
-  const { setIsModalOpen, setModalContent } = useSistem();
+  const closeModal = useModalStore(s => s.close);
   const { mutateAsync: logout, isPending } = useSignOut();
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalContent(null);
-  };
 
   async function exit() {
     try {

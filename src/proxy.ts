@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authCookieOptions } from "@/lib/cookieOptions";
 
 export async function proxy(req: NextRequest) {
 
@@ -35,11 +36,7 @@ export async function proxy(req: NextRequest) {
       const res = NextResponse.next({
         request: { headers: newHeaders },
       });
-      res.cookies.set("auth-token", data.accessToken, {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-      });
+      res.cookies.set("auth-token", data.accessToken, authCookieOptions);
       return res;
     } catch {
       const res = NextResponse.next();

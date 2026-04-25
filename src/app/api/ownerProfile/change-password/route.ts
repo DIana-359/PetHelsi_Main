@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { authCookieOptions } from "@/lib/cookieOptions";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -32,21 +33,11 @@ export async function PUT(req: NextRequest) {
 
     if (backendRes.ok) {
       if (data.accessToken) {
-        response.cookies.set("auth-token", data.accessToken, {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          // secure: true, // Set `secure: true` when deploying over HTTPS.
-        });
+        response.cookies.set("auth-token", data.accessToken, authCookieOptions);
       }
 
       if (data.refreshToken) {
-        response.cookies.set("refresh-token", data.refreshToken, {
-          httpOnly: true,
-          sameSite: "lax",
-          path: "/",
-          // secure: true, // Set `secure: true` when deploying over HTTPS.
-        });
+        response.cookies.set("refresh-token", data.refreshToken, authCookieOptions);
       }
     }
 
