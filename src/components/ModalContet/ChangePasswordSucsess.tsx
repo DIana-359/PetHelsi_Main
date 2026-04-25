@@ -1,9 +1,9 @@
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useModalStore } from "@/stores/useModalStore";
 import { Button } from "@heroui/react";
 import Icon from "@/components/Icon";
 
 export default function ChangePasswordSucsess() {
-  const { setIsModalOpen } = useSistem();
+  const close = useModalStore(s => s.close);
 
   return (
     <div className="flex flex-col items-center">
@@ -19,7 +19,7 @@ export default function ChangePasswordSucsess() {
       </p>
       <Button
         type="button"
-        onPress={(): void => setIsModalOpen(false)}
+        onPress={close}
         className="max-w-[304px] py-[16px] px-[32px] md:px-[114px] text-[16px] md:text-[18px] font-[400] leading-[1] text-background bg-primary-700 rounded-[8px]">
         Зрозуміло
       </Button>

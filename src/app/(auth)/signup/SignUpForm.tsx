@@ -4,7 +4,7 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 import { signUp } from "@/services/auth/signUp";
 import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
@@ -31,7 +31,7 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const { setIsVetBackground } = useSistem();
+  const setIsVetBackground = useUIStore(s => s.setIsVetBackground);
   const { mutateAsync: login } = useSignIn();
 
   const togglePassword = () => setPasswordVisible(!isPasswordVisible);

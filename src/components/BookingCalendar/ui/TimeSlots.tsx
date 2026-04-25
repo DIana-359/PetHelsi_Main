@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 interface Props {
   timeSlots: {
@@ -12,7 +12,9 @@ interface Props {
 }
 
 export default function TimeSlots({ timeSlots, variant = "desktop" }: Props) {
-  const {selectedTime, setSelectedTime, setSlotId} = useBooking()
+  const selectedTime = useBookingStore(s => s.selectedTime);
+  const setSelectedTime = useBookingStore(s => s.setSelectedTime);
+  const setSlotId = useBookingStore(s => s.setSlotId);
   if (timeSlots.length === 0) {
     return (
       <p className="text-sm text-center text-gray-500 mt-4">

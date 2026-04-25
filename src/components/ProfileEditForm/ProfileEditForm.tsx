@@ -8,7 +8,7 @@ import { uk } from "react-day-picker/locale";
 import { useEffect, useRef, useState } from "react";
 import AvatarUser from "../ProfileOwner/AvatarUser";
 import { useRouter } from "next/navigation";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useModalStore } from "@/stores/useModalStore";
 import { Image } from "@heroui/react";
 import { Pulse } from "../Pulse";
 import { useUpdateProfile } from "@/hooks/owners/useUpdateProfile";
@@ -37,7 +37,8 @@ export default function ProfileEditForm() {
   );
   const [city, setCity] = useState<string | null>(data?.city || "");
   const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
-  const { setIsModalOpen, setModalContent } = useSistem();
+  const openModal = useModalStore(s => s.open);
+  const closeModal = useModalStore(s => s.close);
 
   useEffect(() => {
     if (data) {
@@ -67,8 +68,7 @@ export default function ProfileEditForm() {
   };
 
   function handlecloseModal() {
-    setModalContent(null);
-    setIsModalOpen(false);
+    closeModal();
     router.push("/owner/profile");
   }
 
@@ -89,7 +89,7 @@ export default function ProfileEditForm() {
     try {
       await mutateAsync(formData);
 
-      setModalContent(
+      openModal(
         <>
           <p className="text-[14px] md:text-[16px] font-[400] leading-[1.4] text-gray-900 mb-1">
             Ваші дані успішно змінені.
@@ -103,13 +103,11 @@ export default function ProfileEditForm() {
           </Button>
         </>
       );
-
-      setIsModalOpen(true);
     } catch (error: unknown) {
       if (error instanceof Error) {
         alert(`Помилка: ${error.message}`);
       } else {
-        setModalContent(
+        openModal(
           <>
             <p className="text-[14px] md:text-[16px] font-[400] leading-[1.4] text-gray-900 mb-1">
               Не вдалося оновити дані. Спробуйте пізніше.

@@ -1,18 +1,15 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Modal, ModalContent, ModalBody } from "@heroui/react";
-import { useSistem } from "../contextSistem/contextSistem";
+import { useModalStore } from "@/stores/useModalStore";
 import Icon from "@/components/Icon";
 
 export default function ModalWindow() {
   const router = useRouter();
-  const { isModalOpen, setIsModalOpen, modalContent, setModalContent } =
-    useSistem();
+  const isOpen = useModalStore(s => s.isOpen);
+  const content = useModalStore(s => s.content);
+  const close = useModalStore(s => s.close);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalContent(null);
-  };
   const goBack = () => {
     router.back();
   };
@@ -20,8 +17,8 @@ export default function ModalWindow() {
   return (
     <>
       <Modal
-        isOpen={isModalOpen}
-        onOpenChange={() => setIsModalOpen(!isModalOpen)}
+        isOpen={isOpen}
+        onOpenChange={open => { if (!open) close(); }}
         className="p-[16px] xs:px-[32px] xs:pt-[32px] xs:pb-[56px] bg-background min-w-[200px]"
         classNames={{
           wrapper: "items-center",
@@ -44,7 +41,7 @@ export default function ModalWindow() {
               </button>
               <button
                 type="button"
-                onClick={closeModal}
+                onClick={close}
                 className="w-[24px] h-[24px] flex items-center text-primary-700 hover:text-primary-800 cursor-pointer">
                 <Icon
                   sprite="/sprites/sprite-sistem.svg"
@@ -57,7 +54,7 @@ export default function ModalWindow() {
             </div>
 
             <ModalBody className="flex items-center justify-center">
-              {modalContent}
+              {content}
             </ModalBody>
           </>
         </ModalContent>

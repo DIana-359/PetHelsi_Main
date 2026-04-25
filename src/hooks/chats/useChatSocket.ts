@@ -1,29 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { Message, PaginatedMessagesResponse } from "@/types/chatsTypes";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
+import { useChatStore } from "@/stores/useChatStore";
 
-const PENDING_STORAGE_KEY = "chat_pending_messages";
 const MAX_RECONNECT_ATTEMPTS = 5;
 const SEND_TIMEOUT_MS = 5000;
-
-function loadPendingMessages(): Message[] {
-  try {
-    const raw = localStorage.getItem(PENDING_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function savePendingMessages(messages: Message[]) {
-  try {
-    localStorage.setItem(PENDING_STORAGE_KEY, JSON.stringify(messages));
-  } catch { /* ignore quota errors */ }
-}
 
 interface UseChatSocketParams {
   currentUserId?: number;
@@ -41,32 +26,9 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   const reconnecting = useRef(false);
   const reconnectAttempts = useRef(0);
   const pendingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
-  const pendingPayloads = useRef<Map<string, { chatId: string; recipientId: number; content: string; clientMessageId: string }>>(new Map());
 
-  const [pendingMessages, setPendingMessagesRaw] = useState<Message[]>(() => {
-    const loaded = loadPendingMessages().map(msg =>
-      msg.status === "SENT" ? { ...msg, status: "FAILED" as const } : msg
-    );
-    for (const msg of loaded) {
-      if (msg.clientMessageId) {
-        pendingPayloads.current.set(msg.clientMessageId, {
-          chatId: msg.chatId,
-          recipientId: msg.recipientId,
-          content: msg.content,
-          clientMessageId: msg.clientMessageId,
-        });
-      }
-    }
-    savePendingMessages(loaded);
-    return loaded;
-  });
-
-  const setPendingMessages = useCallback((updater: Message[] | ((prev: Message[]) => Message[])) => {
-    setPendingMessagesRaw(prev => {
-      const next = typeof updater === "function" ? updater(prev) : updater;
-      savePendingMessages(next);
-      return next;
-    });
+  useEffect(() => {
+    useChatStore.getState().markUnsentAsFailed();
   }, []);
 
   async function getSocketToken() {
@@ -98,8 +60,13 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   };
 
   const connect = async (userId: number) => {
+    useChatStore.getState().setConnectionStatus("connecting");
+
     const token = await getSocketToken();
-    if (!token) return;
+    if (!token) {
+      useChatStore.getState().setConnectionStatus("failed");
+      return;
+    }
 
     if (clientRef.current) {
       await clientRef.current.deactivate();
@@ -122,6 +89,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
       reconnecting.current = false;
       reconnectAttempts.current = 0;
+      useChatStore.getState().setConnectionStatus("connected");
 
       pendingQueue.current.forEach(fn => fn());
       pendingQueue.current = [];
@@ -144,11 +112,10 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         const matchId = msg.clientMessageId
           || (() => {
             if (msg.senderId !== userId) return undefined;
-            const found = pendingPayloads.current.entries();
-            for (const [cid, p] of found) {
-              if (p.chatId === msg.chatId && p.content === msg.content) return cid;
-            }
-            return undefined;
+            const found = useChatStore
+              .getState()
+              .findPayloadByContent(msg.chatId, msg.content);
+            return found?.clientMessageId;
           })();
 
         if (matchId) {
@@ -157,11 +124,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
             clearTimeout(timer);
             pendingTimers.current.delete(matchId);
           }
-          pendingPayloads.current.delete(matchId);
-
-          setPendingMessages(prev =>
-            prev.filter(m => m.clientMessageId !== matchId)
-          );
+          useChatStore.getState().removePending(matchId);
         }
 
         if (msg.recipientId === userId && msg.status === "SENT") {
@@ -287,6 +250,14 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       });
     };
 
+    client.onStompError = frame => {
+      console.error("STOMP error:", frame.headers["message"], frame.body);
+    };
+
+    client.onWebSocketError = event => {
+      console.error("WebSocket error:", event);
+    };
+
     client.onWebSocketClose = async () => {
       console.log("WebSocket closed");
 
@@ -296,8 +267,11 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
         console.error("Max WebSocket reconnect attempts reached");
         reconnecting.current = false;
+        useChatStore.getState().setConnectionStatus("failed");
         return;
       }
+
+      useChatStore.getState().setConnectionStatus("reconnecting");
 
       const delay = Math.min(1000 * 2 ** reconnectAttempts.current, 30000);
       reconnectAttempts.current++;
@@ -344,7 +318,6 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     if (!userId) return;
 
     messageToChat.current.set(payload.clientMessageId, payload.chatId);
-    pendingPayloads.current.set(payload.clientMessageId, payload);
 
     const optimisticMsg: Message = {
       chatId: payload.chatId,
@@ -359,17 +332,11 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       clientMessageId: payload.clientMessageId,
     };
 
-    setPendingMessages(prev => [...prev, optimisticMsg]);
+    useChatStore.getState().addPending(optimisticMsg, payload);
 
     const timer = setTimeout(() => {
       pendingTimers.current.delete(payload.clientMessageId);
-      setPendingMessages(prev =>
-        prev.map(m =>
-          m.clientMessageId === payload.clientMessageId
-            ? { ...m, status: "FAILED" as const }
-            : m
-        )
-      );
+      useChatStore.getState().markFailed(payload.clientMessageId);
     }, SEND_TIMEOUT_MS);
 
     pendingTimers.current.set(payload.clientMessageId, timer);
@@ -380,29 +347,17 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         body: JSON.stringify(payload),
       });
     }
-  }, [setPendingMessages]);
+  }, []);
 
   const retryMessage = useCallback((clientMessageId: string) => {
-    const payload = pendingPayloads.current.get(clientMessageId);
+    const payload = useChatStore.getState().getPayload(clientMessageId);
     if (!payload) return;
 
-    setPendingMessages(prev =>
-      prev.map(m =>
-        m.clientMessageId === clientMessageId
-          ? { ...m, status: "SENT" as const }
-          : m
-      )
-    );
+    useChatStore.getState().markSent(clientMessageId);
 
     const timer = setTimeout(() => {
       pendingTimers.current.delete(clientMessageId);
-      setPendingMessages(prev =>
-        prev.map(m =>
-          m.clientMessageId === clientMessageId
-            ? { ...m, status: "FAILED" as const }
-            : m
-        )
-      );
+      useChatStore.getState().markFailed(clientMessageId);
     }, SEND_TIMEOUT_MS);
 
     pendingTimers.current.set(clientMessageId, timer);
@@ -413,7 +368,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         body: JSON.stringify(payload),
       });
     }
-  }, [setPendingMessages]);
+  }, []);
 
   const markAsRead = useCallback((chatId: string, messageId: string) => {
     queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
@@ -443,5 +398,5 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
     }
   }, [queryClient]);
 
-  return { sendMessage, markAsRead, retryMessage, pendingMessages };
+  return { sendMessage, markAsRead, retryMessage };
 }

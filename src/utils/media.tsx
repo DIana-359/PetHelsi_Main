@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 
 export default function useMedia() {
   const [isMobileViewport, setIsMobileViewport] = useState<boolean | null>(null);
-  const { setIsOpenModalDashboard } = useSistem();
+  const setIsOpenModalDashboard = useUIStore(s => s.setIsOpenModalDashboard);
 
   useEffect(() => {
     const checkViewport = () => {

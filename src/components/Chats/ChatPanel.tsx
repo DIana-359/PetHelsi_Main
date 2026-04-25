@@ -7,10 +7,11 @@ import ChatsMessages from "@/components/Chats/ChatsMessage";
 import ScrollToBottomButton from "@/components/Chats/ScrollToBottomButton";
 import { useChatMessagesQuery } from "@/hooks/chats/useChatMessages";
 import { useChatScroll } from "@/hooks/chats/useChatScroll";
-import { Chat, Message } from "@/types/chatsTypes";
+import { Chat } from "@/types/chatsTypes";
 import { clsx } from "clsx";
 import { Pulse } from "@/components/Pulse";
 import { mergeMessages } from "@/utils/chats/mergeMessages";
+import { useChatStore } from "@/stores/useChatStore";
 
 interface ChatPanelProps {
   chat: Chat;
@@ -24,7 +25,6 @@ interface ChatPanelProps {
   }) => void;
   markAsRead: (chatId: string, messageId: string) => void;
   retryMessage: (clientMessageId: string) => void;
-  pendingMessages: Message[];
 }
 
 const MAX_MESSAGE_LENGTH = 255;
@@ -36,8 +36,8 @@ export default function ChatPanel({
   sendMessage,
   markAsRead,
   retryMessage,
-  pendingMessages,
 }: ChatPanelProps) {
+  const pendingMessages = useChatStore(state => state.pendingMessages);
   const chatId = String(chat.chatId);
   const [sendError, setSendError] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);

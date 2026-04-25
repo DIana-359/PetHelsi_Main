@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { authCookieOptions } from "@/lib/cookieOptions";
 
 export async function POST() {
   const cookieStore = await cookies();
@@ -38,12 +39,7 @@ export async function POST() {
 
   const response = NextResponse.json({ ok: true, accessToken: data.accessToken });
 
-  response.cookies.set("auth-token", data.accessToken, {
-    httpOnly: true,
-    // secure: true, // Set `secure: true` when deploying over HTTPS.
-    sameSite: "lax",
-    path: "/",
-  });
+  response.cookies.set("auth-token", data.accessToken, authCookieOptions);
 
   return response;
 }

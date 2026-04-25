@@ -18,7 +18,7 @@ import { useFreeScheduleSlots } from "@/hooks/vets/useFreeScheduleSlots";
 import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
 import useMedia from "@/utils/media";
 import Icon from "../Icon";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 import BookingSummaryMobile from "./BookingSummaryMobile";
 import SignUpModal from "@/components/ModalSignUp";
 import dayjs from "dayjs";
@@ -35,7 +35,11 @@ type Props = {
 export default function DoctorPage({ veterinarian }: Props) {
   const [selected, setSelected] = useState("profile");
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const {selectedDate, setSelectedDate, setSelectedTime, setPrice, setSlotId} = useBooking()
+  const selectedDate = useBookingStore(s => s.selectedDate);
+  const setSelectedDate = useBookingStore(s => s.setSelectedDate);
+  const setSelectedTime = useBookingStore(s => s.setSelectedTime);
+  const setPrice = useBookingStore(s => s.setPrice);
+  const setSlotId = useBookingStore(s => s.setSlotId);
   const { data: timeSlots = [] } = useScheduleSlots(veterinarian.id, selectedDate);
   const {data: freeScheduleSlots = [], isLoading} = useFreeScheduleSlots(veterinarian.id)
   const [isModalOpen, setIsModalOpen] = useState(false);
