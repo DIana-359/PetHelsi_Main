@@ -2,7 +2,7 @@
 import Icon from "../Icon";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 import useMedia from "@/utils/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
 import { useProfile } from "@/hooks/owners/useProfile";
@@ -13,7 +13,8 @@ export default function HeaderOwnerActions() {
   const { data } = useProfile();
 
   const [showNotification, setShowNotification] = useState(false);
-  const { isOpenModalDashboard, setIsOpenModalDashboard } = useSistem();
+  const isOpenModalDashboard = useUIStore(s => s.isOpenModalDashboard);
+  const setIsOpenModalDashboard = useUIStore(s => s.setIsOpenModalDashboard);
 
   const handleOpenDashboard = () => {
     if (!isMobile) {
