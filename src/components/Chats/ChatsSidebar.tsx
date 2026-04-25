@@ -1,6 +1,6 @@
 "use client";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
-import type { Chat, Message } from "@/types/chatsTypes";
+import type { Chat } from "@/types/chatsTypes";
 import Icon from "@/components/Icon";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
@@ -9,13 +9,13 @@ import { useProfile } from "@/hooks/owners/useProfile";
 import { useCachedChatMessages } from "@/hooks/chats/useCachedChatMessages";
 import { getChatMessageDateLabel } from "@/utils/date/getChatMessageDateLabel";
 import { mergeMessages } from "@/utils/chats/mergeMessages";
+import { useChatStore } from "@/stores/useChatStore";
 
 interface ChatsSidebarProps {
   chatsList: Chat[];
   openChat?: string | null;
   onSelectChat: (chatId: string) => void;
   currentUserId: number;
-  pendingMessages: Message[];
 }
 
 function ChatSidebarItem({
@@ -26,7 +26,6 @@ function ChatSidebarItem({
   avatar,
   email,
   onSelectChat,
-  pendingMessages,
 }: {
   chat: Chat;
   isActive: boolean;
@@ -35,10 +34,10 @@ function ChatSidebarItem({
   avatar?: string;
   email?: string;
   onSelectChat: (chatId: string) => void;
-  pendingMessages: Message[];
 }) {
   const chatId = String(chat.chatId);
   const cached = useCachedChatMessages(chatId);
+  const pendingMessages = useChatStore(state => state.pendingMessages);
 
   const messages = mergeMessages(cached?.pages, pendingMessages, chatId);
   const lastMessage = messages[messages.length - 1];
@@ -147,7 +146,6 @@ export default function ChatsSidebar({
   openChat,
   onSelectChat,
   currentUserId,
-  pendingMessages,
 }: ChatsSidebarProps) {
   const searchParams = useSearchParams();
   const activeChat = searchParams.get("chatId");
@@ -169,7 +167,6 @@ export default function ChatsSidebar({
           avatar={profile?.avatar}
           email={profile?.email}
           onSelectChat={onSelectChat}
-          pendingMessages={pendingMessages}
         />
       ))}
     </ul>

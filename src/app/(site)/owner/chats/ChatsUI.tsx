@@ -20,7 +20,7 @@ export default function ChatsUI() {
 
   const { data: chats } = useChatsQuery();
 
-  const { sendMessage, markAsRead, retryMessage, pendingMessages } = useChatSocket({
+  const { sendMessage, markAsRead, retryMessage } = useChatSocket({
     currentUserId: currentUserId ?? undefined,
   });
 
@@ -51,7 +51,6 @@ export default function ChatsUI() {
         openChat={chatId}
         onSelectChat={handleChatSwitch}
         currentUserId={currentUserId!}
-        pendingMessages={pendingMessages}
       />
 
       {!chatId ? (
@@ -67,7 +66,6 @@ export default function ChatsUI() {
               sendMessage={sendMessage}
               markAsRead={markAsRead}
               retryMessage={retryMessage}
-              pendingMessages={pendingMessages}
             />
           ))}
         </div>

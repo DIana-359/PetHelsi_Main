@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { authCookieOptions } from "@/lib/cookieOptions";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -55,11 +56,7 @@ export async function GET() {
 
   const finalResponse = NextResponse.json(await retry.json());
 
-  finalResponse.cookies.set("auth-token", data.accessToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-  });
+  finalResponse.cookies.set("auth-token", data.accessToken, authCookieOptions);
 
   return finalResponse;
 }

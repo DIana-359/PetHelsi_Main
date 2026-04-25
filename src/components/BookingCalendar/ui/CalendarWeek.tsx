@@ -7,7 +7,7 @@ import { WEEK_DAYS } from "@/Constants";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
 import isoWeek from "dayjs/plugin/isoWeek";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 dayjs.extend(isoWeek);
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function CalendarWeek({ onSelectDate }: Props) {
-  const {selectedDate} = useBooking();
+  const selectedDate = useBookingStore(s => s.selectedDate);
   const today = dayjs().startOf("day");
 
   const [currentWeekStart, setCurrentWeekStart] = useState<Dayjs | null>(null);

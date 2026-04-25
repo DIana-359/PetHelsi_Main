@@ -1,6 +1,6 @@
 "use client"
 
-import { useBooking } from "@/contextBooking/contextBooking"
+import { useBookingStore } from "@/stores/useBookingStore"
 import clsx from "clsx"
 import { getFormattedDate } from "@/utils/date/getFormattedDate"
 import { useEffect } from "react"
@@ -22,7 +22,10 @@ interface Props {
 }
 
 export default function FreeVetScheduleSlots({ freeScheduleSlots }: Props) {
-  const { selectedTime, setSelectedTime, setPrice, setSelectedDate } = useBooking()
+  const selectedTime = useBookingStore(s => s.selectedTime);
+  const setSelectedTime = useBookingStore(s => s.setSelectedTime);
+  const setPrice = useBookingStore(s => s.setPrice);
+  const setSelectedDate = useBookingStore(s => s.setSelectedDate);
 
   useEffect(() => {
     if (!selectedTime) return
