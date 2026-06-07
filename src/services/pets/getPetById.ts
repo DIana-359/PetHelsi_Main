@@ -1,17 +1,12 @@
 import { apiFetch } from "@/lib/apiFetch.client";
+import { petSchema } from "@/utils/schemas/pet.schemas";
 
 export async function getPetById(id: string) {
   const res = await apiFetch(`/api/pets/${id}/get-pet`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to get pet");
-  }
+  if (!res.ok) throw new Error("Failed to get pet");
 
-  return await res.json();
+  return petSchema.parse(await res.json());
 }

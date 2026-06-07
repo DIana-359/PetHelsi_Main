@@ -46,6 +46,8 @@ export const petSchema = z.object({
   allergies: z.array(z.string()).optional(),
 
   birthDate: birthDateSchema,
+
+  avatar: z.string().optional(),
 });
 
 export type PetFormValues = z.infer<typeof petSchema>;

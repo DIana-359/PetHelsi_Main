@@ -7,20 +7,23 @@ interface UpdatePetAvatarInput {
   file: File;
 }
 
-export function useUpdatePetAvatar() {
+interface UseUpdatePetAvatarOptions {
+  onSuccess?: () => void;
+}
+
+export function useUpdatePetAvatar(options?: UseUpdatePetAvatarOptions) {
   const queryClient = useQueryClient();
 
-  return useMutation<string, unknown, UpdatePetAvatarInput>({
-    mutationFn: async ({ petId, file }) => {
-      const publicUrl = await updatePetAvatar(petId, file);
-      return publicUrl!;
-    },
+  return useMutation<string, Error, UpdatePetAvatarInput>({
+    mutationFn: ({ petId, file }) => updatePetAvatar(petId, file),
+
     onSuccess: (relativeUrl, { petId }) => {
       queryClient.setQueryData<Pet | undefined>(["pet", petId], (old) =>
         old ? { ...old, avatar: relativeUrl } : old,
       );
 
       queryClient.invalidateQueries({ queryKey: ["pets"] });
+      options?.onSuccess?.();
     },
   });
 }

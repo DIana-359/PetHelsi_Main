@@ -27,7 +27,14 @@ export default function SavedChangesModal({
   const router = useRouter();
 
   return (
-    <Modal isOpen={isOpen} placement="center" hideCloseButton>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      placement="center"
+      hideCloseButton
+    >
       <ModalContent className="rounded-[16px] pt-13 pb-8 md:pt-20 md:pb-14 max-w-[560px] ">
         <div className="text-[#1e88e5]">
           <ModalCloseButton onClose={onClose} />

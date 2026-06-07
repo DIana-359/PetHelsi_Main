@@ -5,23 +5,30 @@ import { useUpdatePetAvatar } from "./useUpdatePetAvatar";
 import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
 import { Pet } from "@/types/pet";
 
-export function usePetSubmit({
-  petId,
-  image,
-  reset,
-
-  birthMonth,
-  birthYear,
-}: {
+interface UsePetSubmitProps {
   petId: string;
   image: { preview: string; file: File } | null;
   reset: (values: PetFormValues) => void;
   birthMonth?: string;
-  birthYear: string;
-}) {
+  birthYear?: string;
+  onAvatarUploadSuccess?: () => void;
+  onError?: (message: string) => void;
+}
+
+export function usePetSubmit({
+  petId,
+  image,
+  reset,
+  birthMonth,
+  birthYear,
+  onAvatarUploadSuccess,
+  onError,
+}: UsePetSubmitProps) {
   const router = useRouter();
   const { mutate: updatePetMutate } = useUpdatePet();
-  const { mutateAsync: updateAvatar } = useUpdatePetAvatar();
+  const { mutateAsync: updateAvatar } = useUpdatePetAvatar({
+    onSuccess: onAvatarUploadSuccess,
+  });
 
   const onSubmit = async (formData: PetFormValues) => {
     if (!petId) return;
@@ -60,7 +67,11 @@ export function usePetSubmit({
           router.push("/owner/pets?updated=1");
         },
         onError: (error) => {
-          alert(error.message || "Помилка редагування профілю тварини");
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Помилка редагування профілю тварини";
+          onError?.(message);
         },
       },
     );

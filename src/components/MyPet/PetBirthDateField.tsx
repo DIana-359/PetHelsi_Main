@@ -130,19 +130,38 @@ export default function PetBirthDateField({
 
         <div className="flex flex-col items-start mt-4 gap-4">
           <div className="flex gap-3">
-            <input
-              type="checkbox"
-              className="accent-primary w-4 h-4 rounded border border-primary-300"
-              checked={isBirthDateUnknown}
-              onChange={(e) => {
-                const checked = e.target.checked;
-                setIsBirthDateUnknown(checked);
-                if (checked) {
-                  onChange("");
-                  setIsOpenCalendar(false);
-                }
-              }}
-            />
+            <label>
+              <input
+                type="checkbox"
+                className="peer sr-only"
+                checked={isBirthDateUnknown}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setIsBirthDateUnknown(checked);
+                  if (checked) {
+                    onChange("");
+                    setIsOpenCalendar(false);
+                  }
+                }}
+              />
+
+              <span className="group w-4 h-4 border border-primary-300 rounded flex items-center justify-center transition peer-checked:bg-primary peer-checked:border-primary">
+                <svg
+                  className="w-3 h-3 text-white opacity-0 transition group-peer-checked:opacity-100"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M5 13l4 4L19 7"
+                    stroke="white"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </label>
+
             <label className="text-[12px] text-gray-400 cursor-pointer mb-3">
               Я не пам’ятаю точної дати народження
             </label>
