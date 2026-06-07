@@ -4,6 +4,7 @@ import { useGetPetById } from "./useGetPetById";
 import { useUnsavedChanges } from "./useUnsavedChanges";
 import { usePetAvatar } from "./usePetAvatar";
 import { usePetSubmit } from "./usePetSubmit";
+import { useState } from "react";
 
 export function useEditPetPage(petId: string) {
   const { data, isLoading } = useGetPetById(petId);
@@ -11,6 +12,7 @@ export function useEditPetPage(petId: string) {
   const form = useEditPetForm(data);
   const avatar = usePetAvatar();
   const birth = usePetBirthDate(data);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     reset,
@@ -28,6 +30,9 @@ export function useEditPetPage(petId: string) {
     reset,
     birthMonth: birth.birthMonth,
     birthYear: birth.birthYear,
+    onError: setErrorMessage,
+
+    onAvatarUploadSuccess: () => avatar.setShowAvatarSuccess(true),
   });
 
   const handleCancel = () => {
@@ -37,7 +42,7 @@ export function useEditPetPage(petId: string) {
       name: data.name,
       petTypeName: data.petTypeName,
       breed: data.breed || "",
-      genderTypeName: data.genderTypeName as "Хлопчик" | "Дівчинка",
+      genderTypeName: data.genderTypeName,
       weight: data.weight,
       sterilized: data.sterilized,
       allergies: data.allergies || [],
@@ -64,5 +69,7 @@ export function useEditPetPage(petId: string) {
     onSubmit,
 
     handleCancel,
+    errorMessage,
+    setErrorMessage,
   };
 }

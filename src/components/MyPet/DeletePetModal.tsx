@@ -67,9 +67,7 @@ export default function DeletePetModal({
           <div className="flex w-full max-w-[304px] flex-col gap-2">
             <Button
               className={getButtonClasses("primary", false)}
-              onClick={() => {
-                onClose();
-              }}
+              onPress={onClose}
             >
               Скасувати
             </Button>
@@ -77,9 +75,7 @@ export default function DeletePetModal({
             <Button
               className={getButtonClasses("danger", false)}
               isLoading={isLoading}
-              onClick={() => {
-                onConfirm();
-              }}
+              onPress={onConfirm}
             >
               Видалити профіль
             </Button>

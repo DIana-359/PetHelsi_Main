@@ -23,6 +23,8 @@ export default function EditPetForm({ id }: EditPetFormProps) {
     setIsUnsavedOpen,
     showAvatarSuccess,
     setShowAvatarSuccess,
+    errorMessage,
+    setErrorMessage,
     ...methods
   } = useEditPetPage(id);
 
@@ -32,6 +34,8 @@ export default function EditPetForm({ id }: EditPetFormProps) {
   } = methods;
 
   const submit = handleSubmit(onSubmit);
+
+  const hasChanges = methods.formState.isDirty || image !== null;
 
   if (!initialPet)
     return (
@@ -46,6 +50,12 @@ export default function EditPetForm({ id }: EditPetFormProps) {
         visible={showAvatarSuccess}
         onClose={() => setShowAvatarSuccess(false)}
         message="Фото тварини успішно завантажене"
+      />
+      <GlobalMessage
+        visible={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+        message={errorMessage}
+        variant="warning"
       />
 
       <div className="pb-6">
@@ -65,10 +75,7 @@ export default function EditPetForm({ id }: EditPetFormProps) {
                   avatar={image?.preview ?? initialPet.avatar}
                   firstName={initialPet.name}
                   mode="edit"
-                  onChange={(img) => {
-                    setImage(img);
-                    setShowAvatarSuccess(true);
-                  }}
+                  onChange={(img) => setImage(img)}
                 />
               </div>
             </fieldset>
@@ -80,6 +87,7 @@ export default function EditPetForm({ id }: EditPetFormProps) {
             <EditPetFormBtns
               isSubmitting={isSubmitting}
               pet={initialPet}
+              hasChanges={hasChanges}
               onOpenModal={() => setIsUnsavedOpen(true)}
             />
           </div>

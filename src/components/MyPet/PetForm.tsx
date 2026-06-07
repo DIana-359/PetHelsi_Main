@@ -30,6 +30,13 @@ export default function PetForm({ methods }: PetFormProps) {
   const weight = useWatch({ control, name: "weight" });
   const allergies = useWatch({ control, name: "allergies" }) || [];
 
+  const inputWrapperStyles = clsx(
+    "border w-full shadow-none",
+    "border-primary-300",
+    "hover:!border-primary",
+    "data-[focus=true]:!border-primary",
+  );
+
   return (
     <>
       <div className="w-full md:w-[304px]">
@@ -49,10 +56,9 @@ export default function PetForm({ methods }: PetFormProps) {
           radius="sm"
           classNames={{
             input: "text-left  text-gray-900 placeholder:text-gray-350",
-            inputWrapper: clsx(
-              "border-primary-300 w-full hover:!border-primary focus:!border-primary",
-              { "border-red-500": errors.name },
-            ),
+            inputWrapper: clsx(inputWrapperStyles, {
+              "border-red-500": errors.name,
+            }),
           }}
         />
 
@@ -85,13 +91,10 @@ export default function PetForm({ methods }: PetFormProps) {
                 clearErrors("petTypeName");
               }}
               classNames={{
-                trigger: clsx(
-                  "text-left w-full border hover:!border-primary focus:!border-primary shadow-none data-[open=true]:!border-primary",
-                  {
-                    "border-red-500": errors.petTypeName,
-                    "border-primary-300": !errors.petTypeName,
-                  },
-                ),
+                trigger: clsx(inputWrapperStyles, {
+                  "border-red-500": errors.petTypeName,
+                  "border-primary-300": !errors.petTypeName,
+                }),
                 value: clsx(
                   field.value
                     ? "!text-gray-900 text-[14px]"
@@ -128,8 +131,7 @@ export default function PetForm({ methods }: PetFormProps) {
           classNames={{
             input:
               "text-left focus:outline-none text-gray-900 placeholder:text-gray-350",
-            inputWrapper:
-              "border-primary-300 mb-4 w-full hover:!border-primary data-[focus=true]:!border-primary focus:border-primary shadow-none",
+            inputWrapper: clsx(inputWrapperStyles),
           }}
         />
       </div>
@@ -198,16 +200,15 @@ export default function PetForm({ methods }: PetFormProps) {
                 "text-gray-350": !weight,
               },
             ),
-            inputWrapper: clsx(
-              "border w-full hover:!border-primary focus:!border-primary shadow-none",
-              {
-                "border-red-500": errors.weight,
-                "border-primary-300": !errors.weight,
-              },
-            ),
+            inputWrapper: clsx(inputWrapperStyles, {
+              "border-red-500": errors.weight,
+              "border-primary-300": !errors.weight,
+            }),
           }}
         />
-
+        <small className="text-gray-900 text-[12px]">
+          Дозволені лише цифри та кома (наприклад: 4,6)
+        </small>
         {errors.weight && (
           <span className="text-red-500 text-[12px] mt-1">
             {errors.weight.message}
@@ -262,16 +263,16 @@ export default function PetForm({ methods }: PetFormProps) {
           control={control}
           render={({ field }) => (
             <>
-              <textarea
-                rows={4}
+              <Input
+                type="text"
                 maxLength={250}
-                className={clsx(
-                  "w-full border border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none placeholder:text-gray-350",
-                  {
+                classNames={{
+                  input: clsx("text-left placeholder:text-gray-350", {
                     "text-gray-900": allergies.length,
                     "text-gray-350": !allergies.length,
-                  },
-                )}
+                  }),
+                  inputWrapper: clsx(inputWrapperStyles),
+                }}
                 value={field.value?.join(", ") || ""}
                 onChange={(e) => field.onChange(parseAllergies(e.target.value))}
               />
