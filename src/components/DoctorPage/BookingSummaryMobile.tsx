@@ -1,4 +1,4 @@
-import { useBooking } from "@/contextBooking/contextBooking"
+import { useBookingStore } from "@/stores/useBookingStore"
 import { getFormattedDate } from "@/utils/date/getFormattedDate"
 
 type Props = {
@@ -7,7 +7,9 @@ type Props = {
 };
 
 export default function BookingSummaryMobile({ onBook, error }: Props) {
-  const { price, selectedTime, selectedDate } = useBooking();
+  const price = useBookingStore(s => s.price);
+  const selectedTime = useBookingStore(s => s.selectedTime);
+  const selectedDate = useBookingStore(s => s.selectedDate);
 
   if (!selectedDate) return null
 

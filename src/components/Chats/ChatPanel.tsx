@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ChatsHeader from "@/components/Chats/ChatsHeader";
 import MessageInput from "@/components/Chats/MessageInput";
 import ChatsMessages from "@/components/Chats/ChatsMessage";
+import ScrollToBottomButton from "@/components/Chats/ScrollToBottomButton";
 import { useChatMessagesQuery } from "@/hooks/chats/useChatMessages";
+import { useChatScroll } from "@/hooks/chats/useChatScroll";
 import { Chat } from "@/types/chatsTypes";
 import { clsx } from "clsx";
 import { Pulse } from "@/components/Pulse";
+import { mergeMessages } from "@/utils/chats/mergeMessages";
+import { useChatStore } from "@/stores/useChatStore";
 
 interface ChatPanelProps {
   chat: Chat;
@@ -20,6 +24,7 @@ interface ChatPanelProps {
     clientMessageId: string;
   }) => void;
   markAsRead: (chatId: string, messageId: string) => void;
+  retryMessage: (clientMessageId: string) => void;
 }
 
 const MAX_MESSAGE_LENGTH = 255;
@@ -30,100 +35,54 @@ export default function ChatPanel({
   currentUserId,
   sendMessage,
   markAsRead,
+  retryMessage,
 }: ChatPanelProps) {
+  const pendingMessages = useChatStore(state => state.pendingMessages);
   const chatId = String(chat.chatId);
   const [sendError, setSendError] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const previousMessageCountRef = useRef(0);
-  const initialScrollDoneRef = useRef(false);
 
   const [wasActive, setWasActive] = useState(isActive);
+  const [copiedToastVisible, setCopiedToastVisible] = useState(false);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isActive) setWasActive(true);
   }, [isActive]);
 
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
+
+  const handleCopied = () => {
+    setCopiedToastVisible(true);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    copiedTimerRef.current = setTimeout(() => setCopiedToastVisible(false), 2000);
+  };
+
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useChatMessagesQuery(
     wasActive ? chatId : undefined
   );
 
-  const messages = useMemo(() => {
-    if (!data?.pages) return [];
-    const all = [...data.pages].reverse().flatMap(page => page.content);
-    const seen = new Set<string>();
-    return all.filter(msg => {
-      if (seen.has(msg.messageId)) return false;
-      seen.add(msg.messageId);
-      return true;
-    });
-  }, [data?.pages]);
+  const messages = useMemo(
+    () => mergeMessages(data?.pages, pendingMessages, chatId),
+    [data?.pages, pendingMessages, chatId]
+  );
 
-  const isUserNearBottom = () => {
-    const container = messagesContainerRef.current;
-    if (!container) return false;
-    return container.scrollHeight - container.scrollTop - container.clientHeight < 150;
-  };
-
-  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: container.scrollHeight, behavior });
-  };
-
-  useLayoutEffect(() => {
-    if (!messagesContainerRef.current) return;
-    if (!messages.length) return;
-    if (initialScrollDoneRef.current) return;
-
-    scrollToBottom("auto");
-    initialScrollDoneRef.current = true;
-    previousMessageCountRef.current = messages.length;
-  }, [messages.length]);
-
-  useLayoutEffect(() => {
-    if (!initialScrollDoneRef.current) return;
-    if (messages.length <= previousMessageCountRef.current) {
-      previousMessageCountRef.current = messages.length;
-      return;
-    }
-
-    const lastMessage = messages[messages.length - 1];
-    const isMyMessage = lastMessage?.senderId === currentUserId;
-
-    if (isMyMessage || isUserNearBottom()) {
-      scrollToBottom("smooth");
-    }
-
-    previousMessageCountRef.current = messages.length;
-  }, [messages, currentUserId]);
-
-  useEffect(() => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-
-    let isHandling = false;
-
-    const handleScroll = async () => {
-      if (container.scrollTop > 5 || !hasNextPage || isFetchingNextPage || isHandling) return;
-
-      isHandling = true;
-
-      const prevScrollHeight = container.scrollHeight;
-
-      await fetchNextPage();
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          container.scrollTop = container.scrollHeight - prevScrollHeight;
-          isHandling = false;
-        });
-      });
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  const {
+    messagesContainerRef,
+    showScrollButton,
+    newMessageCount,
+    handleScrollToBottom,
+  } = useChatScroll({
+    messages,
+    currentUserId,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  });
 
   const handleSendMessage = (content: string) => {
     setSendError(null);
@@ -166,15 +125,30 @@ export default function ChatPanel({
           onMessageVisible={markAsRead}
           isPanelVisible={isActive}
           scrollContainerRef={messagesContainerRef}
+          onRetry={retryMessage}
+          onCopied={handleCopied}
         />
       </div>
 
-      <MessageInput
-        ref={inputRef}
-        openChat={chat}
-        onSend={handleSendMessage}
-        onTyping={() => setSendError(null)}
+      <ScrollToBottomButton
+        visible={showScrollButton}
+        count={newMessageCount}
+        onClick={handleScrollToBottom}
       />
+
+      <div className="relative">
+        {copiedToastVisible && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-30 bg-gray-700 text-white text-sm px-5 py-2 rounded-full shadow-lg whitespace-nowrap pointer-events-none">
+            Повідомлення скопійовано
+          </div>
+        )}
+        <MessageInput
+          ref={inputRef}
+          openChat={chat}
+          onSend={handleSendMessage}
+          onTyping={() => setSendError(null)}
+        />
+      </div>
       {sendError && (
         <p className="text-red-500 text-sm mt-2 px-4">{sendError}</p>
       )}

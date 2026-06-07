@@ -1,11 +1,12 @@
 "use client";
 
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 import Icon from "../Icon";
 import { MobileMenu } from "../MobileMenu";
 
 export default function BurgerMenue() {
-  const { isOpenMenu, setIsOpenMenu } = useSistem();
+  const isOpenMenu = useUIStore(s => s.isOpenMenu);
+  const setIsOpenMenu = useUIStore(s => s.setIsOpenMenu);
 
   const toggleModal = () => {
     setIsOpenMenu(!isOpenMenu);

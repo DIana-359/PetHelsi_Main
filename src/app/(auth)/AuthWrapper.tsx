@@ -1,6 +1,6 @@
 "use client";
 import Icon from "@/components/Icon";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,7 +10,8 @@ export default function AuthWrapper({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { isVetBackground, setIsVetBackground } = useSistem();
+  const isVetBackground = useUIStore(s => s.isVetBackground);
+  const setIsVetBackground = useUIStore(s => s.setIsVetBackground);
   const goBack = () => {
     router.push("/");
   };

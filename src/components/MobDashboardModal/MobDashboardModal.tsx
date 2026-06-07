@@ -1,9 +1,9 @@
 "use client";
-import { useSistem } from "../../contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
 
 export default function MobDashboardModal() {
-  const { isOpenModalDashboard } = useSistem();
+  const isOpenModalDashboard = useUIStore(s => s.isOpenModalDashboard);
 
   return (
     <div

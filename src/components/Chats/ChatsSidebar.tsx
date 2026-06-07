@@ -1,12 +1,15 @@
 "use client";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
 import type { Chat } from "@/types/chatsTypes";
+import Icon from "@/components/Icon";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import useMedia from "@/utils/useMedia";
 import { useProfile } from "@/hooks/owners/useProfile";
 import { useCachedChatMessages } from "@/hooks/chats/useCachedChatMessages";
 import { getChatMessageDateLabel } from "@/utils/date/getChatMessageDateLabel";
+import { mergeMessages } from "@/utils/chats/mergeMessages";
+import { useChatStore } from "@/stores/useChatStore";
 
 interface ChatsSidebarProps {
   chatsList: Chat[];
@@ -32,12 +35,11 @@ function ChatSidebarItem({
   email?: string;
   onSelectChat: (chatId: string) => void;
 }) {
-  const cached = useCachedChatMessages(String(chat.chatId));
+  const chatId = String(chat.chatId);
+  const cached = useCachedChatMessages(chatId);
+  const pendingMessages = useChatStore(state => state.pendingMessages);
 
-  const messages = cached?.pages
-    ? [...cached.pages].reverse().flatMap(p => p.content)
-    : [];
-
+  const messages = mergeMessages(cached?.pages, pendingMessages, chatId);
   const lastMessage = messages[messages.length - 1];
 
   const unreadCount = messages.filter(
@@ -115,7 +117,19 @@ function ChatSidebarItem({
           </p>
         )}
 
-        {unreadCount > 0 && (
+        {lastMessage?.status === "FAILED" && (
+          <div className="w-full flex justify-center">
+            <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-send-failed"
+              width="16px"
+              height="16px"
+              className={isActive ? "text-background" : "text-red-500"}
+            />
+          </div>
+        )}
+
+        {!isActive && unreadCount > 0 && (
           <div className="w-full flex justify-center">
             <p className="rounded-full bg-primary-700 min-w-[24px] h-[24px] px-[4px] flex items-center justify-center text-[12px] font-[500] leading-[1] text-background">
               {unreadCount > 99 ? "99+" : unreadCount}

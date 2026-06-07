@@ -20,7 +20,7 @@ export default function ChatsUI() {
 
   const { data: chats } = useChatsQuery();
 
-  const { sendMessage, markAsRead } = useChatSocket({
+  const { sendMessage, markAsRead, retryMessage } = useChatSocket({
     currentUserId: currentUserId ?? undefined,
   });
 
@@ -65,6 +65,7 @@ export default function ChatsUI() {
               currentUserId={currentUserId!}
               sendMessage={sendMessage}
               markAsRead={markAsRead}
+              retryMessage={retryMessage}
             />
           ))}
         </div>
