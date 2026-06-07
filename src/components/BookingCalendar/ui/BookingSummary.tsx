@@ -1,5 +1,5 @@
 import { Button } from "@heroui/react";
-import { useBooking } from "@/contextBooking/contextBooking";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 interface Props {
   onBook: () => void;
@@ -8,7 +8,7 @@ interface Props {
 export default function BookingSummary({
   onBook
 }: Props) {
-  const {price} = useBooking()
+  const price = useBookingStore(s => s.price);
 
   return (
     <div>

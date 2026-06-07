@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { Message, PaginatedMessagesResponse } from "@/types/chatsTypes";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
+import { useChatStore } from "@/stores/useChatStore";
+
+const MAX_RECONNECT_ATTEMPTS = 5;
+const SEND_TIMEOUT_MS = 5000;
 
 interface UseChatSocketParams {
   currentUserId?: number;
@@ -14,19 +18,32 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   const clientRef = useRef<Client | null>(null);
   const queryClient = useQueryClient();
 
+  const currentUserIdRef = useRef<number | undefined>(currentUserId);
+  currentUserIdRef.current = currentUserId;
+
   const messageToChat = useRef<Map<string, string>>(new Map());
   const pendingQueue = useRef<Array<() => void>>([]);
   const reconnecting = useRef(false);
+  const reconnectAttempts = useRef(0);
+  const pendingTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
+  useEffect(() => {
+    useChatStore.getState().markUnsentAsFailed();
+  }, []);
 
   async function getSocketToken() {
-    const res = await fetch("/api/proxy/socket-token", {
-      credentials: "include",
-    });
+    try {
+      const res = await fetch("/api/proxy/socket-token", {
+        credentials: "include",
+      });
 
-    if (!res.ok) return null;
+      if (!res.ok) return null;
 
-    const data = await res.json();
-    return data.token;
+      const data = await res.json();
+      return data.token;
+    } catch {
+      return null;
+    }
   }
 
   const refreshToken = async () => {
@@ -43,11 +60,16 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
   };
 
   const connect = async (userId: number) => {
+    useChatStore.getState().setConnectionStatus("connecting");
+
     const token = await getSocketToken();
-    if (!token) return;
+    if (!token) {
+      useChatStore.getState().setConnectionStatus("failed");
+      return;
+    }
 
     if (clientRef.current) {
-      clientRef.current.deactivate();
+      await clientRef.current.deactivate();
       clientRef.current = null;
     }
 
@@ -66,6 +88,8 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       console.log("WebSocket connected");
 
       reconnecting.current = false;
+      reconnectAttempts.current = 0;
+      useChatStore.getState().setConnectionStatus("connected");
 
       pendingQueue.current.forEach(fn => fn());
       pendingQueue.current = [];
@@ -83,6 +107,24 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
         if (msg.clientMessageId) {
           messageToChat.current.set(msg.clientMessageId, msg.chatId);
+        }
+
+        const matchId = msg.clientMessageId
+          || (() => {
+            if (msg.senderId !== userId) return undefined;
+            const found = useChatStore
+              .getState()
+              .findPayloadByContent(msg.chatId, msg.content);
+            return found?.clientMessageId;
+          })();
+
+        if (matchId) {
+          const timer = pendingTimers.current.get(matchId);
+          if (timer) {
+            clearTimeout(timer);
+            pendingTimers.current.delete(matchId);
+          }
+          useChatStore.getState().removePending(matchId);
         }
 
         if (msg.recipientId === userId && msg.status === "SENT") {
@@ -108,7 +150,8 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
                 m =>
                   m.messageId === msg.messageId ||
                   (msg.clientMessageId &&
-                    m.clientMessageId === msg.clientMessageId)
+                    (m.clientMessageId === msg.clientMessageId ||
+                     m.messageId === msg.clientMessageId))
               );
 
               if (idx !== -1) {
@@ -207,18 +250,39 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       });
     };
 
+    client.onStompError = frame => {
+      console.error("STOMP error:", frame.headers["message"], frame.body);
+    };
+
+    client.onWebSocketError = event => {
+      console.error("WebSocket error:", event);
+    };
+
     client.onWebSocketClose = async () => {
       console.log("WebSocket closed");
 
       if (reconnecting.current) return;
-
       reconnecting.current = true;
+
+      if (reconnectAttempts.current >= MAX_RECONNECT_ATTEMPTS) {
+        console.error("Max WebSocket reconnect attempts reached");
+        reconnecting.current = false;
+        useChatStore.getState().setConnectionStatus("failed");
+        return;
+      }
+
+      useChatStore.getState().setConnectionStatus("reconnecting");
+
+      const delay = Math.min(1000 * 2 ** reconnectAttempts.current, 30000);
+      reconnectAttempts.current++;
+
+      await new Promise(r => setTimeout(r, delay));
 
       const refreshed = await refreshToken();
 
-      if (refreshed && currentUserId) {
-        console.log("Token refreshed, reconnecting socket...");
-        connect(currentUserId);
+      if (refreshed && currentUserIdRef.current) {
+        console.log(`Reconnecting socket (attempt ${reconnectAttempts.current})...`);
+        connect(currentUserIdRef.current);
       } else {
         window.location.href = "/signin";
       }
@@ -233,38 +297,80 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
     connect(currentUserId);
 
+    const timers = pendingTimers.current;
+    const client = clientRef;
+
     return () => {
-      clientRef.current?.deactivate();
-      clientRef.current = null;
+      timers.forEach(timer => clearTimeout(timer));
+      timers.clear();
+      client.current?.deactivate();
+      client.current = null;
     };
   }, [currentUserId]);
 
-  const sendMessage = (payload: {
+  const sendMessage = useCallback((payload: {
     chatId: string;
     recipientId: number;
     content: string;
     clientMessageId: string;
   }) => {
+    const userId = currentUserIdRef.current;
+    if (!userId) return;
+
     messageToChat.current.set(payload.clientMessageId, payload.chatId);
 
-    if (clientRef.current?.connected) {
+    const optimisticMsg: Message = {
+      chatId: payload.chatId,
+      messageId: payload.clientMessageId,
+      senderId: userId,
+      recipientId: payload.recipientId,
+      senderEmail: "",
+      recipientEmail: "",
+      content: payload.content,
+      timestamp: new Date().toISOString(),
+      status: "SENT",
+      clientMessageId: payload.clientMessageId,
+    };
+
+    useChatStore.getState().addPending(optimisticMsg, payload);
+
+    const timer = setTimeout(() => {
+      pendingTimers.current.delete(payload.clientMessageId);
+      useChatStore.getState().markFailed(payload.clientMessageId);
+    }, SEND_TIMEOUT_MS);
+
+    pendingTimers.current.set(payload.clientMessageId, timer);
+
+    if (clientRef.current?.connected && navigator.onLine) {
       clientRef.current.publish({
         destination: "/app/chat.send",
         body: JSON.stringify(payload),
       });
-    } else {
-      pendingQueue.current.push(() => {
-        clientRef.current!.publish({
-          destination: "/app/chat.send",
-          body: JSON.stringify(payload),
-        });
+    }
+  }, []);
+
+  const retryMessage = useCallback((clientMessageId: string) => {
+    const payload = useChatStore.getState().getPayload(clientMessageId);
+    if (!payload) return;
+
+    useChatStore.getState().markSent(clientMessageId);
+
+    const timer = setTimeout(() => {
+      pendingTimers.current.delete(clientMessageId);
+      useChatStore.getState().markFailed(clientMessageId);
+    }, SEND_TIMEOUT_MS);
+
+    pendingTimers.current.set(clientMessageId, timer);
+
+    if (clientRef.current?.connected && navigator.onLine) {
+      clientRef.current.publish({
+        destination: "/app/chat.send",
+        body: JSON.stringify(payload),
       });
     }
-  };
+  }, []);
 
-  const markAsRead = (chatId: string, messageId: string) => {
-    if (!clientRef.current?.connected) return;
-
+  const markAsRead = useCallback((chatId: string, messageId: string) => {
     queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
       ["chatMessages", chatId],
       prev => {
@@ -284,11 +390,13 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
       }
     );
 
-    clientRef.current.publish({
-      destination: "/app/chat.read",
-      body: JSON.stringify({ chatId, messageId }),
-    });
-  };
+    if (clientRef.current?.connected) {
+      clientRef.current.publish({
+        destination: "/app/chat.read",
+        body: JSON.stringify({ chatId, messageId }),
+      });
+    }
+  }, [queryClient]);
 
-  return { sendMessage, markAsRead };
+  return { sendMessage, markAsRead, retryMessage };
 }

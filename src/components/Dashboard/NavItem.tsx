@@ -3,7 +3,7 @@ import { Category, CategoryValue } from "@/types/ownerTypes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icon from "../Icon";
-import { useSistem } from "@/contextSistem/contextSistem";
+import { useUIStore } from "@/stores/useUIStore";
 
 export function NavItem(p: {
   category: keyof typeof Category;
@@ -13,7 +13,7 @@ export function NavItem(p: {
 }) {
   const pathname = usePathname();
   const isActive = pathname.includes("/owner/" + p.category);
-  const { setIsOpenModalDashboard } = useSistem();
+  const setIsOpenModalDashboard = useUIStore(s => s.setIsOpenModalDashboard);
 
   return (
     <Link
