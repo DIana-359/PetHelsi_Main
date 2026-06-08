@@ -9,7 +9,7 @@ import {
 } from "@heroui/react";
 import AvatarPet from "@/components/MyPet/AvatarPet";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import ModalCloseButton from "@/components/ModalCloseButton";
 
 interface PetUploadPhotoModalProps {

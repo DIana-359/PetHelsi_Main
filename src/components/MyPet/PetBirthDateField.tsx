@@ -7,7 +7,7 @@ import { useState, useMemo } from "react";
 import {
   formatDateISO,
   formatDateDisplay,
-} from "@/utils/formatDate.ts/formatDate";
+} from "@/utils/date/formatDate";
 import { MONTHS } from "@/contactMonths";
 
 interface PetBirthDateFiledProps {

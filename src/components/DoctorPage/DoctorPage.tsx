@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DocProfile from "./DocProfile";
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import { Tabs, Tab } from "@heroui/react";
 import { Card, CardBody } from "@heroui/react";
 import AboutTab from "./AboutTab";
@@ -16,7 +16,7 @@ import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
 import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
 import { useFreeScheduleSlots } from "@/hooks/vets/useFreeScheduleSlots";
 import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import Icon from "../Icon";
 import { useBookingStore } from "@/stores/useBookingStore";
 import BookingSummaryMobile from "./BookingSummaryMobile";

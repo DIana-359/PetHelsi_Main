@@ -3,9 +3,9 @@
 import { Card, CardBody, Avatar } from "@heroui/react";
 import vet from "../../../public/Images/VeterinarianCard-img-eg.jpg";
 import Icon from "../Icon";
-import { Vet } from "@/utils/types/vet";
+import { Vet } from "@/types/vetTypes";
 import Link from "next/link";
-import { getYearWord } from "@/utils/types/formatExperience";
+import { getYearWord } from "@/utils/formatExperience";
 import VeterinariansButtons from "./VeterinariansButtons";
 import VeterinarianPrice from "./VeterinarianPrice";
 
