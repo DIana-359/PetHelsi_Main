@@ -1,7 +1,7 @@
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import Icon from "../Icon";
 import { useState } from "react";
-import { petTypeIcons } from "@/utils/types/petTypeIcons";
+import { petTypeIcons } from "@/utils/petTypeIcons";
 
 type Props = {
   veterinarian: Veterinarian;

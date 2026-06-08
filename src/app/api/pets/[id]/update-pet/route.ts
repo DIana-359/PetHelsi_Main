@@ -1,37 +1,11 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { withAuth, backendFetch, forwardJson } from "@/lib/proxyHandler";
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id: petId } = await params;
-    const token = (await cookies()).get("auth-token");
-
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-
-    const res = await fetch(`${process.env.API_URL}/v1/owners/pets/${petId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  } catch (error) {
-    console.error("Update pet profile error:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
+export const PUT = withAuth<{ id: string }>(async ({ token, req, params }) => {
+  const { id: petId } = params;
+  const body = await req.json();
+  const res = await backendFetch(`/v1/owners/pets/${petId}`, token, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+  return forwardJson(res);
+});

@@ -1,26 +1,8 @@
-import { getServerToken } from "@/lib/getServerToken";
 import { NextResponse } from "next/server";
+import { withAuth, backendFetch } from "@/lib/proxyHandler";
 
-export async function GET() {
-  const token = await getServerToken();
-
-  if (!token) {
-    return NextResponse.json(
-      { error: "No auth token" },
-      { status: 401 }
-    );
-  }
-
-  const res = await fetch(
-    `${process.env.API_URL}/v1/chats/my`,
-    {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    }
-  );
+export const GET = withAuth(async ({ token }) => {
+  const res = await backendFetch(`/v1/chats/my`, token, { cache: "no-store" });
 
   if (!res.ok) {
     const error = await res.text();
@@ -29,4 +11,4 @@ export async function GET() {
 
   const data = await res.json();
   return NextResponse.json(data);
-}
+});

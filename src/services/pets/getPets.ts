@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/apiFetch.client";
+import { extractErrorMessage } from "@/lib/handleApiError";
 import { Pet } from "@/types/pet";
 
 export async function getPets(): Promise<Pet[]> {
@@ -7,8 +8,7 @@ export async function getPets(): Promise<Pet[]> {
   });
 
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(errorText || "Failed to get pets");
+    throw new Error(await extractErrorMessage(res, "Failed to get pets"));
   }
 
   if (res.status === 204) {

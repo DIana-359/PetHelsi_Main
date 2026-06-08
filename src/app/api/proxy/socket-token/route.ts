@@ -1,9 +1,8 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getServerToken } from "@/lib/getServerToken";
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token")?.value;
+  const token = await getServerToken();
 
   if (!token) {
     return NextResponse.json({ error: "No token" }, { status: 401 });

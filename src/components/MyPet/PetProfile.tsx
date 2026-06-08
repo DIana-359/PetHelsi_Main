@@ -3,12 +3,12 @@
 import { Pet } from "@/types/pet";
 import MyPetsAddBtn from "@/components/MyPet/MyPetsAddBtn";
 import AvatarPet from "@/components/MyPet/AvatarPet";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import UpdateProfilePetLink from "@/components/MyPet/UpdateProfilePetLink";
 import { useState } from "react";
 import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
 import clsx from "clsx";
-import { formatBirthDateUA } from "@/utils/petDate/petDate";
+import { formatBirthDateUA } from "@/utils/date/petDate";
 
 interface PetProfileProps {
   pets: Pet[];
