@@ -63,7 +63,7 @@ export function backendFetch(
 /** Mirrors a backend JSON response (status + body), tolerating empty / 204. */
 export async function forwardJson(res: Response): Promise<NextResponse> {
   if (res.status === 204) {
-    return NextResponse.json(null, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   }
   const data = await res.json().catch(() => ({}));
   return NextResponse.json(data, { status: res.status });
