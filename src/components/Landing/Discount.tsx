@@ -1,9 +1,9 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import vector from '../assets/Images/vector.png';
-import vectorArrowHeart from '../assets/Images/vector-arrow-heart.png';
-import bunny from '../assets/Images/bunny.gif';
+import vector from '../../assets/Images/vector.png';
+import vectorArrowHeart from '../../assets/Images/vector-arrow-heart.png';
+import bunny from '../../assets/Images/bunny.gif';
 import { Button } from '@heroui/react';
 import { useProfile } from '@/hooks/owners/useProfile';
 

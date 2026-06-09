@@ -1,7 +1,7 @@
 "use client";
 import Icon from "@/components/Icon";
 import { useModalStore } from "@/stores/useModalStore";
-import UserLogout from "@/components/ModalContet/UserLogout";
+import UserLogout from "@/components/ModalContent/UserLogout";
 
 const ButtonLogout = () => {
   const open = useModalStore(s => s.open);
