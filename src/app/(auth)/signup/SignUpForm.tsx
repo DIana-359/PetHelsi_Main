@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
@@ -10,9 +12,9 @@ import GoBack from "@/components/GoBack";
 import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
-import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 import clsx from "clsx";
 import { useSignIn } from "@/hooks/auth/useSignIn";
+import { signUpSchema, SignUpFormValues } from "@/utils/schemas/auth.schemas";
 
 type RoleType = "CLIENT" | "VET";
 type RoleTypeWithEmpty = RoleType | null;
@@ -26,47 +28,62 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
     hideRoleTabs ? "CLIENT" : null
   );
   const [tabError, setTabError] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const setIsVetBackground = useUIStore(s => s.setIsVetBackground);
   const { mutateAsync: login } = useSignIn();
 
-  const togglePassword = () => setPasswordVisible(!isPasswordVisible);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: { email: "", password: "", repeatPassword: "" },
+  });
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSubmitted(true);
+  const togglePassword = () => setPasswordVisible(v => !v);
 
+  const renderPasswordToggle = () => (
+    <button
+      type="button"
+      onClick={togglePassword}
+      className="border-0 bg-transparent flex items-center">
+      {isPasswordVisible ? (
+        <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
+      ) : (
+        <Icon
+          sprite="/sprites/sprite-sistem.svg"
+          id="icon-view_hide"
+          width="24px"
+          height="24px"
+          className="stroke-gray-350 cursor-pointer"
+        />
+      )}
+    </button>
+  );
+
+  const onSubmit = async (values: SignUpFormValues) => {
     if (!selectedRole) {
       setTabError(true);
       return;
     }
-    if (!emailRegex.test(email) || !passwordRegex.test(password)) {
-      return;
-    }
-    if (password !== repeatPassword) {
-      return;
-    }
 
     const dataToSend = {
-      email: email.trim(),
-      password: password.trim(),
-      repeatPassword: repeatPassword.trim(),
+      email: values.email.trim(),
+      password: values.password.trim(),
+      repeatPassword: values.repeatPassword.trim(),
       roleType: selectedRole,
     };
 
     const dataToLogin = {
-      email: email.trim(),
-      password: password.trim(),
+      email: values.email.trim(),
+      password: values.password.trim(),
     };
 
     try {
       const resultAction = await signUp(dataToSend);
       if (resultAction?.email) {
-        await login(dataToLogin)
+        await login(dataToLogin);
         router.push("/owner/profile");
         router.refresh();
       } else {
@@ -75,13 +92,13 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
     } catch (error) {
       console.error("Login error:", error);
     }
-  }
+  };
 
   return (
     <form
-      className="!z-1 p-[16px] min-w-[311px] w-full max-w-[437px] flex flex-col gap-[16px] bg-background rounded-[18px] 
+      className="!z-1 p-[16px] min-w-[311px] w-full max-w-[437px] flex flex-col gap-[16px] bg-background rounded-[18px]
       xs:pt-[40px] xs:pb-[32px] xs:px-[66px]"
-      onSubmit={onSubmit}>
+      onSubmit={handleSubmit(onSubmit)}>
       <GoBack />
       <h2 className="text-[22px] xs:text-[28px] 2xl:text-[30px] font-[500] leading-[1.4] 2xl:leading-[1.5] text-gray-900 mx-auto mb-[24px] lg:mb-[32px]">
         Реєстрація в{" "}
@@ -100,89 +117,63 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
         />
       )}
 
-      <AuthInput
-        id="email"
-        label="E-mail*"
-        placeholder="Введіть E-mail"
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        error={
-          submitted && !emailRegex.test(email)
-            ? "Будь ласка, введіть коректний E-mail"
-            : null
-        }
+      <Controller
+        control={control}
+        name="email"
+        render={({ field }) => (
+          <AuthInput
+            id="email"
+            label="E-mail*"
+            placeholder="Введіть E-mail"
+            type="email"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.email?.message ?? null}
+          />
+        )}
       />
       <div>
         <div className="mb-[4px]">
-          <AuthInput
-            id="password"
-            label="Пароль*"
-            placeholder="Введіть пароль"
-            type={isPasswordVisible ? "text" : "password"}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            rightIcon={
-              <button
-                type="button"
-                onClick={togglePassword}
-                className="border-0 bg-transparent flex items-center">
-                {isPasswordVisible ? (
-                  <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
-                ) : (
-                  <Icon
-                    sprite="/sprites/sprite-sistem.svg"
-                    id="icon-view_hide"
-                    width="24px"
-                    height="24px"
-                    className="stroke-gray-350 cursor-pointer"
-                  />
-                )}
-              </button>
-            }
+          <Controller
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <AuthInput
+                id="password"
+                label="Пароль*"
+                placeholder="Введіть пароль"
+                type={isPasswordVisible ? "text" : "password"}
+                value={field.value}
+                onChange={field.onChange}
+                rightIcon={renderPasswordToggle()}
+              />
+            )}
           />
         </div>
         <p
           className={clsx(
             "text-[12px] font-[400] leading-[1.1]",
-            submitted && !passwordRegex.test(password)
-              ? "text-error-500"
-              : "text-gray-900"
+            errors.password ? "text-error-500" : "text-gray-900"
           )}>
           Пароль має містити мінімум 7 символів: одну велику літеру і цифру
         </p>
       </div>
 
-      <AuthInput
-        id="repeatPassword"
-        label="Повторіть пароль*"
-        placeholder="Повторіть пароль"
-        type={isPasswordVisible ? "text" : "password"}
-        value={repeatPassword}
-        onChange={e => setRepeatPassword(e.target.value)}
-        error={
-          submitted && password !== repeatPassword
-            ? "Паролі повинні співпадати"
-            : null
-        }
-        rightIcon={
-          <button
-            type="button"
-            onClick={togglePassword}
-            className="border-0 bg-transparent flex items-center">
-            {isPasswordVisible ? (
-              <IoEyeOutline className="w-[24px] h-[24px] stroke-gray-350 cursor-pointer" />
-            ) : (
-              <Icon
-                sprite="/sprites/sprite-sistem.svg"
-                id="icon-view_hide"
-                width="24px"
-                height="24px"
-                className="stroke-gray-350 cursor-pointer"
-              />
-            )}
-          </button>
-        }
+      <Controller
+        control={control}
+        name="repeatPassword"
+        render={({ field }) => (
+          <AuthInput
+            id="repeatPassword"
+            label="Повторіть пароль*"
+            placeholder="Повторіть пароль"
+            type={isPasswordVisible ? "text" : "password"}
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.repeatPassword?.message ?? null}
+            rightIcon={renderPasswordToggle()}
+          />
+        )}
       />
       <div className="w-full">
         <button
