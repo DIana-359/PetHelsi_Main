@@ -4,15 +4,10 @@ import { getServerToken } from "@/lib/getServerToken";
 type RouteContext<P> = { params: Promise<P> };
 
 /**
- * Wraps an authenticated proxy route handler.
- *
- * - Resolves the bearer token via {@link getServerToken}, which prefers the
- *   `x-auth-token` header refreshed by the proxy middleware and falls back to
- *   the `auth-token` cookie. This is the single source of truth for the token
- *   across all routes, so a token just refreshed by the middleware is used.
- * - Returns `401` when no token is present.
- * - Awaits and forwards the dynamic route `params` to the handler.
- * - Converts any thrown error into a `500`.
+ * Wraps an authenticated proxy route handler: resolves the bearer token via
+ * {@link getServerToken} (proxy-refreshed `x-auth-token` header, then
+ * `auth-token` cookie), returns 401 if absent, awaits dynamic-route params, and
+ * turns thrown errors into 500.
  */
 export function withAuth<P = Record<string, string>>(
   handler: (args: {
@@ -31,11 +26,8 @@ export function withAuth<P = Record<string, string>>(
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      // For dynamic routes Next passes `context.params` (a Promise we await).
-      // For non-dynamic routes there is no `context`, so we substitute an empty
-      // object. The `as P` is unavoidable here: `P` is an open generic, so the
-      // compiler can't prove `{}` is assignable to every possible `P` — but at
-      // runtime this branch only runs for routes that have no params.
+      // Non-dynamic routes carry no `context`; `as P` is needed because the
+      // compiler can't prove `{}` satisfies an open generic `P`.
       const params = context ? await context.params : ({} as P);
       return await handler({ token, req, params });
     } catch (err) {
@@ -49,12 +41,9 @@ export function withAuth<P = Record<string, string>>(
 }
 
 /**
- * Calls the external backend with the bearer token attached.
- *
- * The `Accept: application/json` header is added by default, and
- * `Content-Type: application/json` is set automatically for string bodies.
- * FormData (and other non-string) bodies are left untouched so `fetch` can set
- * the correct multipart boundary.
+ * Calls the external backend with the bearer token attached. Sets `Accept` and,
+ * for string bodies, `Content-Type` to JSON; leaves FormData untouched so
+ * `fetch` sets the multipart boundary.
  */
 export function backendFetch(
   path: string,
@@ -71,10 +60,7 @@ export function backendFetch(
   return fetch(`${process.env.API_URL}${path}`, { ...init, headers });
 }
 
-/**
- * Mirrors a backend JSON response (status + body) back to the client,
- * tolerating empty / `204 No Content` responses.
- */
+/** Mirrors a backend JSON response (status + body), tolerating empty / 204. */
 export async function forwardJson(res: Response): Promise<NextResponse> {
   if (res.status === 204) {
     return NextResponse.json(null, { status: 204 });
