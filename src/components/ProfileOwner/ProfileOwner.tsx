@@ -11,7 +11,6 @@ export default function ProfileOwner() {
   
 
   const ownerData = [
-    // { label: "avatar", value: data?.avatar ?? "" },
     { label: "Ім’я", value: data?.firstName ?? "Не вказано" },
     { label: "Прізвище", value: data?.lastName ?? "Не вказано" },
     { label: "По-батькові", value: data?.middleName ?? "Не вказано" },

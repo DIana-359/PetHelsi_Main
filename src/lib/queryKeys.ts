@@ -1,22 +1,13 @@
 import type { GetVetsParams } from "@/types/vetTypes";
 
 /**
- * Centralised React Query key factory.
+ * Central React Query key factory — single source of truth for query keys, so a
+ * mutation and a query can't drift onto mismatched key shapes.
  *
- * Every `useQuery` / `useInfiniteQuery` / `invalidateQueries` / `setQueryData`
- * call should source its key from here instead of hand-writing string arrays.
- * This removes "magic string" drift — e.g. a mutation invalidating `["pets"]`
- * while a query reads `["pet"]` — and gives one place to see the whole cache
- * surface.
- *
- * IMPORTANT: the arrays returned here are byte-for-byte identical to the keys
- * previously written inline. Some consumers depend on the exact shape:
- * `useCachedChatMessages` compares `JSON.stringify(key)` against the cache's
- * `queryHash`, and `useChatSocket` reads `query.queryKey[1]`. Do not reorder or
- * rename existing elements — only add new keys.
- *
- * Convention: `all` is the broad key (used for invalidation / partial match),
- * factory functions return the specific key for a single entity.
+ * Keys stay byte-identical to the previous inline arrays on purpose:
+ * `useCachedChatMessages` compares `JSON.stringify(key)` to the cache queryHash
+ * and `useChatSocket` reads `queryKey[1]`, so don't reorder existing elements —
+ * only add new keys.
  */
 export const queryKeys = {
   profile: ["profile"] as const,
@@ -30,7 +21,6 @@ export const queryKeys = {
     all: ["chats"] as const,
   },
 
-  /** Paginated messages of a single chat (infinite query). */
   chatMessages: {
     /** Broad key matching every chat's messages (used with `findAll`). */
     all: ["chatMessages"] as const,
