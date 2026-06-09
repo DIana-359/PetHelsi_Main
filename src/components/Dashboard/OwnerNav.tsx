@@ -1,6 +1,6 @@
 import { NavItem } from "./NavItem";
 import { NAV_ITEMS_OWNER } from "@/Constants";
-import ButtonLogout from "@/components/ButtonLogout";
+import ButtonLogout from "./ButtonLogout";
 
 export enum Category {
   history = "Історія прийомів",
