@@ -8,13 +8,13 @@ import { ModalBookingSuccess } from "./ModalBookingSuccess";
 import { ModalBookingCancel } from "./ModalBookingCancel";
 import { ModalBookingTimeLeft } from "./ModalBookingTimeLeft";
 import OwnerNav from "@/components/Dashboard/OwnerNav";
-import { Vet, AppointmentSlot, AppointmentData } from "@/utils/types/booking";
+import { Vet, AppointmentSlot, AppointmentData } from "@/types/booking";
 import { Pulse } from "@/components/Pulse";
 import Icon from "@/components/Icon";
 import clsx from "clsx";
 import { addPet } from "@/services/owners/addPet";
 import { getPets } from "@/services/pets/getPets";
-import { petTypeIcons } from "@/utils/types/petTypeIcons";
+import { petTypeIcons } from "@/utils/petTypeIcons";
 import { getVet } from "@/services/vets/getVet";
 
 export default function BookingPage() {

@@ -5,7 +5,7 @@ import { Pet } from "@/types/pet";
 import { useAddPet } from "@/hooks/pets/useAddPet";
 import { useAddPetAvatar } from "@/hooks/pets/useAddPetAvatar";
 import { useRouter } from "next/navigation";
-import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
+import { petBirthDate } from "@/utils/date/petBirthDate";
 import { UseFormReturn } from "react-hook-form";
 import { PetFormValues } from "@/utils/schemas/pet.schemas";
 import { PetAvatar } from "@/types/petAvatar";

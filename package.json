@@ -11,9 +11,9 @@
   "dependencies": {
     "@heroui/breadcrumbs": "^2.2.15",
     "@heroui/calendar": "^2.2.19",
-    "@heroui/form": "^2.1.17-beta.0",
-    "@heroui/modal": "^2.2.15-beta.2",
-    "@heroui/react": "^2.8.0-beta.0",
+    "@heroui/form": "^2.1.32",
+    "@heroui/modal": "^2.2.29",
+    "@heroui/react": "^2.8.10",
     "@heroui/system": "^2.4.15",
     "@heroui/tabs": "^2.2.16",
     "@heroui/theme": "^2.4.15",
