@@ -6,6 +6,7 @@ import { Client } from "@stomp/stompjs";
 import { Message, PaginatedMessagesResponse } from "@/types/chatsTypes";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { useChatStore } from "@/stores/useChatStore";
+import { queryKeys } from "@/lib/queryKeys";
 
 const MAX_RECONNECT_ATTEMPTS = 5;
 const SEND_TIMEOUT_MS = 5000;
@@ -138,7 +139,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         }
 
         queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
-          ["chatMessages", msg.chatId],
+          queryKeys.chatMessages.byChat(msg.chatId),
           prev => {
             if (!prev) return prev;
 
@@ -205,7 +206,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
         if (!targetChatId) {
           const allQueries = queryClient.getQueryCache().findAll({
-            queryKey: ["chatMessages"],
+            queryKey: queryKeys.chatMessages.all,
           });
 
           for (const query of allQueries) {
@@ -230,7 +231,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
         if (!targetChatId) return;
 
         queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
-          ["chatMessages", targetChatId],
+          queryKeys.chatMessages.byChat(targetChatId),
           prev => {
             if (!prev) return prev;
 
@@ -372,7 +373,7 @@ export function useChatSocket({ currentUserId }: UseChatSocketParams) {
 
   const markAsRead = useCallback((chatId: string, messageId: string) => {
     queryClient.setQueryData<InfiniteData<PaginatedMessagesResponse>>(
-      ["chatMessages", chatId],
+      queryKeys.chatMessages.byChat(chatId),
       prev => {
         if (!prev) return prev;
 
