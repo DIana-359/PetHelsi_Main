@@ -263,16 +263,16 @@ export default function PetForm({ methods }: PetFormProps) {
           control={control}
           render={({ field }) => (
             <>
-              <Input
-                type="text"
+              <textarea
+                rows={4}
                 maxLength={250}
-                classNames={{
-                  input: clsx("text-left placeholder:text-gray-350", {
+                className={clsx(
+                  "w-full border border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none placeholder:text-gray-350",
+                  {
                     "text-gray-900": allergies.length,
                     "text-gray-350": !allergies.length,
-                  }),
-                  inputWrapper: clsx(inputWrapperStyles),
-                }}
+                  },
+                )}
                 value={field.value?.join(", ") || ""}
                 onChange={(e) => field.onChange(parseAllergies(e.target.value))}
               />

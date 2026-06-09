@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updatePetAvatar } from "@/services/pets/updatePetAvatar";
 import { Pet } from "@/types/pet";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UpdatePetAvatarInput {
   petId: string;
@@ -18,11 +19,12 @@ export function useUpdatePetAvatar(options?: UseUpdatePetAvatarOptions) {
     mutationFn: ({ petId, file }) => updatePetAvatar(petId, file),
 
     onSuccess: (relativeUrl, { petId }) => {
-      queryClient.setQueryData<Pet | undefined>(["pet", petId], (old) =>
-        old ? { ...old, avatar: relativeUrl } : old,
+      queryClient.setQueryData<Pet | undefined>(
+        queryKeys.pets.detail(petId),
+        (old) => (old ? { ...old, avatar: relativeUrl } : old),
       );
 
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pets.all });
       options?.onSuccess?.();
     },
   });

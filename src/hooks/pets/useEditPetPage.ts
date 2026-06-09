@@ -5,6 +5,7 @@ import { useUnsavedChanges } from "./useUnsavedChanges";
 import { usePetAvatar } from "./usePetAvatar";
 import { usePetSubmit } from "./usePetSubmit";
 import { useState } from "react";
+import { PetFormValues } from "@/utils/schemas/pet.schemas";
 
 export function useEditPetPage(petId: string) {
   const { data, isLoading } = useGetPetById(petId);
@@ -16,12 +17,10 @@ export function useEditPetPage(petId: string) {
 
   const {
     reset,
-    handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { isDirty },
   } = form;
 
   const hasChanges = isDirty || avatar.image !== null;
-
   const unsaved = useUnsavedChanges({ hasChanges });
 
   const { onSubmit } = usePetSubmit({
@@ -31,7 +30,6 @@ export function useEditPetPage(petId: string) {
     birthMonth: birth.birthMonth,
     birthYear: birth.birthYear,
     onError: setErrorMessage,
-
     onAvatarUploadSuccess: () => avatar.setShowAvatarSuccess(true),
   });
 
@@ -42,7 +40,7 @@ export function useEditPetPage(petId: string) {
       name: data.name,
       petTypeName: data.petTypeName,
       breed: data.breed || "",
-      genderTypeName: data.genderTypeName,
+      genderTypeName: data.genderTypeName as PetFormValues["genderTypeName"],
       weight: data.weight,
       sterilized: data.sterilized,
       allergies: data.allergies || [],
@@ -54,20 +52,12 @@ export function useEditPetPage(petId: string) {
   };
 
   return {
-    ...form,
-    ...avatar,
-    ...birth,
-    ...unsaved,
-
+    form,
+    avatar,
+    unsaved,
     initialPet: data,
-
     isLoading,
-    isSubmitting,
-    errors,
-
-    handleSubmit,
     onSubmit,
-
     handleCancel,
     errorMessage,
     setErrorMessage,

@@ -14,28 +14,17 @@ interface EditPetFormProps {
 }
 
 export default function EditPetForm({ id }: EditPetFormProps) {
-  const {
-    initialPet,
-    image,
-    setImage,
-    onSubmit,
-    isUnsavedOpen,
-    setIsUnsavedOpen,
-    showAvatarSuccess,
-    setShowAvatarSuccess,
-    errorMessage,
-    setErrorMessage,
-    ...methods
-  } = useEditPetPage(id);
+  const { form, avatar, unsaved, initialPet, onSubmit, errorMessage, setErrorMessage } =
+    useEditPetPage(id);
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+    formState: { isSubmitting, isDirty },
+  } = form;
 
   const submit = handleSubmit(onSubmit);
 
-  const hasChanges = methods.formState.isDirty || image !== null;
+  const hasChanges = isDirty || avatar.image !== null;
 
   if (!initialPet)
     return (
@@ -47,8 +36,8 @@ export default function EditPetForm({ id }: EditPetFormProps) {
   return (
     <>
       <GlobalMessage
-        visible={showAvatarSuccess}
-        onClose={() => setShowAvatarSuccess(false)}
+        visible={avatar.showAvatarSuccess}
+        onClose={() => avatar.setShowAvatarSuccess(false)}
         message="Фото тварини успішно завантажене"
       />
       <GlobalMessage
@@ -72,34 +61,34 @@ export default function EditPetForm({ id }: EditPetFormProps) {
             <fieldset className="flex flex-col gap-[24px] items-center md:items-start md:flex-row md:gap-[40px]">
               <div>
                 <PetAvatarUploader
-                  avatar={image?.preview ?? initialPet.avatar}
+                  avatar={avatar.image?.preview ?? initialPet.avatar}
                   firstName={initialPet.name}
                   mode="edit"
-                  onChange={(img) => setImage(img)}
+                  onChange={(img) => avatar.setImage(img)}
                 />
               </div>
             </fieldset>
           </div>
 
           <div className="w-full grid grid-cols-1 md:max-w-[304px]">
-            <PetForm methods={methods} />
+            <PetForm methods={form} />
 
             <EditPetFormBtns
               isSubmitting={isSubmitting}
               pet={initialPet}
               hasChanges={hasChanges}
-              onOpenModal={() => setIsUnsavedOpen(true)}
+              onOpenModal={() => unsaved.setIsUnsavedOpen(true)}
             />
           </div>
         </div>
       </section>
       <SavedChangesModal
-        isOpen={isUnsavedOpen}
+        isOpen={unsaved.isUnsavedOpen}
         onSave={() => {
-          setIsUnsavedOpen(false);
+          unsaved.setIsUnsavedOpen(false);
           submit();
         }}
-        onClose={() => setIsUnsavedOpen(false)}
+        onClose={() => unsaved.setIsUnsavedOpen(false)}
         isLoading={isSubmitting}
       />
     </>

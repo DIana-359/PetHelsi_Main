@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/apiFetch.client";
+import { extractErrorMessage } from "@/lib/handleApiError";
 
 export async function updatePetAvatar(id: string, file: File): Promise<string> {
   const formData = new FormData();
@@ -9,7 +10,11 @@ export async function updatePetAvatar(id: string, file: File): Promise<string> {
     body: formData,
   });
 
-  if (!res.ok) throw new Error("Failed to update pet avatar");
+  if (!res.ok) {
+    throw new Error(
+      await extractErrorMessage(res, "Failed to update pet avatar"),
+    );
+  }
 
   const data = await res.json();
   return data.publicUrl;

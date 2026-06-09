@@ -55,7 +55,7 @@ export default function SavedChangesModal({
           <div className="flex w-full max-w-[304px] flex-col gap-2">
             <Button
               type="button"
-              onClick={onSave}
+              onPress={onSave}
               isDisabled={isLoading}
               className={getButtonClasses("primary", false)}
             >
@@ -63,7 +63,7 @@ export default function SavedChangesModal({
             </Button>
             <Button
               type="button"
-              onClick={() => {
+              onPress={() => {
                 router.push("/owner/pets?unsave=1");
               }}
               className={getButtonClasses("secondary", false)}
