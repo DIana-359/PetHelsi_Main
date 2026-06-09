@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePet } from "@/services/pets/deletePet";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function useDeletePet() {
   const queryClient = useQueryClient();
@@ -8,9 +9,9 @@ export function useDeletePet() {
     mutationFn: (id: string) => deletePet(id),
 
     onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pets.all });
 
-      queryClient.removeQueries({ queryKey: ["pet", id] });
+      queryClient.removeQueries({ queryKey: queryKeys.pets.detail(id) });
     },
   });
 }

@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { petSchema, PetFormValues } from "@/utils/schemas/pet.schemas";
-// import { Pet } from "@/types/pet";
+import { Pet } from "@/types/pet";
 import { useEffect } from "react";
 
-export function useEditPetForm(data: PetFormValues | undefined) {
+export function useEditPetForm(data: Pet | undefined) {
   const methods = useForm<PetFormValues>({
     resolver: zodResolver(petSchema),
     defaultValues: {
@@ -29,7 +29,7 @@ export function useEditPetForm(data: PetFormValues | undefined) {
       name: data.name,
       petTypeName: data.petTypeName,
       breed: data.breed || "",
-      genderTypeName: data.genderTypeName,
+      genderTypeName: data.genderTypeName as PetFormValues["genderTypeName"],
       weight: data.weight,
       sterilized: data.sterilized,
       allergies: data.allergies || [],

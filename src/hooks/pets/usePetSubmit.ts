@@ -2,7 +2,7 @@ import { PetFormValues } from "@/utils/schemas/pet.schemas";
 import { useRouter } from "next/navigation";
 import { useUpdatePet } from "./useUpdatePet";
 import { useUpdatePetAvatar } from "./useUpdatePetAvatar";
-import { petBirthDate } from "@/utils/petBirthDate/petBirthDate";
+import { petBirthDate } from "@/utils/date/petBirthDate";
 import { Pet } from "@/types/pet";
 
 interface UsePetSubmitProps {

@@ -1,8 +1,7 @@
-// import { Pet } from "@/types/pet";
 import { useEffect, useState } from "react";
-import { PetFormValues } from "@/utils/schemas/pet.schemas";
+import { Pet } from "@/types/pet";
 
-export function usePetBirthDate(data: PetFormValues | undefined) {
+export function usePetBirthDate(data: Pet | undefined) {
   const [selected, setSelected] = useState<Date>();
   const [isOpenCalendar, setIsOpenCalendar] = useState(false);
   const [isBirthDateUnknown, setIsBirthDateUnknown] = useState(false);

@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/apiFetch.client";
+import { extractErrorMessage } from "@/lib/handleApiError";
 import { Pet } from "@/types/pet";
 
 export async function updatePet(id: string, pet: Pet): Promise<Pet> {
@@ -8,11 +9,9 @@ export async function updatePet(id: string, pet: Pet): Promise<Pet> {
     body: JSON.stringify(pet),
   });
 
-  const text = await res.text();
-
   if (!res.ok) {
-    throw new Error(`Failed to update pet: ${res.status} ${text}`);
+    throw new Error(await extractErrorMessage(res, "Failed to update pet"));
   }
 
-  return JSON.parse(text) as Pet;
+  return (await res.json()) as Pet;
 }
