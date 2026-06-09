@@ -1,6 +1,6 @@
 "use client";
 
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import Image from "next/image";
 
 type Props = {

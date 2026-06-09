@@ -1,43 +1,19 @@
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { withAuth, backendFetch } from "@/lib/proxyHandler";
 
-export async function GET() {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
+export const GET = withAuth(async ({ token }) => {
+  const res = await backendFetch(`/v1/owners/history`, token, {
+    cache: "no-store",
+  });
 
-    if (!token) {
-      return new Response(JSON.stringify({ error: "No auth token" }), {
-        status: 401,
-      });
-    }
-
-    const response = await fetch(
-      `${process.env.API_URL}/v1/owners/history`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cache: "no-store",
-      }
+  if (!res.ok) {
+    const details = await res.text();
+    return NextResponse.json(
+      { error: `Failed to fetch history. Status: ${res.status}`, details },
+      { status: res.status },
     );
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      return new Response(
-        JSON.stringify({
-          error: `Failed to fetch history. Status: ${response.status}`,
-          details: errorBody,
-        }),
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-    return Response.json(data);
-  } catch (error) {
-    console.error("Server error:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-    });
   }
-}
+
+  const data = await res.json();
+  return NextResponse.json(data);
+});

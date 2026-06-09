@@ -1,5 +1,5 @@
 import { GetVetsParams } from "@/types/vetTypes";
-import { VetsResponse } from "@/utils/types/vet";
+import { VetsResponse } from "@/types/vetTypes";
 
 export async function getVetsByCriteria(
   params: GetVetsParams = {}

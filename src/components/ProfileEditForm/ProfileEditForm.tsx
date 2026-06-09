@@ -1,18 +1,27 @@
 "use client";
-import { Form, Input, Button } from "@heroui/react";
+
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { Button, Image, Input } from "@heroui/react";
 import GoBack from "@/components/GoBack";
 import Icon from "@/components/Icon";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { DayPicker } from "react-day-picker";
-import { uk } from "react-day-picker/locale";
-import { useEffect, useRef, useState } from "react";
 import AvatarUser from "../ProfileOwner/AvatarUser";
-import { useRouter } from "next/navigation";
-import { useModalStore } from "@/stores/useModalStore";
-import { Image } from "@heroui/react";
 import { Pulse } from "../Pulse";
+import { useModalStore } from "@/stores/useModalStore";
 import { useUpdateProfile } from "@/hooks/owners/useUpdateProfile";
 import { useProfile } from "@/hooks/owners/useProfile";
+import {
+  profileSchema,
+  ProfileFormValues,
+} from "@/utils/schemas/profile.schemas";
+import {
+  FormInput,
+  formInputClassNames,
+  formLabelClass,
+} from "@/components/Form/FormInput";
+import { FormDatePicker } from "@/components/Form/FormDatePicker";
 
 export default function ProfileEditForm() {
   const router = useRouter();
@@ -20,51 +29,40 @@ export default function ProfileEditForm() {
   const { mutateAsync, isPending } = useUpdateProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<string | null>(data?.avatar || "");
-  const [selected, setSelected] = useState<Date>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [phone, setPhone] = useState<string | null>(data?.phone || "");
-  const [lastName, setLastName] = useState<string | null>(
-    data?.lastName || ""
-  );
-  const [firstName, setFirstName] = useState<string | null>(
-    data?.firstName || ""
-  );
-  const [middleName, setMiddleName] = useState<string | null>(
-    data?.middleName || ""
-  );
-  const [birthday, setBirthday] = useState<string | null>(
-    data?.birthday || ""
-  );
-  const [city, setCity] = useState<string | null>(data?.city || "");
-  const [isValidPhone, setIsValidPhone] = useState<boolean>(true);
-  const openModal = useModalStore(s => s.open);
-  const closeModal = useModalStore(s => s.close);
+  const openModal = useModalStore((s) => s.open);
+  const closeModal = useModalStore((s) => s.close);
+
+  const { control, handleSubmit, reset } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    mode: "onTouched",
+    defaultValues: {
+      lastName: "",
+      firstName: "",
+      middleName: "",
+      phone: "",
+      birthday: "",
+      city: "",
+    },
+  });
 
   useEffect(() => {
     if (data) {
-      setLastName(data.lastName || "");
-      setFirstName(data.firstName || "");
-      setMiddleName(data.middleName || "");
-      setPhone(data.phone || "");
-      setBirthday(data.birthday || "");
-      setCity(data.city || "");
-      setImage(data.avatar || "");
-      if (data.birthday) setSelected(new Date(data.birthday));
+      reset({
+        lastName: data.lastName ?? "",
+        firstName: data.firstName ?? "",
+        middleName: data.middleName ?? "",
+        phone: data.phone ?? "",
+        birthday: data.birthday ?? "",
+        city: data.city ?? "",
+      });
+      setImage(data.avatar ?? "");
     }
-  }, [data]);
+  }, [data, reset]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    const localUrl = URL.createObjectURL(file);
-    setImage(localUrl);
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPhone(value);
-    setIsValidPhone(isValidPhoneNumber(value));
+    setImage(URL.createObjectURL(file));
   };
 
   function handlecloseModal() {
@@ -72,22 +70,22 @@ export default function ProfileEditForm() {
     router.push("/owner/profile");
   }
 
-  async function handleUpdateForm(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function handleCancelUpdateProfile() {
+    router.push("/owner/profile");
+  }
 
-    const cleanPhone = phone ? phone.replace(/\s+/g, "") : "";
-
-    const formData = {
-      lastName,
-      firstName,
-      middleName,
-      phone: cleanPhone,
-      birthday: selected ? selected.toISOString().slice(0, 10) : birthday,
-      city,
+  const onSubmit = async (values: ProfileFormValues) => {
+    const payload = {
+      lastName: values.lastName,
+      firstName: values.firstName,
+      middleName: values.middleName || null,
+      phone: values.phone.replace(/\s+/g, ""),
+      birthday: values.birthday || null,
+      city: values.city,
     };
 
     try {
-      await mutateAsync(formData);
+      await mutateAsync(payload);
 
       openModal(
         <>
@@ -101,7 +99,7 @@ export default function ProfileEditForm() {
             onPress={handlecloseModal}>
             Готово
           </Button>
-        </>
+        </>,
       );
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -119,16 +117,13 @@ export default function ProfileEditForm() {
               onPress={handlecloseModal}>
               Закрити
             </Button>
-          </>
+          </>,
         );
       }
     }
-  }
+  };
 
   if (!data) return <Pulse />;
-  function handleCancelUpdateProfile() {
-    router.push("/owner/profile");
-  }
 
   return (
     <div className="mb-[24px]">
@@ -180,216 +175,68 @@ export default function ProfileEditForm() {
           </button>
         </div>
 
-        <Form
+        <form
           className="w-full max-w-[304px] flex flex-col gap-[16px] bg-background"
-          onSubmit={handleUpdateForm}>
-          <div className="w-full">
-            <label
-              htmlFor="lastName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              Прізвище*
-            </label>
+          onSubmit={handleSubmit(onSubmit)}>
+          <FormInput
+            control={control}
+            name="lastName"
+            label="Прізвище*"
+            placeholder="Введіть прізвище"
+            isRequired
+          />
 
-            <Input
-              value={lastName ?? ""}
-              onChange={e => setLastName(e.target.value)}
-              isRequired
-              name="lastName"
-              placeholder="Введіть прізвище"
-              type="text"
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:border-primary-700 focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
-            />
-          </div>
+          <FormInput
+            control={control}
+            name="firstName"
+            label="Ім’я*"
+            placeholder="Введіть ім’я"
+            isRequired
+          />
 
-          <div className="w-full">
-            <label
-              htmlFor="firstName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              Ім’я*
-            </label>
+          <FormInput
+            control={control}
+            name="middleName"
+            label="По-батькові"
+            placeholder="Введіть по батькові"
+          />
 
-            <Input
-              value={firstName ?? ""}
-              onChange={e => setFirstName(e.target.value)}
-              isRequired
-              name="firstName"
-              placeholder="Введіть ім’я"
-              type="text"
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:border-primary-700 focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
-            />
-          </div>
+          <FormDatePicker
+            control={control}
+            name="birthday"
+            label="Дата народження"
+          />
+
+          <FormInput
+            control={control}
+            name="phone"
+            label="Телефон*"
+            placeholder="Введіть номер телефону"
+            type="tel"
+            isRequired
+          />
 
           <div className="w-full">
-            <label
-              htmlFor="middleName"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              По-батькові
-            </label>
-            <Input
-              value={middleName ?? ""}
-              onChange={e => setMiddleName(e.target.value)}
-              name="middleName"
-              placeholder="Введіть по батькові"
-              type="text"
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:border-primary-700 focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
-            />
-          </div>
-
-          <div className="w-full relative">
-            <label
-              htmlFor="birthday"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              Дата народження
-            </label>
-            <input
-              name="birthday"
-              placeholder="ДД/ММ/РРРР"
-              value={selected ? selected.toLocaleDateString() : birthday ?? ""}
-              readOnly
-              onChange={e => setBirthday(e.target.value)}
-              onClick={() => setIsOpen(!isOpen)}
-              className="w-full border-[1px] border-primary-300 rounded-[12px] px-2 py-[13px] focus:outline-none focus:border-primary-500 text-[16px] font-[500] leading-[1.4] text-gray-950"
-            />
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="absolute right-2 bottom-[13px] cursor-pointer">
-              <svg
-                width="24"
-                height="24"
-                className="stroke-primary-700 fill-background hover:stroke-primary-900 transition-colors duration-300 pointer-events-none">
-                <use href="/sprites/sprite-sistem.svg#icon-calendar" />
-              </svg>
-            </button>
-
-            {isOpen && (
-              <div className="z-99910 w-[318px] absolute top-[82px] bg-white border rounded p-[16px] border-none shadow-sm shadow-gray-300">
-                <DayPicker
-                  mode="single"
-                  ISOWeek
-                  locale={uk}
-                  selected={selected}
-                  onSelect={date => {
-                    setSelected(date);
-                    setIsOpen(false);
-                  }}
-                  captionLayout="dropdown"
-                  classNames={{
-                    root: "z-10 bg-background",
-                    weekday: "p-[9px] hover:bg-blue-100 rounded-md",
-                    day_button: "p-[9px] hover:bg-blue-100 rounded-md",
-                    selected: "hover:hover:bg-blue-100",
-                    today: "text-primary-700",
-                    nav_button:
-                      "text-gray-400 hover:text-gray-600 disabled:opacity-50",
-                    chevron: "fill-gray-500",
-                    caption_dropdowns: "flex gap-4 justify-center items-center",
-                    dropdown:
-                      "px-2 py-2 rounded-lg border border-primary-300 bg-white text-gray-900 text-base font-medium focus:border-primary-700 focus:outline-none transition",
-                  }}
-                  styles={{
-                    caption_label: { display: "none" },
-                  }}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="w-full">
-            <label
-              htmlFor="phone"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              Телефон*
-            </label>
-            <Input
-              isRequired
-              name="phone"
-              placeholder="Введіть номер телефону"
-              type="tel"
-              value={phone ?? ""}
-              onChange={handlePhoneChange}
-              isInvalid={!isValidPhone}
-              errorMessage={
-                !isValidPhone ? "Введіть коректний номер телефону" : undefined
-              }
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:border-primary-700 focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
-              validate={isValid => {
-                if (!isValid) {
-                  return "Введіть номер телефону у форматі +380 (XX) XXX-XX-XX";
-                }
-              }}
-            />
-          </div>
-
-          <div className="w-full">
-            <label
-              htmlFor="email"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
+            <label htmlFor="email" className={formLabelClass}>
               E-mail*
             </label>
             <Input
               readOnly
-              isRequired
               name="email"
               placeholder="Введіть E-mail"
               type="email"
               value={data?.email ?? ""}
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
+              classNames={formInputClassNames}
             />
           </div>
 
-          <div className="w-full">
-            <label
-              htmlFor="city"
-              className="block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]">
-              Місце проживання
-            </label>
-            <Input
-              value={city ?? ""}
-              onChange={e => setCity(e.target.value)}
-              isRequired
-              name="city"
-              placeholder="Введіть назву населенного пункту"
-              type="text"
-              classNames={{
-                inputWrapper:
-                  "bg-white border-[1px] border-primary-300 rounded-[12px] focus-within:border-primary-700 focus-within:ring-0 focus-within:ring-offset-0 focus-within:shadow-none",
-                input:
-                  "text-[16px] font-[400] leading-[1.4] text-gray-900 placeholder:text-[14px] placeholder:font-[400] placeholder:leading-[1.4] placeholder:text-gray-400 outline-none",
-                errorMessage: "text-[12px] font-[400] text-red-500",
-              }}
-            />
-          </div>
+          <FormInput
+            control={control}
+            name="city"
+            label="Місце проживання"
+            placeholder="Введіть назву населенного пункту"
+            isRequired
+          />
 
           <div className="flex items-center gap-[16px] mt-[16px]">
             <Button
@@ -406,7 +253,7 @@ export default function ProfileEditForm() {
               Скасувати
             </Button>
           </div>
-        </Form>
+        </form>
       </fieldset>
     </div>
   );

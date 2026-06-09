@@ -1,6 +1,6 @@
 "use client";
 
-import { Vet } from "@/utils/types/vet";
+import { Vet } from "@/types/vetTypes";
 import VetCardHomePage from "./VetCardHomePage";
 import { useVetsByCriteria } from "@/hooks/vets/useVets";
 import { Pulse } from "@/components/Pulse";

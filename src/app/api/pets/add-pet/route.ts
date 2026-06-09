@@ -1,32 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { Pet } from "@/types/pet";
+import { withAuth, backendFetch, forwardJson } from "@/lib/proxyHandler";
 
-export async function POST(req: NextRequest) {
-  try {
-    const token = (await cookies()).get("auth-token");
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const body: Pet = await req.json();
-
-    const res = await fetch(`${process.env.API_URL}/v1/owners/pets`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  } catch (err) {
-    console.error("Add pet error:", err);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
+export const POST = withAuth(async ({ token, req }) => {
+  const body = await req.json();
+  const res = await backendFetch(`/v1/owners/pets`, token, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  return forwardJson(res);
+});

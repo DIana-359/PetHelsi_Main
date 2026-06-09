@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button } from "@heroui/react";
-// import ChangePasswordSucsess from "@/components/ModalContet/ChangePasswordSucsess";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import ForgotPassword from "@/components/ForgotPassword";

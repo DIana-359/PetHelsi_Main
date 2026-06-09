@@ -1,42 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { withAuth, backendFetch, forwardJson } from "@/lib/proxyHandler";
 
-export async function POST(req: NextRequest) {
-  try {
-    const token = (await cookies()).get("auth-token");
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const petId = req.nextUrl.searchParams.get("petId");
-    if (!petId) {
-      return NextResponse.json(
-        { message: "petId query parameter is required" },
-        { status: 400 },
-      );
-    }
-
-    const formData = await req.formData();
-
-    const res = await fetch(
-      `${process.env.API_URL}/v1/owners/pets/${petId}/avatars`,
-      {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-      },
-    );
-
-    const data = await res.json();
-
-    return NextResponse.json(data, { status: res.status });
-  } catch (err) {
-    console.error("Add pet avatar error:", err);
+export const POST = withAuth(async ({ token, req }) => {
+  const petId = req.nextUrl.searchParams.get("petId");
+  if (!petId) {
     return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
+      { message: "petId query parameter is required" },
+      { status: 400 },
     );
   }
-}
+
+  const formData = await req.formData();
+  const res = await backendFetch(`/v1/owners/pets/${petId}/avatars`, token, {
+    method: "POST",
+    body: formData,
+  });
+  return forwardJson(res);
+});

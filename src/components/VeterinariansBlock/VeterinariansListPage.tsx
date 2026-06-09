@@ -1,5 +1,5 @@
 import VeterinarianCard from "./VeterinarianCard";
-import { Vet } from "@/utils/types/vet";
+import { Vet } from "@/types/vetTypes";
 
 export default function VeterinariansListPage({
   veterinarians,
