@@ -1,4 +1,14 @@
-export default function HistoryInfoMobile({ date, time, price }) {
+interface HistoryInfoMobileProps {
+  date: string;
+  time: string;
+  price: number;
+}
+
+export default function HistoryInfoMobile({
+  date,
+  time,
+  price,
+}: HistoryInfoMobileProps) {
   return (
     <div className="flex flex-row items-center gap-[44px] pb-[16px] border-b-[1px] border-primary-200 mb-[12px]">
       <div className="flex flex-col gap-[4px]">

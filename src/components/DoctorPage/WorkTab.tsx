@@ -1,4 +1,4 @@
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 
 type Props = {
   veterinarian: Veterinarian;

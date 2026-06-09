@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import StarsRating from "../StarsRating";
 import { Avatar } from "@heroui/react";
 import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";

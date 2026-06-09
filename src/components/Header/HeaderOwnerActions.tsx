@@ -3,7 +3,7 @@ import Icon from "../Icon";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useUIStore } from "@/stores/useUIStore";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
 import { useProfile } from "@/hooks/owners/useProfile";
 

@@ -1,7 +1,7 @@
 "use client";
 import AvatarUser from "./AvatarUser";
 import { Pulse } from "../Pulse";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import EditProfileLink from "./EditProfileLink";
 import { useProfile } from "@/hooks/owners/useProfile";
 

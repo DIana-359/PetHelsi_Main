@@ -1,39 +1,17 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { withAuth, backendFetch } from "@/lib/proxyHandler";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id: petId } = await params;
-    const token = (await cookies()).get("auth-token");
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+export const GET = withAuth<{ id: string }>(async ({ token, params }) => {
+  const { id: petId } = params;
+  const res = await backendFetch(`/v1/owners/pets/${petId}`, token);
 
-    const res = await fetch(`${process.env.API_URL}/v1/owners/pets/${petId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-    });
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { message: "Failed to fetch pet" },
-        { status: res.status },
-      );
-    }
-
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  } catch (err) {
-    console.error("Get pet error:", err);
+  if (!res.ok) {
     return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
+      { message: "Failed to fetch pet" },
+      { status: res.status },
     );
   }
-}
+
+  const data = await res.json();
+  return NextResponse.json(data, { status: res.status });
+});
