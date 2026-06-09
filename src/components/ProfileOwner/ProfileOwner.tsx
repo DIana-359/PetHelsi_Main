@@ -1,7 +1,7 @@
 "use client";
 import AvatarUser from "./AvatarUser";
 import { Pulse } from "../Pulse";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import EditProfileLink from "./EditProfileLink";
 import { useProfile } from "@/hooks/owners/useProfile";
 
@@ -11,7 +11,6 @@ export default function ProfileOwner() {
   
 
   const ownerData = [
-    // { label: "avatar", value: data?.avatar ?? "" },
     { label: "Ім’я", value: data?.firstName ?? "Не вказано" },
     { label: "Прізвище", value: data?.lastName ?? "Не вказано" },
     { label: "По-батькові", value: data?.middleName ?? "Не вказано" },

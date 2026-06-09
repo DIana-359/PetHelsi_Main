@@ -4,7 +4,7 @@ import type { Chat } from "@/types/chatsTypes";
 import Icon from "@/components/Icon";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
-import useMedia from "@/utils/useMedia";
+import useMedia from "@/hooks/useMedia";
 import { useProfile } from "@/hooks/owners/useProfile";
 import { useCachedChatMessages } from "@/hooks/chats/useCachedChatMessages";
 import { getChatMessageDateLabel } from "@/utils/date/getChatMessageDateLabel";

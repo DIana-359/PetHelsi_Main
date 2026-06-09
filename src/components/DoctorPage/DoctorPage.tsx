@@ -3,20 +3,20 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import DocProfile from "./DocProfile";
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import { Tabs, Tab } from "@heroui/react";
 import { Card, CardBody } from "@heroui/react";
 import AboutTab from "./AboutTab";
 import WorkTab from "./WorkTab";
 import EducationTab from "./EducationTab";
-import SlotUnavailableModal from "@/components/SlotUnavailableModal"
+import SlotUnavailableModal from "./SlotUnavailableModal"
 import clsx from "clsx";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
 import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
 import { useFreeScheduleSlots } from "@/hooks/vets/useFreeScheduleSlots";
 import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
-import useMedia from "@/utils/media";
+import useMedia from "@/hooks/media";
 import Icon from "../Icon";
 import { useBookingStore } from "@/stores/useBookingStore";
 import BookingSummaryMobile from "./BookingSummaryMobile";
@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 import { useBookingFlow } from "@/hooks/booking/useBookingFlow";
 import { Pulse } from "@/components/Pulse";
 import { useScheduleSlots } from "@/hooks/vets/useScheduleSlots";
-import EmptyCalendar from "@/components/EmptyCalendar";
+import EmptyCalendar from "./EmptyCalendar";
 import { useProfile } from "@/hooks/owners/useProfile";
 
 type Props = {

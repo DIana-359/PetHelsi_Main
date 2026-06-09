@@ -1,4 +1,3 @@
-"use client";
 import { apiFetch } from "@/lib/apiFetch.client";
 
 export default async function updateProfile(formData: {

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { PaginatedMessagesResponse } from "@/types/chatsTypes";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function useCachedChatMessages(chatId: string) {
   const queryClient = useQueryClient();
 
   const [data, setData] = useState<InfiniteData<PaginatedMessagesResponse> | undefined>(
-    () => queryClient.getQueryData(["chatMessages", chatId])
+    () => queryClient.getQueryData(queryKeys.chatMessages.byChat(chatId))
   );
 
   useEffect(() => {
-    const queryKey = ["chatMessages", chatId];
+    const queryKey = queryKeys.chatMessages.byChat(chatId);
     const queryHash = JSON.stringify(queryKey);
 
     setData(queryClient.getQueryData(queryKey));

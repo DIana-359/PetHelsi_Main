@@ -1,10 +1,10 @@
 import Head from "next/head";
-import Appointment from "@/components/Appointment";
+import Appointment from "@/components/Landing/Appointment";
 import Hero from "@/components/Hero/Hero";
-import HeroImage from "@/components/HeroImage";
+import HeroImage from "@/components/Landing/HeroImage";
 import Features from "@/components/Features/Features";
-import Discount from "@/components/Discount";
-import Faq from "@/components/Faq";
+import Discount from "@/components/Landing/Discount";
+import Faq from "@/components/Landing/Faq";
 import Veterinarians from "@/components/VeterinariansBlock/Veterinarians";
 import Footer from "@/components/Footer/Footer";
 

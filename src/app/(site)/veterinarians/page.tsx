@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 import VeterinariansPagination from "@/components/VeterinariansBlock/VeterinariansPagination";
-import { Vet } from "@/utils/types/vet";
+import { Vet } from "@/types/vetTypes";
 import SortSelect from "@/components/VeterinariansBlock/SortSelect";
 import VeterinariansListPage from "@/components/VeterinariansBlock/VeterinariansListPage";
 import NotFoundVet from "@/components/VeterinariansBlock/NotFoundVet";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Veterinarian } from "@/utils/types/veterinarian";
+import { Veterinarian } from "@/types/veterinarian";
 import StarsRating from "../StarsRating";
 import { Avatar } from "@heroui/react";
 import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";
@@ -80,7 +80,6 @@ const DocReviews: React.FC<DocReviewsProps> = ({ reviews }) => {
 
 export default DocReviews;
 
-// Вспомогательная функция форматирования даты (можно заменить по стилю под проект)
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ru-RU", {
