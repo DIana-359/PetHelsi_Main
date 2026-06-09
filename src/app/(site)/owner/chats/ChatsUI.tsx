@@ -10,6 +10,7 @@ import { useChatsQuery } from "@/hooks/chats/useChats";
 import { useChatSocket } from "@/hooks/chats/useChatSocket";
 import { useCurrentUserId } from "@/hooks/useCurrentUserId";
 import { getChatMessages } from "@/services/chats/getChatMessages";
+import { queryKeys } from "@/lib/queryKeys";
 
 export default function ChatsUI() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function ChatsUI() {
   useEffect(() => {
     if (!chats) return;
     chats.forEach(chat => {
-      const key = ["chatMessages", String(chat.chatId)];
+      const key = queryKeys.chatMessages.byChat(String(chat.chatId));
       const existing = queryClient.getQueryData(key);
       if (existing) return;
       queryClient.prefetchInfiniteQuery({

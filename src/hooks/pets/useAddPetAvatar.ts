@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPetAvatar } from "@/services/pets/addPetAvatar";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface AddPetAvatarInput {
   petId: string;
@@ -18,8 +19,8 @@ export function useAddPetAvatar() {
     },
 
     onSuccess: (petId) => {
-      queryClient.invalidateQueries({ queryKey: ["pet", petId] });
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pets.detail(petId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pets.all });
     },
   });
 }

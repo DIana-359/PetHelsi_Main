@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getChatMessages } from "@/services/chats/getChatMessages";
 import { PaginatedMessagesResponse } from "@/types/chatsTypes";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function useChatMessagesQuery(chatId?: string) {
   return useInfiniteQuery<PaginatedMessagesResponse, Error>({
-    queryKey: ["chatMessages", chatId],
+    queryKey: queryKeys.chatMessages.byChat(chatId),
     queryFn: ({ pageParam }) =>
       getChatMessages(chatId!, pageParam as number),
     initialPageParam: 0,

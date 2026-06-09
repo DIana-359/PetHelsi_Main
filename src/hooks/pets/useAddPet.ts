@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPet } from "@/services/pets/addPet";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function useAddPet() {
   const queryClient = useQueryClient();
@@ -8,7 +9,7 @@ export function useAddPet() {
     mutationFn: addPet,
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.pets.all });
     },
   });
 }
