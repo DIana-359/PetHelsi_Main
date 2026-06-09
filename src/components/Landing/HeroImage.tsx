@@ -1,5 +1,5 @@
 import Image from "next/image";
-import girlDogImageDesktop from "../../public/Images/girl-dog-desktop.jpg";
+import girlDogImageDesktop from "../../../public/Images/girl-dog-desktop.jpg";
 
 export default function HeroImage() {
   return (

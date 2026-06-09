@@ -1,9 +1,9 @@
 "use client";
 
 import { Accordion, AccordionItem } from "@heroui/react";
-import faqGirlDog2x from "../../public/Images/faq-girl-dog-desktop@2x.png";
+import faqGirlDog2x from "../../../public/Images/faq-girl-dog-desktop@2x.png";
 import Image from "next/image";
-import Icon from "./Icon";
+import Icon from "../Icon";
 
 export default function Faq() {
   return (

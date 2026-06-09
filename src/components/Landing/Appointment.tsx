@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import consultationImg2x from "../../public/Images/online-consultation@2x.png";
-import vector from "../../public/Images/Vector-circle.png";
-import cat from "../../public/Images/cat.gif";
+import consultationImg2x from "../../../public/Images/online-consultation@2x.png";
+import vector from "../../../public/Images/Vector-circle.png";
+import cat from "../../../public/Images/cat.gif";
 
 export default function AppointmentProcess() {
   return (

@@ -20,8 +20,8 @@ import {
   FormInput,
   formInputClassNames,
   formLabelClass,
-} from "@/components/form/FormInput";
-import { FormDatePicker } from "@/components/form/FormDatePicker";
+} from "@/components/Form/FormInput";
+import { FormDatePicker } from "@/components/Form/FormDatePicker";
 
 export default function ProfileEditForm() {
   const router = useRouter();
