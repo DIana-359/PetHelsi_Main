@@ -17,7 +17,7 @@ export default function MyPetsAddBtn({
         onClick={onClick}
         className={
           className ??
-          "flex w-full items-center justify-center lg:w-[216px] text-[14px] text-primary  gap-2 border-2 border-primary  rounded-[6px] px-6 py-2 bg-white  hover:bg-primary-50 hover:text-primary transition-colors font-[400] lg:cursor-pointer"
+          "flex w-full items-center justify-center lg:w-[216px] text-[14px] text-primary  gap-2 border-2 border-primary  rounded-[6px] px-6 py-2 bg-white  hover:bg-primary-50 hover:text-primary transition-colors font-[400] md:cursor-pointer"
         }
       >
         <Icon
