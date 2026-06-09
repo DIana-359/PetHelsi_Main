@@ -31,7 +31,12 @@ export function withAuth<P = Record<string, string>>(
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
       }
 
-      const params = (context ? await context.params : ({} as P)) as P;
+      // For dynamic routes Next passes `context.params` (a Promise we await).
+      // For non-dynamic routes there is no `context`, so we substitute an empty
+      // object. The `as P` is unavoidable here: `P` is an open generic, so the
+      // compiler can't prove `{}` is assignable to every possible `P` — but at
+      // runtime this branch only runs for routes that have no params.
+      const params = context ? await context.params : ({} as P);
       return await handler({ token, req, params });
     } catch (err) {
       console.error("API route error:", err);
