@@ -11,8 +11,6 @@ export interface Veterinarian {
     name: string,
     city: string
   },
-  // petCategories: string[];
-  // petProblems: string[];
 
   petTypes: string[];
   issueTypes: string[]

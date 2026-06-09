@@ -80,7 +80,6 @@ const DocReviews: React.FC<DocReviewsProps> = ({ reviews }) => {
 
 export default DocReviews;
 
-// Вспомогательная функция форматирования даты (можно заменить по стилю под проект)
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString("ru-RU", {
