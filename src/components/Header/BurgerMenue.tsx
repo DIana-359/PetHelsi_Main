@@ -2,7 +2,7 @@
 
 import { useUIStore } from "@/stores/useUIStore";
 import Icon from "../Icon";
-import { MobileMenu } from "../MobileMenu";
+import { MobileMenu } from "./MobileMenu";
 
 export default function BurgerMenue() {
   const isOpenMenu = useUIStore(s => s.isOpenMenu);
