@@ -3,27 +3,35 @@ import { DaysUa, MonthsUaShort } from "@/utils/constsVet";
 import Image from "next/image";
 import { Button } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { parseValidDate } from "@/utils/date/parseValidDate";
 
 export default function NotFoundVet({ dateStr }: { dateStr?: string }) {
   const router = useRouter();
-  const selectedDate = new Date(dateStr || "");
+  const pathname = usePathname();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  const selectedDate = useMemo(() => {
+    const parsed = parseValidDate(dateStr);
+    if (parsed) return parsed;
+    const fallback = new Date();
+    fallback.setHours(0, 0, 0, 0);
+    return fallback;
+  }, [dateStr]);
 
   const dateButtons = useMemo(() => {
     const buttons = [];
     const totalDays = 5;
-  
-  
+
     for (let i = 1; buttons.length < totalDays; i++) {
       const next = new Date(selectedDate);
       next.setDate(selectedDate.getDate() + i);
       buttons.push(next);
     }
-  
+
     return buttons;
-  }, [dateStr]);
+  }, [selectedDate]);
 
   const formatBtnDate = (date: Date) => {
     const day = date.getDate();
@@ -45,7 +53,7 @@ export default function NotFoundVet({ dateStr }: { dateStr?: string }) {
     const params = new URLSearchParams(window.location.search);
     params.set("date", newDate);
   
-    router.push(`/veterinarians?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const [isMobile, setIsMobile] = useState(false);
