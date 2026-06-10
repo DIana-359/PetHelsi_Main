@@ -173,7 +173,6 @@ export default function BookingPage() {
       </div>
       <div className="text-gray-500 pt-5 md:pt-8">
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
-          {/* Левая колонка - форма */}
           <div className="lg:w-1/2 bg-white p-6 rounded-lg">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">
               Бронювання запису

@@ -3,7 +3,6 @@
 import { Input } from "@heroui/react";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 
-/** Shared field styling, reused by the other form primitives and static fields. */
 export const formLabelClass =
   "block text-[12px] font-[500] leading-[1.4] text-gray-700 mb-[8px]";
 
@@ -24,7 +23,6 @@ interface FormInputProps<T extends FieldValues> {
   isRequired?: boolean;
 }
 
-/** HeroUI text input wired to react-hook-form via `control` + `name`. */
 export function FormInput<T extends FieldValues>({
   control,
   name,

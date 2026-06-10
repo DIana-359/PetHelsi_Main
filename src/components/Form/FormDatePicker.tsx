@@ -27,10 +27,6 @@ interface FormDatePickerProps<T extends FieldValues> {
   placeholder?: string;
 }
 
-/**
- * Calendar field wired to react-hook-form. The form value is a `YYYY-MM-DD`
- * string; the popover calendar reads/writes it as a `Date`.
- */
 export function FormDatePicker<T extends FieldValues>({
   control,
   name,

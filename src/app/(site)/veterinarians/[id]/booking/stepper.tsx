@@ -14,7 +14,6 @@ const Stepper: React.FC<{ steps: Step[] }> = ({ steps }) => {
         return (
           <React.Fragment key={index}>
             <div className="flex flex-col items-center relative">
-              {/* Кружок */}
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 z-10
                   ${
@@ -44,7 +43,6 @@ const Stepper: React.FC<{ steps: Step[] }> = ({ steps }) => {
                   index + 1
                 )}
               </div>
-              {/* Название шага */}
               <span
                 className={`mt-2 text-sm font-medium ${
                   step.status === "active"
@@ -58,7 +56,6 @@ const Stepper: React.FC<{ steps: Step[] }> = ({ steps }) => {
               </span>
             </div>
 
-            {/* Линия между кружками */}
             {!isLast && (
               <div
                 className={`flex-1 h-0.5 mx-2 transition-all duration-300 mb-6
