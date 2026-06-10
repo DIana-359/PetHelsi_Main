@@ -13,7 +13,6 @@ const EducationTab = ({ veterinarian }: Props) => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Загальна освіта */}
       <div>
         <h3 className="text-[16px]  md:text-[18px] lg:text-[18px] font-semibold mb-4">
           Загальна освіта
@@ -48,8 +47,6 @@ const EducationTab = ({ veterinarian }: Props) => {
           </div>
         )}
       </div>
-
-      {/* Додаткова освіта */}
 
       <h3 className="text-[16px]  md:text-[18px] lg:text-[18px] font-semibold mb-4">
         Додаткова освіта

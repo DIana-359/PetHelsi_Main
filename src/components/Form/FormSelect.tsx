@@ -18,7 +18,6 @@ interface FormSelectProps<T extends FieldValues> {
   placeholder?: string;
 }
 
-/** HeroUI single-select wired to react-hook-form via `control` + `name`. */
 export function FormSelect<T extends FieldValues>({
   control,
   name,
