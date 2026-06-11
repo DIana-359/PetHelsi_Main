@@ -19,11 +19,11 @@ export function NavItem(p: {
     <Link
       href={"/owner/" + p.category}
       onClick={() => setIsOpenModalDashboard(false)}
-      className={`group flex items-center justify-between gap-1 px-1 py-2 hover:bg-slate-100 
-      transform transition rounded-md duration-300 ease-in-out 
+      className={`group flex items-center justify-between gap-1 px-1 py-2
+      transform transition rounded-md duration-300 ease-in-out
       ${
         isActive &&
-        "bg-primary-100 md:border-r-[1px] rounded-r-none md:border-primary-700 md:mr-[-1px]"
+        "md:border-r-[1px] rounded-r-none md:border-primary-700 md:mr-[-1px]"
       }`}>
       <div className="flex justify-center items-center gap-[8px]">
         <Icon
@@ -31,9 +31,15 @@ export function NavItem(p: {
           id={p.icon}
           width="24px"
           height="24px"
-          className="stroke-gray-900 fill-background group-hover:stroke-primary-700 cursor-pointer transition-colors"
+          className={`${
+            isActive
+              ? "stroke-primary-700 text-primary-700"
+              : "stroke-gray-900 text-gray-900"
+          } fill-background group-hover:stroke-primary-700 group-hover:text-primary-700 cursor-pointer transition-colors`}
         />
-        <p className="text-[16px] font-[400] leading-[1.4] md:text-[18px] md:font-[500] text-gray-900 group-hover:text-primary-700 transition-colors">
+        <p className={`text-[16px] font-[400] leading-[1.4] md:text-[18px] md:font-[500] ${
+          isActive ? "text-primary-700" : "text-gray-900"
+        } group-hover:text-primary-700 transition-colors`}>
           {p.text}
         </p>
       </div>

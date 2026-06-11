@@ -23,13 +23,13 @@ export const NAV_ITEMS_OWNER = [
     category: "pets",
     text: "Мої тварини",
     alt: "pets",
-    icon: "icon-paw",
+    icon: "icon-pets",
   },
   {
     category: "veterinarians",
     text: "Ветеринари",
     alt: "veterinarians",
-    icon: "icon-group",
+    icon: "icon-vet",
   },
   {
     category: "profile",
