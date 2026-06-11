@@ -233,8 +233,8 @@ export default function ProfileEditForm() {
           <FormInput
             control={control}
             name="city"
-            label="Місце проживання"
-            placeholder="Введіть назву населенного пункту"
+            label="Місце проживання*"
+            placeholder="Введіть назву населеного пункту"
             isRequired
           />
 

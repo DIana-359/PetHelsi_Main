@@ -179,9 +179,9 @@ export default function ChangePassword() {
               errorMessage: "text-[12px] font-[400] text-red-500",
             }}
             validate={value => {
-              const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+              const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$/;
               if (!passwordRegex.test(value)) {
-                return "Пароль має містити не менше 6 символів, одну велику літеру та одну цифру";
+                return "Пароль має містити не менше 7 символів, одну велику літеру та одну цифру";
               }
             }}
           />
