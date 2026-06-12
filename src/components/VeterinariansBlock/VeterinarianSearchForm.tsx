@@ -8,8 +8,8 @@ import {
   getLocalTimeZone,
   parseDate,
 } from "@internationalized/date";
-import { optionsAnimals, optionsProblems } from "../../Constants";
-import Icon from "../Icon";
+import { optionsAnimals, optionsProblems } from "@/Constants";
+import Icon from "@/components/Icon";
 import { checkAuth } from "@/utils/checkAuth";
 
 interface FormData {

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import DownloadPDFButton from "../History/DownloadPDFButton";
+import DownloadPDFButton from "@/components/History/DownloadPDFButton";
 import { IHistoryItem } from "@/types/historyTypes";
 
 interface Props {

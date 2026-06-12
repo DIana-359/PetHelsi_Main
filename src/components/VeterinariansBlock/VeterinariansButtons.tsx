@@ -2,7 +2,7 @@
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import { useState } from "react";
-import SignUpModal from "../ModalSignUp";
+import SignUpModal from "@/components/ModalSignUp";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useProfile } from "@/hooks/owners/useProfile";
 interface IVeterinariansButtonsProps {

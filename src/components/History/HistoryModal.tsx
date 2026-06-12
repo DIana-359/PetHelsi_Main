@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { IoEyeOutline } from "react-icons/io5";
 import { IHistoryItem } from "@/types/historyTypes";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import DownloadPDFButton from "./DownloadPDFButton";
 
 interface HistoryModalProps {

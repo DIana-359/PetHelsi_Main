@@ -1,7 +1,7 @@
 "use client";
 
 import { useUIStore } from "@/stores/useUIStore";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { MobileMenu } from "./MobileMenu";
 
 export default function BurgerMenue() {

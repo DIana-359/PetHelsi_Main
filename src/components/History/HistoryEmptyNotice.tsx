@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { Button } from "@heroui/react";
 
 export default function HistoryEmptyNotice() {

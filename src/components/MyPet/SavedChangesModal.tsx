@@ -7,7 +7,7 @@ import {
   ModalBody,
   Button,
 } from "@heroui/react";
-import ModalCloseButton from "../ModalCloseButton";
+import ModalCloseButton from "@/components/ModalCloseButton";
 import { getButtonClasses } from "@/utils/buttonClasses/buttonClasses";
 import { useRouter } from "next/navigation";
 

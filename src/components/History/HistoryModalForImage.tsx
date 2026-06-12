@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Modal, ModalContent, ModalBody, ModalHeader } from "@heroui/react";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 
 type FileType = { url: string; type: "image" | "video" };
 

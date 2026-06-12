@@ -1,5 +1,5 @@
 import Image from "next/image";
-import lightningPng from "../../public/Logo_nose.svg";
+import lightningPng from "@public/Logo_nose.svg";
 
 export function Pulse() {
   return (

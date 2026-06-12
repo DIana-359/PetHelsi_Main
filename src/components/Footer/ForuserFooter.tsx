@@ -1,4 +1,4 @@
-import { NavLink } from "../Header/NavLink";
+import { NavLink } from "@/components/Header/NavLink";
 
 const FOOTER_FORUSER = [
   { name: "Політика конфіденційності", href: "/processing-regulation" },

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Icon from "@/components/Icon";
 import ForgotPassword from "@/components/ForgotPassword";
 import GoBack from "@/components/GoBack";
-import { handleGoogleLogin } from "../AuthFunction";
+import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 import { useSignIn } from "@/hooks/auth/useSignIn";

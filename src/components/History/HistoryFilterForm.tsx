@@ -3,7 +3,7 @@
 // import { useState } from "react";
 // // import { IHistoryItem } from "@/utils/types/historyItem";
 // import { optionsAnimals } from "@/components/Hero/Constants";
-// import Icon from "../Icon";
+// import Icon from "@/components/Icon";
 
 // interface HistoryFilterFormProps {
 //   search?: string;

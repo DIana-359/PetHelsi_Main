@@ -2,7 +2,7 @@
 import { Category, CategoryValue } from "@/types/ownerTypes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { useUIStore } from "@/stores/useUIStore";
 
 export function NavItem(p: {

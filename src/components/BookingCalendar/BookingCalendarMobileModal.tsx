@@ -1,6 +1,6 @@
 import { Modal, ModalContent, ModalHeader, ModalBody } from "@heroui/react";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 
 type Props = {
   vetId: string;

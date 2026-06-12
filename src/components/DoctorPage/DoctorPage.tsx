@@ -13,11 +13,11 @@ import SlotUnavailableModal from "./SlotUnavailableModal"
 import clsx from "clsx";
 import DocReviews from "./DocReviews";
 import BookingCalendar from "@/components/BookingCalendar/BookingCalendar";
-import BookingCalendarMobileModal from "../BookingCalendar/BookingCalendarMobileModal";
+import BookingCalendarMobileModal from "@/components/BookingCalendar/BookingCalendarMobileModal";
 import { useFreeScheduleSlots } from "@/hooks/vets/useFreeScheduleSlots";
 import FreeVetScheduleSlots from "./FreeVetScheduleSlots";
 import useMedia from "@/hooks/media";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { useBookingStore } from "@/stores/useBookingStore";
 import BookingSummaryMobile from "./BookingSummaryMobile";
 import SignUpModal from "@/components/ModalSignUp";

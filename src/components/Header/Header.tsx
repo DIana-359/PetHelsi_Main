@@ -1,8 +1,8 @@
 import Link from "next/link";
 //import { ClientHeaderActions } from "./ClientHeaderActions";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import ClientHeaderActionsServer from "./ClientHeaderActionsServer";
-import MobDashboardModal from "../MobDashboardModal/MobDashboardModal";
+import MobDashboardModal from "@/components/MobDashboardModal/MobDashboardModal";
 
 export default async function Header() {
   return (

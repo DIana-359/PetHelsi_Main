@@ -1,6 +1,6 @@
 "use client";
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import HistoryModal from "./HistoryModal";
 import { IHistoryItem } from "@/types/historyTypes";
 interface HistoryDetailsConsultationProps {

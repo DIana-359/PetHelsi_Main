@@ -1,10 +1,10 @@
 "use client";
 
 import { Card, CardBody } from "@heroui/react";
-import vet from "../../../public/Images/588f8e49768020da958bb009d913c575.png";
+import vet from "@public/Images/588f8e49768020da958bb009d913c575.png";
 import VeterinarianCard from "./VeterinarianCard";
 import Image from "next/image";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Vet } from "@/types/vetTypes";
 
 interface Props {

@@ -1,5 +1,5 @@
 "use client";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useUIStore } from "@/stores/useUIStore";
