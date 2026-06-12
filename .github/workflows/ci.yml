@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Новий пуш у ту саму гілку скасовує застарілий прогін
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      # Плейсхолдери лише для збірки: артефакт CI нікуди не деплоїться,
+      # реальні значення Vercel підставляє у своєму білді
+      API_URL: https://ci-placeholder.local/api
+      NEXT_PUBLIC_BACKEND_URL: https://ci-placeholder.local
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ci-placeholder
+      NEXT_PUBLIC_APP_URL: https://ci-placeholder.local
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
