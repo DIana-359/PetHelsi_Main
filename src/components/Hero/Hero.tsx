@@ -1,7 +1,7 @@
 import Image from "next/image";
-import dog from "../../../public/Images/dog.gif";
-import vector from "../../../public/Images/vector.png";
-import { VeterinarianSearchForm } from "../VeterinariansBlock/VeterinarianSearchForm";
+import dog from "@public/Images/dog.gif";
+import vector from "@public/Images/vector.png";
+import { VeterinarianSearchForm } from "@/components/VeterinariansBlock/VeterinarianSearchForm";
 
 export default function Hero() {
   return (

@@ -7,7 +7,7 @@ import EditPetFormBtns from "./EditPetFormBtns";
 import SavedChangesModal from "./SavedChangesModal";
 import PetForm from "./PetForm";
 import { useEditPetPage } from "@/hooks/pets/useEditPetPage";
-import { Pulse } from "../Pulse";
+import { Pulse } from "@/components/Pulse";
 
 interface EditPetFormProps {
   id: string;

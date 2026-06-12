@@ -2,7 +2,7 @@
 
 import Icon from "@/components/Icon";
 import { Card, CardBody, Avatar } from "@heroui/react";
-import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";
+import vetImg from "@public/Images/VeterinarianCard-img-eg.jpg";
 import { Veterinarian } from "@/types/veterinarian";
 import { getYearWord } from "@/utils/formatExperience";
 

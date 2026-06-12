@@ -12,6 +12,21 @@ const compat = new FlatCompat({
 const eslintConfig = [
   { ignores: [".next/", "node_modules/", "out/", "next-env.d.ts"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["../*"],
+              message: "Use the @/ or @public/ alias instead of relative parent imports.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;

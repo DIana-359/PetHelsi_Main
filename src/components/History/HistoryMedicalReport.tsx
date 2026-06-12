@@ -1,6 +1,6 @@
 import { IHistoryItem } from "@/types/historyTypes";
 import InputUpdateComplaint from "./InputUpdateComplaint";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 interface Props {
   historyItem: IHistoryItem;
   setHistoryItem?: (value: IHistoryItem) => void;

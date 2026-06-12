@@ -1,5 +1,5 @@
 import { Veterinarian } from "@/types/veterinarian";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { useState } from "react";
 import { petTypeIcons } from "@/utils/petTypeIcons";
 

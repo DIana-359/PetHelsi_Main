@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { Veterinarian } from "@/types/veterinarian";
-import StarsRating from "../StarsRating";
+import StarsRating from "@/components/StarsRating";
 import { Avatar } from "@heroui/react";
-import vetImg from "@/../public/Images/VeterinarianCard-img-eg.jpg";
+import vetImg from "@public/Images/VeterinarianCard-img-eg.jpg";
 import ReviewIcon from "./ReviewIcon";
 
 interface DocReviewsProps {

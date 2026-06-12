@@ -1,7 +1,7 @@
 "use client";
 import { IHistoryItem } from "@/types/historyTypes";
 import { useEffect, useRef, useState } from "react";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import HistoryModalForImage from "./HistoryModalForImage";
 interface HistoryUploadedFilesProps {
   historyItem?: IHistoryItem;

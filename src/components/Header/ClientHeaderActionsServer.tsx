@@ -1,5 +1,5 @@
 "use client";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 import { NavLink } from "./NavLink";
 import HeaderOwnerActions from "./HeaderOwnerActions";
 import Navigation from "./Navigation";

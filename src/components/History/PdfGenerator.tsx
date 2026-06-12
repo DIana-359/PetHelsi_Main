@@ -4,7 +4,7 @@ import HistoryMedicalReport from "./HistoryMedicalReport";
 import { RefObject, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { IoMdClose } from "react-icons/io";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 
 interface Props {
   historyItem?: IHistoryItem;

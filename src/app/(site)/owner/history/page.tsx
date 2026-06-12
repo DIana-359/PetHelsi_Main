@@ -4,7 +4,7 @@ import TableHeader from "@/components/History/TableHeader";
 import { Pulse } from "@/components/Pulse";
 import HistoryEmptyNotice from "@/components/History/HistoryEmptyNotice";
 import HistoryCard from "@/components/History/HistoryCard";
-import { IHistoryResponse } from "../../../../types/historyTypes";
+import { IHistoryResponse } from "@/types/historyTypes";
 import { apiFetch } from "@/lib/apiFetch.client";
 
 export default function History() {

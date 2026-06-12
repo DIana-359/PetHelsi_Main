@@ -1,5 +1,5 @@
 import { featuresList } from "./Constants";
-import Icon from "../Icon";
+import Icon from "@/components/Icon";
 
 export default function Features() {
   return (

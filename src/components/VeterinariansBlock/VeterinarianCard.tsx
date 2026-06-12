@@ -1,8 +1,8 @@
 "use client";
 
 import { Card, CardBody, Avatar } from "@heroui/react";
-import vet from "../../../public/Images/VeterinarianCard-img-eg.jpg";
-import Icon from "../Icon";
+import vet from "@public/Images/VeterinarianCard-img-eg.jpg";
+import Icon from "@/components/Icon";
 import { Vet } from "@/types/vetTypes";
 import Link from "next/link";
 import { getYearWord } from "@/utils/formatExperience";
