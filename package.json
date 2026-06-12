@@ -6,7 +6,11 @@
     "dev": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.9"
   },
   "dependencies": {
     "@heroui/breadcrumbs": "^2.2.15",
