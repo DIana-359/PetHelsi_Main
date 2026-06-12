@@ -6,7 +6,6 @@ on:
   push:
     branches: [main]
 
-# Новий пуш у ту саму гілку скасовує застарілий прогін
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -21,8 +20,6 @@ jobs:
     timeout-minutes: 15
     env:
       NEXT_TELEMETRY_DISABLED: 1
-      # Плейсхолдери лише для збірки: артефакт CI нікуди не деплоїться,
-      # реальні значення Vercel підставляє у своєму білді
       API_URL: https://ci-placeholder.local/api
       NEXT_PUBLIC_BACKEND_URL: https://ci-placeholder.local
       NEXT_PUBLIC_GOOGLE_CLIENT_ID: ci-placeholder
