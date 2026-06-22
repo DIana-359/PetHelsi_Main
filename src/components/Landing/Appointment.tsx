@@ -9,7 +9,7 @@ export default function AppointmentProcess() {
   return (
     <div
       id="appointment"
-      className="lg:grid grid-cols-12 mb-22 w-full gap-6 items-center justify-center pt-4 pb-14 overflow-hidden"
+      className="lg:grid grid-cols-12 mb-22 w-full gap-6 items-center justify-center pt-4 pb-14 overflow-visible lg:overflow-hidden"
     >
       <div className="hidden col-span-5 lg:block rounded-3xl overflow-hidden">
         <div className="relative w-full h-full">
@@ -65,7 +65,7 @@ export default function AppointmentProcess() {
               <h3 className="hidden xl:inline text-2xl font-medium text-white mb-1">
                 Сплатіть для отримання консультації
               </h3>
-              <p className="text-sm xl:text-base font-normal text-white pr-43">
+              <p className="max-w-[185px] lg:max-w-none text-sm xl:text-base font-normal text-white lg:pr-43">
                 Наша платформа підтримує різні платіжні системи.
                 Здійсніть оплату та проконсультуйтеся з ветеринаром
               </p>
@@ -79,7 +79,7 @@ export default function AppointmentProcess() {
               alt="Pen Circle"
             />
         </div>
-        <div className="absolute -bottom-[49px] lg:-bottom-[15px] right-1 lg:-right-[19px] w-[98px] h-[136px] lg:w-[230px] lg:h-[321px]">
+        <div className="absolute -bottom-[96px] lg:-bottom-[15px] right-1 lg:-right-[19px] w-[98px] h-[136px] lg:w-[230px] lg:h-[321px]">
           <Image
             src={cat}
             alt="Cat GIF"
