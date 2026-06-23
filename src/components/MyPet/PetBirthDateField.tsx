@@ -9,6 +9,7 @@ import {
   formatDateDisplay,
 } from "@/utils/date/formatDate";
 import { MONTHS } from "@/contactMonths";
+import clsx from "clsx";
 
 interface PetBirthDateFiledProps {
   value?: string;
@@ -82,15 +83,21 @@ export default function PetBirthDateField({
           placeholder="ДД / ММ / РРРР"
           value={displayValue}
           variant="bordered"
-          readOnly
+          radius="sm"
           onClick={toggleCalendar}
           classNames={{
             input: `text-left text-[14px] focus:outline-none ${
               displayValue ? "text-gray-900" : "text-gray-350"
             } placeholder:text-gray-350`,
-            inputWrapper: `border-primary-300 hover:!border-primary focus:!border-primary w-full rounded-[8px]  ${
-              error ? "border-red-500" : "border-primary-300"
-            }`,
+            inputWrapper: clsx(
+              "border w-full shadow-none",
+              "border-primary-300",
+              "hover:!border-primary",
+              "data-[focus=true]:!border-primary",
+              {
+                "border-red-500": error,
+              },
+            ),
           }}
         />
         {error && !isBirthDateUnknown && (
@@ -98,7 +105,7 @@ export default function PetBirthDateField({
         )}
 
         {!isBirthDateUnknown && isOpenCalendar && (
-          <div className="w-[318px] bg-white border rounded p-[16px] border-none shadow-sm shadow-gray-300">
+          <div className="w-[318px] bg-white border rounded  border-none shadow-sm shadow-gray-300">
             <DayPicker
               mode="single"
               locale={uk}
@@ -121,7 +128,7 @@ export default function PetBirthDateField({
                 chevron: "fill-gray-500",
                 caption_dropdowns: "flex gap-4 justify-center items-center",
                 dropdown:
-                  "px-2 py-2 rounded-[8px] border border-primary-300 bg-white text-gray-900 text-base font-medium focus:border-primary-700 focus:outline-none transition",
+                  "px-2 py-2 rounded-[8px] !border !border-primary-300 bg-white text-gray-900 text-base font-medium focus:border-primary-700 focus:outline-none transition",
               }}
               styles={{ caption_label: { display: "none" } }}
             />
@@ -145,7 +152,7 @@ export default function PetBirthDateField({
                 }}
               />
 
-              <span className="group w-4 h-4 border border-primary-300 rounded flex items-center justify-center transition peer-checked:bg-primary peer-checked:border-primary">
+              <span className="group w-4 h-4 border border-primary-700 rounded flex items-center justify-center transition peer-checked:bg-primary peer-checked:border-primary">
                 <svg
                   className="w-3 h-3 text-white opacity-0 transition group-peer-checked:opacity-100"
                   viewBox="0 0 24 24"
@@ -185,7 +192,7 @@ export default function PetBirthDateField({
                     }}
                     classNames={{
                       trigger:
-                        "text-left w-full border rounded-[8px] border-primary-300 bg-white hover:!border-primary hover:!bg-white focus:!border-primary focus:bg-white",
+                        "text-left w-full border rounded-[8px] border-primary-300 bg-white !shadow-none hover:!border-primary hover:!bg-white focus:!border-primary focus:bg-white",
                       value: birthMonth ? "!text-gray-900" : "!text-gray-350",
                       selectorIcon: "text-[#1E88E5] w-6 h-6",
                     }}
@@ -206,7 +213,7 @@ export default function PetBirthDateField({
                       updateApproxDate(birthMonth, year);
                     }}
                     classNames={{
-                      trigger: `text-left w-full rounded-lg border bg-white ${
+                      trigger: `text-left w-full rounded-lg !shadow-none border bg-white ${
                         error ? "border-red-500" : "border-primary-300"
                       } hover:!border-primary hover:!bg-white focus:!border-primary`,
                       value: birthYear ? "!text-gray-900" : "!text-gray-350",

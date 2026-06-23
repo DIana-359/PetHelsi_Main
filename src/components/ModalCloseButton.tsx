@@ -14,7 +14,7 @@ export default function ModalCloseButton({
   return (
     <button
       onClick={onClose}
-      className={`absolute right-4 top-4 border-none bg-transparent cursor-pointer outline-none opacity-70 hover:opacity-100 fill-current stroke-current transition ${className}`}
+      className={`absolute  border-none bg-transparent cursor-pointer outline-none opacity-70 hover:opacity-100 fill-current stroke-current transition ${className}`}
     >
       <Icon
         sprite="/sprites/sprite-sistem.svg"
