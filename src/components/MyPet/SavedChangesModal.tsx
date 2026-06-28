@@ -37,7 +37,7 @@ export default function SavedChangesModal({
     >
       <ModalContent className="rounded-[16px] pt-13 pb-8 md:pt-20 md:pb-14 max-w-[560px] ">
         <div className="text-[#1e88e5]">
-          <ModalCloseButton onClose={onClose} />
+          <ModalCloseButton onClose={onClose} className="right-4 top-4" />
         </div>
         <ModalHeader className="text-center pb-4 md:pb-0">
           <h2 className="w-full text-[20px] md:text-[24px] font-[600] text-[#333f5d]">

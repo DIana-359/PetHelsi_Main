@@ -49,7 +49,7 @@ export default function PetCreatedModal({
     >
       <ModalContent className="flex flex-col w-full gap-6 outline-none">
         <div className="text-[#1e88e5]">
-          <ModalCloseButton onClose={onClose} />
+          <ModalCloseButton onClose={onClose} className="right-4 top-4" />
         </div>
         <ModalHeader className="text-[20px] md:text-[24px] justify-center font-semibold gap-4 text-gray-900 text-center">
           Профіль {pet.name} створено

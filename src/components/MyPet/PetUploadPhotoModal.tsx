@@ -46,7 +46,7 @@ export default function PetUploadPhotoModal({
     <Modal isOpen={isOpen} onClose={onClose} placement="center" hideCloseButton>
       <ModalContent className=" flex flex-col  md:items-center px-0 py-8 md:px-8 md:py-14  rounded-[16px] max-w-full md:max-w-[560px]">
         <div className="text-[#1e88e5]">
-          <ModalCloseButton onClose={onClose} />
+          <ModalCloseButton onClose={onClose} className="right-4 top-4" />
         </div>
         <ModalHeader className="p-0 text-[24px] flex justify-center text-gray-900 mb-2 font-semibold">
           {mode === "edit" ? "Зміна фото тварини" : "Додавання фото тварини"}

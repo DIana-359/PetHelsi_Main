@@ -48,7 +48,7 @@ export function GlobalMessage({
 
       <ModalCloseButton
         onClose={onClose}
-        className="text-[#333f5d] -right-4 -top-2 scale-[1] md:-top-1 z-10 md:right-4 md:scale-[0.65]"
+        className="text-[#333f5d] right-1 -top-0.1 scale-[1] md:-top-0.5 z-10 md:right-4 md:scale-[0.65]"
       />
     </div>
   );

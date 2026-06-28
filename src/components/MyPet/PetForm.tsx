@@ -1,7 +1,7 @@
 "use client";
 
 import { optionsAnimals } from "@/Constants";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { Input, Select, SelectItem, Textarea } from "@heroui/react";
 import PetBirthDateField from "@/components/MyPet/PetBirthDateField";
 import { SterilizedLabel } from "@/components/MyPet/SterilizedLabel";
 import { Controller, UseFormReturn, useWatch } from "react-hook-form";
@@ -130,14 +130,14 @@ export default function PetForm({ methods }: PetFormProps) {
           radius="sm"
           classNames={{
             input:
-              "text-left focus:outline-none text-gray-900 placeholder:text-gray-350",
+              "text-left focus:outline-none text-gray-700 placeholder:text-gray-350",
             inputWrapper: clsx(inputWrapperStyles),
           }}
         />
       </div>
 
       <div className="w-full md:w-[304px]">
-        <label className="text-[12px] block mb-2 font-medium text-gray-700">
+        <label className="text-[12px] block mt-4 mb-2 font-medium text-gray-700">
           Стать тварини*
         </label>
 
@@ -263,25 +263,30 @@ export default function PetForm({ methods }: PetFormProps) {
           control={control}
           render={({ field }) => (
             <>
-              <textarea
-                rows={4}
+              <Textarea
+                type="text"
+                variant="bordered"
+                radius="sm"
                 maxLength={250}
-                className={clsx(
-                  "w-full border border-primary-300 hover:!border-primary focus:!border-primary shadow-none rounded-lg p-3 text-left focus:outline-none placeholder:text-gray-350",
-                  {
-                    "text-gray-900": allergies.length,
-                    "text-gray-350": !allergies.length,
-                  },
-                )}
+                classNames={{
+                  input: clsx(
+                    "text-left placeholder:text-gray-350 resize-none h-[89px] overflow-y-auto",
+                    {
+                      "text-gray-900": allergies.length,
+                      "text-gray-350": !allergies.length,
+                    },
+                  ),
+                  inputWrapper: clsx(inputWrapperStyles),
+                }}
                 value={field.value?.join(", ") || ""}
                 onChange={(e) => field.onChange(parseAllergies(e.target.value))}
               />
 
-              <div className="flex mb-6 justify-between">
-                <small className="text-gray-400 text-[12px]">
+              <div className="flex mb-6 mt-1 justify-between">
+                <small className="text-gray-700 text-[12px]">
                   Максимум 250 символів
                 </small>
-                <span className="text-gray-400 text-[12px]">
+                <span className="text-gray-700 text-[12px]">
                   {allergies.join(", ").length}/250
                 </span>
               </div>
