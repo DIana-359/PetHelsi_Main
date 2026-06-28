@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button } from "@heroui/react";
+import { Form, Input, Button, Modal, ModalBody, ModalContent } from "@heroui/react";
 import Icon from "@/components/Icon";
 import { IoEyeOutline } from "react-icons/io5";
 import ForgotPassword from "@/components/ForgotPassword";
@@ -22,6 +22,7 @@ export default function ChangePassword() {
   const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isOpenModalChangePassword, setOpenModalChangePassword] =
     useState<boolean>(false);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const { mutate: changePasswordMutate } = useChangePassword();
 
@@ -64,6 +65,7 @@ export default function ChangePassword() {
             newPassword: "",
             repeatNewPassword: "",
           });
+          setSuccessModalOpen(true);
         },
         onError: err => {
           console.error("Помилка зміни паролю:", err);
@@ -257,6 +259,55 @@ export default function ChangePassword() {
           setOpenModalChangePassword={setOpenModalChangePassword}
         />
       )}
+
+      <Modal
+        isOpen={isSuccessModalOpen}
+        onOpenChange={open => {
+          if (!open) setSuccessModalOpen(false);
+        }}
+        placement="center"
+        hideCloseButton
+        className="rounded-[16px]"
+      >
+        <ModalContent className="relative w-full max-w-[560px] px-8 py-12 md:px-[96px] md:pt-[90px] md:pb-[56px]">
+          <button
+            type="button"
+            onClick={() => setSuccessModalOpen(false)}
+            aria-label="Закрити"
+            className="absolute right-8 top-8 text-primary-700 hover:text-primary-900 transition-colors cursor-pointer"
+          >
+            <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-close"
+              width="32px"
+              height="32px"
+              className="fill-current stroke-current"
+            />
+          </button>
+
+          <ModalBody className="flex flex-col items-center gap-6 p-0 text-center">
+            <Icon
+              sprite="/sprites/sprite-sistem.svg"
+              id="icon-chec_-ring_filled"
+              width="76px"
+              height="76px"
+              className="text-primary-700"
+            />
+
+            <p className="text-[20px] md:text-[24px] font-[500] leading-[1.2] text-[#333f5d]">
+              Ваш пароль успішно змінено
+            </p>
+
+            <Button
+              type="button"
+              onPress={() => setSuccessModalOpen(false)}
+              className="w-full max-w-[304px] h-[48px] rounded-[8px] bg-primary-600 text-[16px] font-[400] leading-[1.4] text-white hover:bg-primary-700"
+            >
+              Зрозуміло
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
