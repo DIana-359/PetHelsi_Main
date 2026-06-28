@@ -79,7 +79,7 @@ export default function Faq() {
                   id={isOpen ? "icon-minus" : "icon-plus"}
                   width="24px"
                   height="24px"
-                  className="fill-primary !rotate-90"
+                  className="stroke-primary-700 fill-none shrink-0 !rotate-90"
                 />
               )}>
               <ol className="lg:pb-10 lg:px-6">
