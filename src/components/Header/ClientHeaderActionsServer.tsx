@@ -5,11 +5,13 @@ import HeaderOwnerActions from "./HeaderOwnerActions";
 import Navigation from "./Navigation";
 import BurgerMenue from "./BurgerMenue";
 import { useProfile } from "@/hooks/owners/useProfile";
+import { useDoctorProfile } from "@/hooks/doctors/useDoctorProfile";
 
 export default function ClientHeaderActionsServer() {
-  const { data } = useProfile();
+  const { data: owner } = useProfile();
+  const { data: doctor } = useDoctorProfile();
 
-  if (data) {
+  if (owner || doctor) {
     return <HeaderOwnerActions />;
   }
 

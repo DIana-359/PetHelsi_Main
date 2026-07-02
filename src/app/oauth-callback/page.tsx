@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Pulse } from "@/components/Pulse";
 import { apiFetch } from "@/lib/apiFetch.client";
+import { RoleType } from "@/types/roleTypes";
+import { resolveHomePath } from "@/services/auth/resolveHomePath.client";
 
 export default function OAuthCallback() {
   const router = useRouter();
@@ -12,7 +14,7 @@ export default function OAuthCallback() {
     const code = params.get("code");
     const rawState = params.get("state");
 
-    let role: "CLIENT" | "DOCTOR" | undefined;
+    let role: RoleType | undefined;
 
     if (rawState) {
       try {
@@ -29,10 +31,7 @@ export default function OAuthCallback() {
     })
       .then(async res => {
         if (!res.ok) throw new Error("Exchange failed");
-        //const data = await res.json();
-        //if (data.token) localStorage.setItem("token", data.token);
-        // TODO check if role CLIENT - redirect page profile else - redirect page - vet page etc
-        router.replace("/owner/profile");
+        router.replace(await resolveHomePath());
       })
       .catch(() => router.replace("/signup"));
   }, [router]);

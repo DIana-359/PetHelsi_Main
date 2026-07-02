@@ -15,16 +15,15 @@ import AuthRoleTabs from "@/components/AuthRoleTabs/AuthRoleTabs";
 import clsx from "clsx";
 import { useSignIn } from "@/hooks/auth/useSignIn";
 import { signUpSchema, SignUpFormValues } from "@/utils/schemas/auth.schemas";
+import { AuthRoleWithEmpty } from "@/types/roleTypes";
 
-type RoleType = "CLIENT" | "VET";
-type RoleTypeWithEmpty = RoleType | null;
 type SignUpFormProps = {
   hideRoleTabs?: boolean;
 };
 
 export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<RoleTypeWithEmpty>(
+  const [selectedRole, setSelectedRole] = useState<AuthRoleWithEmpty>(
     hideRoleTabs ? "CLIENT" : null
   );
   const [tabError, setTabError] = useState(false);
@@ -84,7 +83,9 @@ export default function SignUpForm({ hideRoleTabs = false }: SignUpFormProps) {
       const resultAction = await signUp(dataToSend);
       if (resultAction?.email) {
         await login(dataToLogin);
-        router.push("/owner/profile");
+        const home =
+          resultAction.roleType === "VET" ? "/vet/profile" : "/owner/profile";
+        router.push(home);
         router.refresh();
       } else {
         setTabError(true);
