@@ -45,6 +45,15 @@ export const NAV_ITEMS_OWNER = [
   },
 ] as NavItemType[];
 
+export const NAV_ITEMS_VET = [
+  { category: "appointments", text: "Мої прийоми", icon: "icon-list" },
+  { category: "chats", text: "Чати", icon: "icon-message_light" },
+  { category: "schedule", text: "Мій графік", icon: "icon-calendar" },
+  { category: "cards", text: "Мої картки", icon: "icon-credit-card" },
+  { category: "profile", text: "Мій профіль", icon: "icon-user" },
+  { category: "settings", text: "Налаштування", icon: "icon-settings" },
+];
+
 export const optionsAnimals = [
   { value: "Собака", key: "Собака", icon: "icon-dog" },
   { value: "Кіт", key: "Кіт", icon: "icon-cat" },

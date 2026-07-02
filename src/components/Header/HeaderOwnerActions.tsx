@@ -6,19 +6,27 @@ import { useUIStore } from "@/stores/useUIStore";
 import useMedia from "@/hooks/media";
 import AvatarUser from "@/components/ProfileOwner/AvatarUser";
 import { useProfile } from "@/hooks/owners/useProfile";
+import { useDoctorProfile } from "@/hooks/doctors/useDoctorProfile";
 
 export default function HeaderOwnerActions() {
   const isMobile = useMedia();
   const router = useRouter();
-  const { data } = useProfile();
+  const { data: owner } = useProfile();
+  const { data: doctor } = useDoctorProfile();
+
+  const isVet = !owner && !!doctor;
+  const homePath = isVet ? "/vet/profile" : "/owner/profile";
+  const avatar = isVet ? doctor?.avatar : owner?.avatar;
+  const displayName = isVet ? doctor?.name : owner?.firstName;
+  const email = isVet ? doctor?.userEmail : owner?.email;
 
   const [showNotification, setShowNotification] = useState(false);
   const isOpenModalDashboard = useUIStore(s => s.isOpenModalDashboard);
   const setIsOpenModalDashboard = useUIStore(s => s.setIsOpenModalDashboard);
 
   const handleOpenDashboard = () => {
-    if (!isMobile) {
-      router.push("/owner/profile");
+    if (!isMobile || isVet) {
+      router.push(homePath);
     } else {
       setIsOpenModalDashboard(true);
     }
@@ -43,9 +51,9 @@ export default function HeaderOwnerActions() {
           onClick={handleOpenDashboard}
           className="flex items-center justify-center hover:stroke-primary">
           <AvatarUser
-            avatar={data?.avatar}
-            firstName={data?.firstName}
-            email={data?.email}
+            avatar={avatar}
+            firstName={displayName}
+            email={email}
             size={32}
           />
         </button>

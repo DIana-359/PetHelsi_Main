@@ -2,13 +2,11 @@
 
 import React from "react";
 import clsx from "clsx";
-
-type RoleType = "CLIENT" | "VET";
-type RoleTypeWithEmpty = RoleType | null;
+import { AuthRole, AuthRoleWithEmpty } from "@/types/roleTypes";
 
 interface RoleTabsProps {
-  selectedRole: RoleTypeWithEmpty;
-  setSelectedRole: (role: RoleTypeWithEmpty) => void;
+  selectedRole: AuthRoleWithEmpty;
+  setSelectedRole: (role: AuthRoleWithEmpty) => void;
   tabError: boolean;
   setTabError: (value: boolean) => void;
   setIsVetBackground?: (value: boolean) => void;
@@ -21,12 +19,12 @@ export default function AuthRoleTabs({
   setTabError,
   setIsVetBackground,
 }: RoleTabsProps) {
-  const roles: { key: RoleType; label: string }[] = [
+  const roles: { key: AuthRole; label: string }[] = [
     { key: "CLIENT", label: "Я - власник тварини" },
     { key: "VET", label: "Я - ветеринар" },
   ];
 
-  const handleClick = (role: RoleType) => {
+  const handleClick = (role: AuthRole) => {
     setSelectedRole(role);
     setTabError(false);
     setIsVetBackground?.(role === "VET");

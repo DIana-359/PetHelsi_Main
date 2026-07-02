@@ -11,6 +11,7 @@ import { handleGoogleLogin } from "@/app/(auth)/AuthFunction";
 import AuthInput from "@/components/AuthInput/AuthInput";
 import { emailRegex, passwordRegex } from "@/utils/validation/validationAuth";
 import { useSignIn } from "@/hooks/auth/useSignIn";
+import { resolveHomePath } from "@/services/auth/resolveHomePath.client";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export default function SignInPage() {
 
     try {
       await login({ email, password });
-      router.push("/owner/profile");
+      router.push(await resolveHomePath());
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Login error:", error.message);

@@ -1,13 +1,13 @@
 import Header from "@/components/Header/Header";
 import { HydrationBoundary } from "@tanstack/react-query";
-import { fetchProfileAndDehydrate } from "@/services/auth/fetchProfileAndDehydrate";
+import { fetchIdentityAndDehydrate } from "@/services/auth/fetchIdentityAndDehydrate";
 
 export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { dehydratedState } = await fetchProfileAndDehydrate();;
+  const { dehydratedState } = await fetchIdentityAndDehydrate();
 
   return (
       <div id="app-root">

@@ -9,6 +9,8 @@ import type { GetVetsParams } from "@/types/vetTypes";
 export const queryKeys = {
   profile: ["profile"] as const,
 
+  doctorProfile: ["doctorProfile"] as const,
+
   pets: {
     all: ["pets"] as const,
     detail: (petId: string) => ["pet", petId] as const,
